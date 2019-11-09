@@ -23,6 +23,7 @@ public class Window extends JFrame {
 	 */
 	public Window(int width, int height) {
 		super();
+		
 		this.width = width;
 		this.height = height;
 		
@@ -35,6 +36,9 @@ public class Window extends JFrame {
 	private void layoutView() {
 		mainPanel = new JPanel();
 		mainPanel.setPreferredSize(new Dimension(width, height));
+		
+		Environment env = new Environment(width, height);
+		mainPanel.add(env);
 	} //end layoutView
 	
 	/**
