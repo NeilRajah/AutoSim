@@ -39,6 +39,23 @@ public class Window extends JFrame {
 		
 		Environment env = new Environment(width, height);
 		mainPanel.add(env);
+		
+		Runnable updateTheta = () -> {
+			while (this.mainPanel.isVisible()) {
+				env.setTheta(env.theta + 0.005);
+				System.out.println("updating");
+				try {
+					Thread.sleep(5);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		Thread t = new Thread(updateTheta);
+		t.start();
+//		t.run();
 	} //end layoutView
 	
 	/**

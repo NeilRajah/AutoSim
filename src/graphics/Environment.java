@@ -19,9 +19,12 @@ public class Environment extends JComponent implements Component {
 	private int width; //width of the environment
 	private int height; //height of the environment
 	
+	public double theta = 0;
+	
 	public Environment(int width, int height) {
 		super();
 		
+		//set the width and height of the component
 		this.width = width;
 		this.height = height;
 		this.setPreferredSize(new Dimension(width, height));
@@ -47,9 +50,13 @@ public class Environment extends JComponent implements Component {
 	/**
 	 * Update the environment
 	 */
-	public void update() {
-		// TODO Auto-generated method stub
-		
+	public void update() {	
+		repaint();
+	} //end update
+	
+	public void setTheta(double newTheta) {
+		theta = newTheta;
+		update();
 	}
 	
 	/**
@@ -58,13 +65,15 @@ public class Environment extends JComponent implements Component {
 	 */
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.BLACK);
-		g2.fillRect(0, 0, width, height);
-		
+	    
 		g2.setColor(Color.WHITE);
-		g2.setStroke(new BasicStroke(10));
-		
-		g2.drawLine(0, 0, width, height);
-	} //end paintComponent
+		g2.fillRect(0, 0, width, height);
+		g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
 
+
+		g2.translate(this.width/2, this.height/2);
+		g2.rotate(theta);
+
+		Painter.drawRobot(g2);
+	} //end paintComponent
 } //end Environment
