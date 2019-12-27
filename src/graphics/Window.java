@@ -6,10 +6,15 @@
  */
 package graphics;
 
-import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import main.AutoSim;
+import util.Util;
 
 public class Window extends JFrame {
 	private JPanel mainPanel; //main panel for display
@@ -24,8 +29,8 @@ public class Window extends JFrame {
 	public Window(int width, int height) {
 		super();
 		
-		this.width = width;
-		this.height = height;
+//		this.width = width;
+//		this.height = height;
 		
 		layoutView();
 	} //end constructor
@@ -34,40 +39,58 @@ public class Window extends JFrame {
 	 * Layout the window, add all components
 	 */
 	private void layoutView() {
+		//main panel that holds all components
 		mainPanel = new JPanel();
-		mainPanel.setPreferredSize(new Dimension(width, height));
+//		mainPanel.setLayout(new GridBagLayout());
 		
+		//environment where robot acts in
+//		System.out.println(AutoSim.screenWidth +" "+ AutoSim.screenHeight +" "+ (AutoSim.ppi * AutoSim.fieldWidth));
+		int width = AutoSim.ppi * AutoSim.fieldWidth;
+		int height = AutoSim.ppi * AutoSim.fieldHeight;
+//		int width = 324, height = 324;
+		Util.println(width, height, AutoSim.ppi);
 		Environment env = new Environment(width, height);
+//		GridBagConstraints envGBC = createGBC(0,0, 1, 0.9);
+//		mainPanel.add(env, envGBC);
 		mainPanel.add(env);
 		
-		Runnable updateTheta = () -> {
-			while (this.mainPanel.isVisible()) {
-				env.setTheta(env.theta + 0.005);
-				System.out.println("updating");
-				try {
-					Thread.sleep(5);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		
-		Thread t = new Thread(updateTheta);
-		t.start();
-//		t.run();
+		//text field (UI placeholder)
+		JTextField text = new JTextField();
+		GridBagConstraints textGBC = createGBC(0,1, 1, 0.1);
+//		mainPanel.add(text, textGBC);
 	} //end layoutView
+	
+	/**
+	 * Create a GridBagConstraints object based on parameters for the layout
+	 * int gridx - x position to contrain to
+	 * int gridy - y position to constrain to
+	 * double weightx - x weight to contrain to
+	 * double weighty - y weight to constrain to
+	 * return gbc - GridBagConstraints with parameters
+	 */
+	private GridBagConstraints createGBC(int gridx, int gridy, double weightx, double weighty) {
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = gridx;
+		gbc.gridy = gridy;
+		gbc.weightx = weightx;
+		gbc.weighty = weighty;
+		gbc.fill = GridBagConstraints.BOTH; //default to filling entire cell
+		
+		return gbc;
+	} //end createGBC
 	
 	/**
 	 * Configure and launch the window
 	 */
 	public void launch() {
+		//configure frame and set it to visible
+		this.setTitle("AutoSim");
 		this.setContentPane(mainPanel);
 		this.setUndecorated(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
-		this.setResizable(false);
-		this.setLocation(600, 200);
+		this.setResizable(false); //scale window components
+		this.setLocation(0, 0); //change to center to screen
 		this.setVisible(true);
 	} //end launch
 

@@ -54,26 +54,21 @@ public class Environment extends JComponent implements Component {
 		repaint();
 	} //end update
 	
-	public void setTheta(double newTheta) {
-		theta = newTheta;
-		update();
-	}
-	
 	/**
 	 * Draw the environment
 	 * Graphics g - responsible for drawing
 	 */
 	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
+		Graphics2D g2 = (Graphics2D) g; //Graphics2D for better graphics
 	    
-		g2.setColor(Color.WHITE);
+		//white background
+		g2.setColor(Color.blue);
 		g2.fillRect(0, 0, width, height);
+		
+		//stroke for lines
 		g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
 
-
-		g2.translate(this.width/2, this.height/2);
-		g2.rotate(theta);
-
-		Painter.drawRobot(g2);
+		//draw elements
+		Painter.drawRobot(g2); //draw the robot,
 	} //end paintComponent
 } //end Environment

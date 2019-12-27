@@ -17,7 +17,7 @@ public class Util {
 	
 	public static void println(double ... d) {
 		for(double dbl : d) {
-			System.out.print(d + " ");
+			System.out.print(dbl + " ");
 		}
 		System.out.println();
 	} //end println
