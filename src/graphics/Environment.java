@@ -61,8 +61,8 @@ public class Environment extends JComponent implements Component {
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g; //Graphics2D for better graphics
 	    
-		//white background
-		g2.setColor(Color.blue);
+		//white background, will be replaced by field or grid
+		g2.setColor(Color.white);
 		g2.fillRect(0, 0, width, height);
 		
 		//stroke for lines

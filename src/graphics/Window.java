@@ -18,19 +18,14 @@ import util.Util;
 
 public class Window extends JFrame {
 	private JPanel mainPanel; //main panel for display
-	private int width; //width of window
-	private int height; //height of window
 	
 	/**
 	 * Create a window
 	 * @param width Width of the window in pixels
 	 * @param height Height of the window in pixels
 	 */
-	public Window(int width, int height) {
+	public Window() {
 		super();
-		
-//		this.width = width;
-//		this.height = height;
 		
 		layoutView();
 	} //end constructor
