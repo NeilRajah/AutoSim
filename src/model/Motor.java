@@ -28,11 +28,11 @@ public class Motor {
 	 * double kFreeSpeed - free speed in RPM
 	 * double kFreeCurrent - free current in Amps
 	 */
-	public Motor(double kStallTorque, double kStallCurrent, double kFreeSpeed, double kFreeCurrent) {
-		this.kStallTorque = kStallTorque;
-		this.kStallCurrent = kStallCurrent;
-		this.kFreeSpeed = kFreeSpeed;
-		this.kFreeCurrent = kFreeCurrent;
+	public Motor(double stallTorque, double stallCurrent, double freeSpeed, double freeCurrent) {
+		this.kStallTorque = stallTorque;
+		this.kStallCurrent = stallCurrent;
+		this.kFreeSpeed = freeSpeed;
+		this.kFreeCurrent = freeCurrent;
 		
 		//calculated values
 		//resistance across is total voltage divided by stall current

@@ -25,4 +25,12 @@ public class Util {
 		}
 		System.out.println();
 	} //end println
+	
+	public static void println(String msg, double ... d) {
+		System.out.print(msg + " ");
+		for (double dbl : d) {
+			System.out.print(dbl + " ");
+		}
+		System.out.println();
+	}
 } //end Util

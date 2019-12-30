@@ -8,7 +8,7 @@ public class Test {
 		
 		Runnable applyVoltage = () -> {
 			double t = 0.0;
-			while (t < 10.0) {
+			while (t < 1.0) {
 				System.out.println(r.getAveragePos());
 				r.update(12, 12);
 				try {
@@ -23,10 +23,6 @@ public class Test {
 		
 		Thread t = new Thread(applyVoltage);
 		t.start();
-	}
-	
-	public static double cube(double x) {
-		return x*x*x;
 	}
 
 }

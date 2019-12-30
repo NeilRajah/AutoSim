@@ -6,6 +6,8 @@
  */
 package model;
 
+import util.Util;
+
 public class Gearbox {
 	//Attributes
 	//Configured
@@ -112,9 +114,12 @@ public class Gearbox {
 	public double calcTorque(double voltage) {
 		//torque is proportional to voltage applied and angular velocity of the motor
 		double cVoltage = (kGearRatio * kTorque) / (kMotor.getResistanceConstant());
-		double cVelocity = (kGearRatio * kGearRatio * kTorque) / (kMotor.getResistanceConstant() * kMotor.getVoltageConstant());
+		double cVelocity = -(kGearRatio * kGearRatio * kTorque) / (kMotor.getResistanceConstant() * kMotor.getVoltageConstant());
 		
-		return cVoltage * voltage + cVelocity * velocity;
+//		Util.println("Voltage and Velocity constants", cVoltage, cVelocity);
+//		Util.println("calcTorque():", cVoltage * voltage + cVelocity * velocity);
+		
+		return cVoltage * voltage + cVelocity * this.velocity;
 	} ///end calcTorque
 	
 	/**
@@ -124,5 +129,7 @@ public class Gearbox {
 	public void update(double dt) {
 		velocity += acceleration * dt; //v2 = v1 + at
 		position += velocity * dt + 0.5 * acceleration * dt *dt; //d2 = d1 + vt + 0.5at^2
+		
+		Util.println("GBK:", acceleration, velocity, position);
 	} //end update
 } //end Gearbox

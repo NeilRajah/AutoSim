@@ -14,7 +14,6 @@ import util.Util;
 public class Robot {
 	//Attributes
 	//Configured
-	private double kWheelDia; //wheel diameter in inches
 	private double kMass; //mass of the robot in pounds
 	private double kLength; //length of the robot in inches
 	private double kWidth; //width of the robot in inches
@@ -48,23 +47,22 @@ public class Robot {
 	 * Gearbox leftGearbox - left gearbox
 	 * Gearbox rightGearbox - right gearbox
 	 */
-	public Robot(double kWheelDia, double kMass, double kLength, double kWidth, Gearbox leftGearbox, Gearbox rightGearbox) {
-		this.kWheelDia = kWheelDia;
-		this.kMass = kMass * Util.LBS_TO_KG; //convert to kg
-		this.kLength = kLength;
-		this.kWidth = kWidth;
+	public Robot(double wheelDia, double mass, double length, double width, Gearbox leftGearbox, Gearbox rightGearbox) {
+		this.kMass = mass * Util.LBS_TO_KG; //convert to kg
+		this.kLength = length * Util.INCHES_TO_METERS; //convert to m
+		this.kWidth = width * Util.INCHES_TO_METERS; //convert to m
 		this.leftGearbox = leftGearbox;
 		this.rightGearbox = rightGearbox;
 		
 		//Calculate constants
 		//convert radius to meters
-		kWheelRad = kWheelDia/2 * Util.INCHES_TO_METERS; 
+		kWheelRad = wheelDia/2 * Util.INCHES_TO_METERS; 
 		
 		//robot simplified to rectangular slab rotating about axis through center perpendicular to surface
-		kMOI = 1/12 * kMass * (kLength * kLength + kWidth * kWidth);
+		kMOI = kMass * (kLength * kLength + kWidth * kWidth) / 12;
 		
 		//half the width of the robot
-		kPivotArm = kWidth/2 * Util.INCHES_TO_METERS;
+		kPivotArm = kWidth/2;
 		
 		//set values to zero
 		averagePos = 0;
@@ -80,6 +78,9 @@ public class Robot {
 		//calculate torque from each gearbox
 		double leftTorque = leftGearbox.calcTorque(leftVoltage);
 		double rightTorque = rightGearbox.calcTorque(rightVoltage);
+
+//		Util.println("Gearbox Torques:", leftTorque, rightTorque);
+//		Util.println("Gearbox Torques:", leftGearbox.calcTorque(leftVoltage), rightGearbox.calcTorque(rightVoltage));
 		
 		//calculate each side's acceleration
 		calcGearboxAccelerations(leftTorque, rightTorque);
@@ -99,7 +100,10 @@ public class Robot {
 	 */
 	private void calcGearboxAccelerations(double leftTorque, double rightTorque) {
 		double A = (leftTorque + rightTorque) / (kMass * kWheelRad * kWheelRad);
-		double B = (kPivotArm * (rightTorque - leftTorque)) / (kMOI * kWheelRad);
+		double B = ((rightTorque - leftTorque) * kPivotArm * kPivotArm) / (kMOI * kWheelRad * kWheelRad);
+		
+//		Util.println("Acceleration Constants:", A, B);
+//		Util.println("Robot Constants:", kPivotArm, kMOI, kWheelRad);
 		
 		leftGearbox.setAcc(A - B);
 		rightGearbox.setAcc(A + B);
@@ -107,8 +111,8 @@ public class Robot {
 	
 	private void updatePose(double dt) {
 		//calculate the magnitude of displacement in time interval
-		double leftDisp = leftGearbox.getPos() * kWheelRad;
-		double rightDisp = rightGearbox.getPos() * kWheelRad;
+		double leftDisp = leftGearbox.getPos(); //kWheelRad / Util.INCHES_TO_METERS
+		double rightDisp = rightGearbox.getPos();
 		double disp = (leftDisp + rightDisp) / 2;
 		
 		//calculate heading assuming constant angular acceleration
@@ -117,7 +121,7 @@ public class Robot {
 		double angDisp = angVel * dt + 0.5 * angAcc * dt * dt;
 		
 		//update average position, heading and coordinates
-		averagePos += disp;
+		averagePos = disp * kWheelRad / Util.INCHES_TO_METERS;
 		heading -= angDisp;
 		point.translate(disp, heading);
 	}
