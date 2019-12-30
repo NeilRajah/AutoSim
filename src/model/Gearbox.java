@@ -30,6 +30,10 @@ public class Gearbox {
 		
 		//calculate constants
 		kTorque = (kNumMotors * kMotor.getStallTorque()) / kMotor.getStallCurrent();
+		
+		position = 0;
+		velocity = 0;
+		acceleration = 0;
 	} //end constructor
 	
 	//Getters
@@ -90,6 +94,14 @@ public class Gearbox {
 		return acceleration;
 	} //end getAcc
 	
+	/**
+	 * Set the acceleration of the gearbox
+	 * double acc - acceleration of the gearbox
+	 */
+	public void setAcc(double acc) {
+		this.acceleration = acc;
+	} //end setAcc
+	
 	//Dynamics
 	
 	/**
@@ -97,11 +109,20 @@ public class Gearbox {
 	 * double voltage - voltage applied to the motor
 	 * return - calculated torque based on voltage
 	 */
-	private double calcTorque(double voltage) {
+	public double calcTorque(double voltage) {
 		//torque is proportional to voltage applied and angular velocity of the motor
 		double cVoltage = (kGearRatio * kTorque) / (kMotor.getResistanceConstant());
 		double cVelocity = (kGearRatio * kGearRatio * kTorque) / (kMotor.getResistanceConstant() * kMotor.getVoltageConstant());
 		
 		return cVoltage * voltage + cVelocity * velocity;
 	} ///end calcTorque
+	
+	/**
+	 * Update the position and velocity of the gearbox by assuming constant acceleration in a timestamp
+	 * double dt - time interval of constant acceleration
+	 */
+	public void (double dt) {
+		velocity += acceleration * dt; //v2 = v1 + at
+		position += velocity * dt + 0.5 * acceleration * dt *dt; //d2 = d1 + vt + 0.5at^2
+	} //end update
 } //end Gearbox

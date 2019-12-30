@@ -53,6 +53,11 @@ public class Point {
 		this.y = y;
 	} //end setY
 	
+	public void translate(double magnitude, double angle) {
+		this.x += magnitude * Math.sin(angle);
+		this.y += magnitude * Math.cos(angle);
+	}
+	
 	/**
 	 * Calculate the distance between two points using the Pythagorean theorem
 	 * Point p1 - first point
