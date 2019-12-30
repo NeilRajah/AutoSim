@@ -121,7 +121,7 @@ public class Gearbox {
 	 * Update the position and velocity of the gearbox by assuming constant acceleration in a timestamp
 	 * double dt - time interval of constant acceleration
 	 */
-	public void (double dt) {
+	public void update(double dt) {
 		velocity += acceleration * dt; //v2 = v1 + at
 		position += velocity * dt + 0.5 * acceleration * dt *dt; //d2 = d1 + vt + 0.5at^2
 	} //end update
