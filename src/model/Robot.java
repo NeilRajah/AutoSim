@@ -44,15 +44,14 @@ public class Robot {
 	 * double kMass - mass of the robot in pounds
 	 * double kLength - length of the robot in inches
 	 * double kWidth - width of the robot in inches
-	 * Gearbox leftGearbox - left gearbox
-	 * Gearbox rightGearbox - right gearbox
+	 * Gearbox gearbox - drive gearboxes
 	 */
-	public Robot(double wheelDia, double mass, double length, double width, Gearbox leftGearbox, Gearbox rightGearbox) {
+	public Robot(double wheelDia, double mass, double length, double width, Gearbox gearbox) {
 		this.kMass = mass * Util.LBS_TO_KG; //convert to kg
 		this.kLength = length * Util.INCHES_TO_METERS; //convert to m
 		this.kWidth = width * Util.INCHES_TO_METERS; //convert to m
-		this.leftGearbox = leftGearbox;
-		this.rightGearbox = rightGearbox;
+		this.leftGearbox = gearbox;
+		this.rightGearbox = gearbox;
 		
 		//Calculate constants
 		//convert radius to meters
@@ -70,12 +69,24 @@ public class Robot {
 		point = new Point(0,0);
 	} //end constructor
 	
+	public void reset() {
+		averagePos = 0;
+		heading = 0;
+		point = new Point(0,0);
+		leftGearbox.reset();
+		rightGearbox.reset();
+	}
+	
 	public double getAveragePos() {
 		return averagePos;
 	}
 	
 	public double getAverageVel() {
 		return (leftGearbox.getVel() + rightGearbox.getVel()) * 0.5 * kWheelRad / Util.INCHES_TO_METERS / 12;
+	}
+	
+	public Point getPoint() {
+		return point;
 	}
 
 	public void update(double leftVoltage, double rightVoltage) {
@@ -111,10 +122,10 @@ public class Robot {
 		rightGearbox.setAcc(A + B);
 		
 		//update the position and velocity of the gearbox
-		leftGearbox.update(Util.UPDATE_PERIOD);
+//		leftGearbox.update(Util.UPDATE_PERIOD);
+		rightGearbox.update(Util.UPDATE_PERIOD);
 		Util.println("L Gearbox Kinematics:", leftGearbox.getPos(),
 						leftGearbox.getVel(), leftGearbox.getAcc());
-//		rightGearbox.update(Util.UPDATE_PERIOD);
 		Util.println("R Gearbox Kinematics:", rightGearbox.getPos(),
 				rightGearbox.getVel(), rightGearbox.getAcc());
 	} //end setAccelerations
@@ -133,8 +144,10 @@ public class Robot {
 //		Util.println("Gearbox Differences:", (rightGearbox.getVel() - leftGearbox.getVel()));
 		
 		//update average position, heading and coordinates
-		averagePos = disp * kWheelRad / Util.INCHES_TO_METERS;
+		double newPos = disp * kWheelRad / Util.INCHES_TO_METERS;
 		heading -= angDisp;
-//		point.translate(disp, heading);
+		
+		point.translate(newPos - averagePos, heading);
+		averagePos = newPos;
 	}
 } //end Robot

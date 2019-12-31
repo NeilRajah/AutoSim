@@ -137,4 +137,10 @@ public class Gearbox {
 //		prevVel = velocity;
 //		Util.println("GBK:", acceleration, velocity, position);
 	} //end update
+	
+	public void reset() {
+		position = 0;
+		velocity = 0;
+		acceleration = 0;
+	}
 } //end Gearbox

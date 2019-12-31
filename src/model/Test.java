@@ -4,7 +4,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		Gearbox gb = new Gearbox(120, new Motor(2.41, 131, 5330, 2.7), 2);
-		Robot r = new Robot(4, 150, 30, 30, gb, gb);
+		Robot r = new Robot(4, 150, 30, 30, gb);
 		
 		Runnable applyVoltage = () -> {
 			double t = 0.0;

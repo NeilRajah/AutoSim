@@ -6,6 +6,8 @@
  */
 package model;
 
+import util.Util;
+
 public class Motor {
 	//Constants
 	public static final double MAX_VOLTAGE = 12.0; //max voltage in Volts
@@ -39,7 +41,8 @@ public class Motor {
 		kResistance = MAX_VOLTAGE/kStallCurrent;
 		
 		//angular velocity of the motor per volt applied
-		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (MAX_VOLTAGE - (kResistance * kFreeCurrent));
+		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (MAX_VOLTAGE - (kResistance * kFreeCurrent) + Util.V_INTERCEPT);
+		Util.println("kV:", kVoltage);
 	} //end constructor
 
 	/**

@@ -11,6 +11,7 @@ public class Util {
 	public static final double INCHES_TO_METERS = 0.0254;
 	public static final double LBS_TO_KG = 0.453592;
 	public static final double UPDATE_PERIOD = 0.005; //5ms
+	public static final double V_INTERCEPT = 0.205551323; //voltage required to overcome frictional losses
 	
 	public static void println(String ... s) {
 		for(String str : s) {
