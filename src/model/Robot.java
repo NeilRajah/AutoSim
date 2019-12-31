@@ -102,7 +102,7 @@ public class Robot {
 		double A = (leftTorque + rightTorque) / (kMass * kWheelRad * kWheelRad);
 		double B = ((rightTorque - leftTorque) * kPivotArm * kPivotArm) / (kMOI * kWheelRad * kWheelRad);
 		
-//		Util.println("Acceleration Constants:", A, B);
+		Util.println("Acceleration Constants:", A, B);
 //		Util.println("Robot Constants:", kPivotArm, kMOI, kWheelRad);
 		
 		leftGearbox.setAcc(A - B);
@@ -120,9 +120,12 @@ public class Robot {
 		double angVel = angAcc * dt;
 		double angDisp = angVel * dt + 0.5 * angAcc * dt * dt;
 		
+		Util.println("L Gearbox Kinematics:", leftGearbox.getPos(), leftGearbox.getVel(), leftGearbox.getAcc());
+//		Util.println("Gearbox Differences:", (rightGearbox.getVel() - leftGearbox.getVel()));
+		
 		//update average position, heading and coordinates
 		averagePos = disp * kWheelRad / Util.INCHES_TO_METERS;
 		heading -= angDisp;
-		point.translate(disp, heading);
+//		point.translate(disp, heading);
 	}
 } //end Robot

@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import util.Util;
+
 class ModelTest {
 	
 	@Test
@@ -20,11 +22,11 @@ class ModelTest {
 	void displacementTest() {
 		Gearbox gb = new Gearbox(8.2554, new Motor(2.6, 105, 5676, 1.8), 2);
 		Robot r = new Robot(4, 153, 30, 30, gb, gb);
-		double t = 0.005;
+		double t = 0.00;
 		while (t < 1.0) {
 			r.update(12,12);
 			System.out.println(t +" "+ r.getAveragePos() + "\n");
-			t += 0.005;
+			t += Util.UPDATE_PERIOD;
 		}
 		double correctDisplacement = 125;
 		assertEquals(correctDisplacement, r.getAveragePos(), 1);

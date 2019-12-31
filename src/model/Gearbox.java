@@ -101,7 +101,7 @@ public class Gearbox {
 	 * double acc - acceleration of the gearbox
 	 */
 	public void setAcc(double acc) {
-		this.acceleration = acc;
+		acceleration = acc;
 	} //end setAcc
 	
 	//Dynamics
@@ -128,8 +128,8 @@ public class Gearbox {
 	 */
 	public void update(double dt) {
 		velocity += acceleration * dt; //v2 = v1 + at
-		position += velocity * dt + 0.5 * acceleration * dt *dt; //d2 = d1 + vt + 0.5at^2
+		position += 0.5 * velocity * dt; //distance is average speed * time, v/2 * t
 		
-		Util.println("GBK:", acceleration, velocity, position);
+//		Util.println("GBK:", acceleration, velocity, position);
 	} //end update
 } //end Gearbox
