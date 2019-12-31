@@ -20,6 +20,8 @@ public class Gearbox {
 	private double velocity; //velocity of the motor in radians per second
 	private double acceleration; //acceleration of the motor in radians per second^2
 	
+	private double prevVel;
+	
 	/**
 	 * Create a gearbox with given parameters
 	 * double kGearRatio - gear reduction of the gearbox
@@ -36,6 +38,8 @@ public class Gearbox {
 		position = 0;
 		velocity = 0;
 		acceleration = 0;
+		
+		prevVel = 0;
 	} //end constructor
 	
 	//Getters
@@ -128,8 +132,9 @@ public class Gearbox {
 	 */
 	public void update(double dt) {
 		velocity += acceleration * dt; //v2 = v1 + at
-		position += 0.5 * velocity * dt; //distance is average speed * time, v/2 * t
-		
+		position += velocity * dt; //distance is average speed * time, v/2 * t
+
+//		prevVel = velocity;
 //		Util.println("GBK:", acceleration, velocity, position);
 	} //end update
 } //end Gearbox

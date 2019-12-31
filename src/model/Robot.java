@@ -73,21 +73,23 @@ public class Robot {
 	public double getAveragePos() {
 		return averagePos;
 	}
+	
+	public double getAverageVel() {
+		return (leftGearbox.getVel() + rightGearbox.getVel()) * 0.5 * kWheelRad / Util.INCHES_TO_METERS / 12;
+	}
 
 	public void update(double leftVoltage, double rightVoltage) {
 		//calculate torque from each gearbox
 		double leftTorque = leftGearbox.calcTorque(leftVoltage);
 		double rightTorque = rightGearbox.calcTorque(rightVoltage);
 
-//		Util.println("Gearbox Torques:", leftTorque, rightTorque);
+		Util.println("Gearbox Torques:", leftTorque, rightTorque);
 //		Util.println("Gearbox Torques:", leftGearbox.calcTorque(leftVoltage), rightGearbox.calcTorque(rightVoltage));
 		
 		//calculate each side's acceleration
-		calcGearboxAccelerations(leftTorque, rightTorque);
+		updateGearboxes(leftTorque, rightTorque);
+//		Util.println("Post CGA:", leftGearbox.getAcc(), rightGearbox.getAcc());
 		
-		//update the position and velocity of the gearbox
-		leftGearbox.update(Util.UPDATE_PERIOD);
-		rightGearbox.update(Util.UPDATE_PERIOD);
 		
 		//update the pose of the robot
 		updatePose(Util.UPDATE_PERIOD);
@@ -98,7 +100,7 @@ public class Robot {
 	 * double leftTorque - torque of the left gearbox
 	 * double rightTorque - torque of the right gearbox
 	 */
-	private void calcGearboxAccelerations(double leftTorque, double rightTorque) {
+	private void updateGearboxes(double leftTorque, double rightTorque) {
 		double A = (leftTorque + rightTorque) / (kMass * kWheelRad * kWheelRad);
 		double B = ((rightTorque - leftTorque) * kPivotArm * kPivotArm) / (kMOI * kWheelRad * kWheelRad);
 		
@@ -107,6 +109,14 @@ public class Robot {
 		
 		leftGearbox.setAcc(A - B);
 		rightGearbox.setAcc(A + B);
+		
+		//update the position and velocity of the gearbox
+		leftGearbox.update(Util.UPDATE_PERIOD);
+		Util.println("L Gearbox Kinematics:", leftGearbox.getPos(),
+						leftGearbox.getVel(), leftGearbox.getAcc());
+//		rightGearbox.update(Util.UPDATE_PERIOD);
+		Util.println("R Gearbox Kinematics:", rightGearbox.getPos(),
+				rightGearbox.getVel(), rightGearbox.getAcc());
 	} //end setAccelerations
 	
 	private void updatePose(double dt) {
@@ -120,7 +130,6 @@ public class Robot {
 		double angVel = angAcc * dt;
 		double angDisp = angVel * dt + 0.5 * angAcc * dt * dt;
 		
-		Util.println("L Gearbox Kinematics:", leftGearbox.getPos(), leftGearbox.getVel(), leftGearbox.getAcc());
 //		Util.println("Gearbox Differences:", (rightGearbox.getVel() - leftGearbox.getVel()));
 		
 		//update average position, heading and coordinates
