@@ -19,9 +19,6 @@ public class Gearbox {
 	private double position; //amount the motor has turned in radians
 	private double velocity; //velocity of the motor in radians per second
 	private double acceleration; //acceleration of the motor in radians per second^2
-	
-	private double prevVel;
-	
 	/**
 	 * Create a gearbox with given parameters
 	 * double kGearRatio - gear reduction of the gearbox
@@ -38,8 +35,6 @@ public class Gearbox {
 		position = 0;
 		velocity = 0;
 		acceleration = 0;
-		
-		prevVel = 0;
 	} //end constructor
 	
 	//Getters
@@ -97,7 +92,7 @@ public class Gearbox {
 	 * return acceleration - acceleration of the gearbox in radians
 	 */
 	public double getAcc() {
-		return acceleration;
+		return this.acceleration;
 	} //end getAcc
 	
 	/**
@@ -105,7 +100,8 @@ public class Gearbox {
 	 * double acc - acceleration of the gearbox
 	 */
 	public void setAcc(double acc) {
-		acceleration = acc;
+		this.acceleration = acc;
+//		System.out.println(acc);
 	} //end setAcc
 	
 	//Dynamics
@@ -120,22 +116,17 @@ public class Gearbox {
 		double cVoltage = (kGearRatio * kTorque) / (kMotor.getResistanceConstant());
 		double cVelocity = -(kGearRatio * kGearRatio * kTorque) / (kMotor.getResistanceConstant() * kMotor.getVoltageConstant());
 		
-//		Util.println("Voltage and Velocity constants", cVoltage, cVelocity);
-//		Util.println("calcTorque():", cVoltage * voltage + cVelocity * velocity);
-		
-		return cVoltage * voltage + cVelocity * this.velocity;
+		return cVoltage * voltage + cVelocity * velocity;
 	} ///end calcTorque
 	
 	/**
 	 * Update the position and velocity of the gearbox by assuming constant acceleration in a timestamp
 	 * double dt - time interval of constant acceleration
 	 */
-	public void update(double dt) {
-		velocity += acceleration * dt; //v2 = v1 + at
-		position += velocity * dt; //distance is average speed * time, v/2 * t
-
-//		prevVel = velocity;
-//		Util.println("GBK:", acceleration, velocity, position);
+	public void update(double acceleration, double dt) {
+		this.acceleration = acceleration;
+		this.velocity += this.acceleration * dt; //v2 = v1 + at
+		this.position += this.velocity * dt + 0.5 * this.acceleration * dt * dt; //constant vel in that time interval
 	} //end update
 	
 	public void reset() {

@@ -42,7 +42,6 @@ public class Motor {
 		
 		//angular velocity of the motor per volt applied
 		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (MAX_VOLTAGE - (kResistance * kFreeCurrent) + Util.V_INTERCEPT);
-		Util.println("kV:", kVoltage);
 	} //end constructor
 
 	/**

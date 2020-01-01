@@ -55,7 +55,7 @@ public class Robot {
 		
 		//Calculate constants
 		//convert radius to meters
-		kWheelRad = wheelDia/2 * Util.INCHES_TO_METERS; 
+		kWheelRad = wheelDia/2 * Util.INCHES_TO_METERS;
 		
 		//robot simplified to rectangular slab rotating about axis through center perpendicular to surface
 		kMOI = kMass * (kLength * kLength + kWidth * kWidth) / 12;
@@ -67,6 +67,7 @@ public class Robot {
 		averagePos = 0;
 		heading = 0;
 		point = new Point(0,0);
+		angularSpeed = 0;
 	} //end constructor
 	
 	public void reset() {
@@ -75,6 +76,7 @@ public class Robot {
 		point = new Point(0,0);
 		leftGearbox.reset();
 		rightGearbox.reset();
+		angularSpeed = 0;
 	}
 	
 	public double getAveragePos() {
@@ -88,21 +90,29 @@ public class Robot {
 	public Point getPoint() {
 		return point;
 	}
+	
+	public double getHeading() {
+		return heading;
+	}
+	
+	//testing
+	public Gearbox getLeftGearbox() {
+		return leftGearbox;
+	}
+	
+	public Gearbox getRightGearbox() {
+		return rightGearbox;
+	}
 
-	public void update(double leftVoltage, double rightVoltage) {
-		//calculate torque from each gearbox
+	public void update(double leftVoltage, double rightVoltage) {//calculate torque from each gearbox
 		double leftTorque = leftGearbox.calcTorque(leftVoltage);
 		double rightTorque = rightGearbox.calcTorque(rightVoltage);
-
-		Util.println("Gearbox Torques:", leftTorque, rightTorque);
-//		Util.println("Gearbox Torques:", leftGearbox.calcTorque(leftVoltage), rightGearbox.calcTorque(rightVoltage));
 		
 		//calculate each side's acceleration
 		updateGearboxes(leftTorque, rightTorque);
-//		Util.println("Post CGA:", leftGearbox.getAcc(), rightGearbox.getAcc());
-		
 		
 		//update the pose of the robot
+		updateHeading(leftTorque, rightTorque, Util.UPDATE_PERIOD);
 		updatePose(Util.UPDATE_PERIOD);
 	} //end update
 	
@@ -112,23 +122,28 @@ public class Robot {
 	 * double rightTorque - torque of the right gearbox
 	 */
 	private void updateGearboxes(double leftTorque, double rightTorque) {
-		double A = (leftTorque + rightTorque) / (kMass * kWheelRad * kWheelRad);
-		double B = ((rightTorque - leftTorque) * kPivotArm * kPivotArm) / (kMOI * kWheelRad * kWheelRad);
+		double S = 1 / (kMass * kWheelRad * kWheelRad);
+		double D = (kPivotArm * kPivotArm) / (kMOI * kWheelRad * kWheelRad);
 		
-		Util.println("Acceleration Constants:", A, B);
-//		Util.println("Robot Constants:", kPivotArm, kMOI, kWheelRad);
+		double sum = (leftTorque + rightTorque);
+		double difference = (rightTorque - leftTorque);
 		
-		leftGearbox.setAcc(A - B);
-		rightGearbox.setAcc(A + B);
+		double leftAcc = (S * sum) - (D * difference);
+		double rightAcc = (S * sum) + (D * difference);	
+		
+//		Util.println("Left and right accelerations sent to gearboxes:", leftAcc, rightAcc);
 		
 		//update the position and velocity of the gearbox
-//		leftGearbox.update(Util.UPDATE_PERIOD);
-		rightGearbox.update(Util.UPDATE_PERIOD);
-		Util.println("L Gearbox Kinematics:", leftGearbox.getPos(),
-						leftGearbox.getVel(), leftGearbox.getAcc());
-		Util.println("R Gearbox Kinematics:", rightGearbox.getPos(),
-				rightGearbox.getVel(), rightGearbox.getAcc());
-	} //end setAccelerations
+		leftGearbox.update(leftAcc, Util.UPDATE_PERIOD);
+		rightGearbox.update(rightAcc, Util.UPDATE_PERIOD);
+	} //end updateGearboxes
+	
+	private void updateHeading(double leftTorque, double rightTorque, double dt) {
+		angularSpeed = (kWheelRad / (2 * kPivotArm)) * (rightGearbox.getVel() - leftGearbox.getVel());
+		double angDisp = angularSpeed * dt;
+		
+		heading += angDisp;
+	}
 	
 	private void updatePose(double dt) {
 		//calculate the magnitude of displacement in time interval
@@ -136,17 +151,8 @@ public class Robot {
 		double rightDisp = rightGearbox.getPos();
 		double disp = (leftDisp + rightDisp) / 2;
 		
-		//calculate heading assuming constant angular acceleration
-		double angAcc = (kWheelRad * (rightGearbox.getAcc() - leftGearbox.getAcc())) / (2 * kPivotArm);
-		double angVel = angAcc * dt;
-		double angDisp = angVel * dt + 0.5 * angAcc * dt * dt;
-		
-//		Util.println("Gearbox Differences:", (rightGearbox.getVel() - leftGearbox.getVel()));
-		
-		//update average position, heading and coordinates
+		//update average position and coordinates
 		double newPos = disp * kWheelRad / Util.INCHES_TO_METERS;
-		heading -= angDisp;
-		
 		point.translate(newPos - averagePos, heading);
 		averagePos = newPos;
 	}

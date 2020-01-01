@@ -3,26 +3,27 @@ package model;
 public class Test {
 
 	public static void main(String[] args) {
-		Gearbox gb = new Gearbox(120, new Motor(2.41, 131, 5330, 2.7), 2);
-		Robot r = new Robot(4, 150, 30, 30, gb);
+		Ball ball = new Ball();
 		
-		Runnable applyVoltage = () -> {
-			double t = 0.0;
-			while (t < 1.0) {
-				System.out.println(r.getAveragePos());
-				r.update(12, 12);
-				try {
-					Thread.sleep(5);
-				} catch (Exception e) {
-					
-				}
-				
-				t += 0.005;
-			}
-		};
-		
-		Thread t = new Thread(applyVoltage);
-		t.start();
+		System.out.println(ball.getRadius());
+		ball.setRadius(20.0);
+		System.out.println(ball.getRadius());
 	}
 
+}
+
+class Ball {
+	private double radius;
+	
+	public Ball() {
+		radius = 0;
+	}
+	
+	public double getRadius() {
+		return radius;
+	}
+	
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
 }
