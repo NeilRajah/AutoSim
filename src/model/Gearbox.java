@@ -6,38 +6,62 @@
  */
 package model;
 
-import util.Util;
-
 public class Gearbox {
 	//Attributes
 	//Configured
 	private double kGearRatio; //gear reduction of the gearbox 
 	private Motor kMotor; //motor used in the gearbox
+	private double kNumMotors; //number of motors in the gearbox
 	
 	//Calculated
 	private double kTorque; //Nm per amp applied to the motor
-	private double position; //amount the motor has turned in radians
-	private double velocity; //velocity of the motor in radians per second
-	private double acceleration; //acceleration of the motor in radians per second^2
+	private double kPosition; //amount the motor has turned in radians
+	private double kVelocity; //velocity of the motor in radians per second
+	private double kAcceleration; //acceleration of the motor in radians per second^2
 	/**
 	 * Create a gearbox with given parameters
 	 * double kGearRatio - gear reduction of the gearbox
 	 * Motor kMotor - motor used in the gearbox
 	 * double kNumMotors - number of motors in the gearbox
 	 */
-	public Gearbox(double kGearRatio, Motor kMotor, double kNumMotors) {
-		this.kGearRatio = kGearRatio;
-		this.kMotor = kMotor;
+	public Gearbox(double gearRatio, Motor motor, double numMotors) {
+		this.kGearRatio = gearRatio;
+		this.kMotor = motor;
+		this.kNumMotors = numMotors;
 		
 		//calculate constants
-		kTorque = (kNumMotors * kMotor.getStallTorque()) / kMotor.getStallCurrent();
+		kTorque = (numMotors * motor.getStallTorque()) / motor.getStallCurrent();
 		
-		position = 0;
-		velocity = 0;
-		acceleration = 0;
+		//set the kinematics to zero
+		reset();
 	} //end constructor
 	
-	//Getters
+	//Attributes
+	/**
+	 * Get the gear ratio of the gearbox
+	 * return kGearRatio - reduction of the gearbox
+	 */
+	public double getGearRatio() {
+		return kGearRatio;
+	} //end getGearRatio
+	
+	/**
+	 * Get the number of motors in the gearbox
+	 * return kNumMotors - number of motors in the gearbox
+	 */
+	public double getNumMotors() {
+		return kNumMotors;
+	} //end getNumMotors
+	
+	/**
+	 * Get the parameter array for the motors in the gearbox
+	 * return - array of motor parameters
+	 */
+	public double[] getMotorParameters() {
+		return kMotor.getParameters();
+	} //end getMotorName
+	
+	//Constants
 	
 	/**
 	 * Get the torque constant of the gearbox
@@ -46,14 +70,6 @@ public class Gearbox {
 	public double getTorqueConstant() {
 		return kTorque;
 	} //end getTorqueConstant
-	
-	/**
-	 * Get the gear ratio of the gearbox
-	 * return kGearRatio - reduction of the gearbox
-	 */
-	public double getGearRatio() {
-		return kGearRatio;
-	} //end getGearRatio
 	
 	/**
 	 * Get the voltage constant of the gearbox
@@ -71,12 +87,14 @@ public class Gearbox {
 		return kMotor.getResistanceConstant();
 	} //end getResistanceConstant
 	
+	//Kinematics
+	
 	/**
 	 * Get the position of the gearbox
 	 * return position - position of the gearbox in radians
 	 */
 	public double getPos() {
-		return position;
+		return kPosition;
 	} //end getPos
 	
 	/**
@@ -84,7 +102,7 @@ public class Gearbox {
 	 * return velocity - velocity of the gearbox in radians
 	 */
 	public double getVel() {
-		return velocity;
+		return kVelocity;
 	} //end getVel
 	
 	/**
@@ -92,17 +110,8 @@ public class Gearbox {
 	 * return acceleration - acceleration of the gearbox in radians
 	 */
 	public double getAcc() {
-		return this.acceleration;
+		return kAcceleration;
 	} //end getAcc
-	
-	/**
-	 * Set the acceleration of the gearbox
-	 * double acc - acceleration of the gearbox
-	 */
-	public void setAcc(double acc) {
-		this.acceleration = acc;
-//		System.out.println(acc);
-	} //end setAcc
 	
 	//Dynamics
 	
@@ -116,7 +125,7 @@ public class Gearbox {
 		double cVoltage = (kGearRatio * kTorque) / (kMotor.getResistanceConstant());
 		double cVelocity = -(kGearRatio * kGearRatio * kTorque) / (kMotor.getResistanceConstant() * kMotor.getVoltageConstant());
 		
-		return cVoltage * voltage + cVelocity * velocity;
+		return cVoltage * voltage + cVelocity * kVelocity;
 	} ///end calcTorque
 	
 	/**
@@ -124,14 +133,17 @@ public class Gearbox {
 	 * double dt - time interval of constant acceleration
 	 */
 	public void update(double acceleration, double dt) {
-		this.acceleration = acceleration;
-		this.velocity += this.acceleration * dt; //v2 = v1 + at
-		this.position += this.velocity * dt + 0.5 * this.acceleration * dt * dt; //constant vel in that time interval
+		this.kAcceleration = acceleration;
+		this.kVelocity += this.kAcceleration * dt; //v2 = v1 + at
+		this.kPosition += this.kVelocity * dt + 0.5 * this.kAcceleration * dt * dt; //constant vel in that time interval
 	} //end update
 	
+	/**
+	 * Reset the kinematics of the gearbox
+	 */
 	public void reset() {
-		position = 0;
-		velocity = 0;
-		acceleration = 0;
-	}
+		kPosition = 0;
+		kVelocity = 0;
+		kAcceleration = 0;
+	} //end reset
 } //end Gearbox

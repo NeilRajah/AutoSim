@@ -50,8 +50,10 @@ public class Robot {
 		this.kMass = mass * Util.LBS_TO_KG; //convert to kg
 		this.kLength = length * Util.INCHES_TO_METERS; //convert to m
 		this.kWidth = width * Util.INCHES_TO_METERS; //convert to m
-		this.leftGearbox = gearbox;
-		this.rightGearbox = gearbox;
+		
+		//create gearboxes
+		this.leftGearbox = new Gearbox(gearbox.getGearRatio(), new Motor(gearbox.getMotorParameters()),gearbox.getNumMotors());
+		this.rightGearbox = new Gearbox(gearbox.getGearRatio(), new Motor(gearbox.getMotorParameters()),gearbox.getNumMotors());
 		
 		//Calculate constants
 		//convert radius to meters
@@ -62,6 +64,8 @@ public class Robot {
 		
 		//half the width of the robot
 		kPivotArm = kWidth/2;
+		
+//		System.out.println("mass: " + kMass + " moi: " + kMOI + " kPivotArm: " + kPivotArm + " radius: " + kWheelRad);
 		
 		//set values to zero
 		averagePos = 0;
@@ -105,14 +109,16 @@ public class Robot {
 	}
 
 	public void update(double leftVoltage, double rightVoltage) {//calculate torque from each gearbox
-		double leftTorque = leftGearbox.calcTorque(leftVoltage);
-		double rightTorque = rightGearbox.calcTorque(rightVoltage);
+		double leftForce = leftGearbox.calcTorque(leftVoltage) / kWheelRad;
+		double rightForce = rightGearbox.calcTorque(rightVoltage) / kWheelRad;
+		
+		Util.println("Forces:", leftForce, rightForce);
 		
 		//calculate each side's acceleration
-		updateGearboxes(leftTorque, rightTorque);
+		updateGearboxes(leftForce, rightForce);
 		
 		//update the pose of the robot
-		updateHeading(leftTorque, rightTorque, Util.UPDATE_PERIOD);
+		updateHeading(Util.UPDATE_PERIOD);
 		updatePose(Util.UPDATE_PERIOD);
 	} //end update
 	
@@ -121,15 +127,18 @@ public class Robot {
 	 * double leftTorque - torque of the left gearbox
 	 * double rightTorque - torque of the right gearbox
 	 */
-	private void updateGearboxes(double leftTorque, double rightTorque) {
-		double S = 1 / (kMass * kWheelRad * kWheelRad);
-		double D = (kPivotArm * kPivotArm) / (kMOI * kWheelRad * kWheelRad);
+	private void updateGearboxes(double leftForce, double rightForce) {
+//		double S = 1 / (kMass * kWheelRad * kWheelRad);
+//		double D = (kPivotArm * kPivotArm) / (kMOI * kWheelRad * kWheelRad);
 		
-		double sum = (leftTorque + rightTorque);
-		double difference = (rightTorque - leftTorque);
+//		double sum = (leftTorque + rightTorque);
+//		double difference = (rightTorque - leftTorque);
 		
-		double leftAcc = (S * sum) - (D * difference);
-		double rightAcc = (S * sum) + (D * difference);	
+		double fM = (1/kMass) - (kPivotArm * kPivotArm)/kMOI;
+		double fP = (1/kMass) + (kPivotArm * kPivotArm)/kMOI;
+		
+		double leftAcc = (fP * leftForce + fM * rightForce) / kWheelRad; //convert from m/s^2 to rad/s^2
+		double rightAcc = (fM * leftForce + fP * rightForce) / kWheelRad;
 		
 //		Util.println("Left and right accelerations sent to gearboxes:", leftAcc, rightAcc);
 		
@@ -138,7 +147,7 @@ public class Robot {
 		rightGearbox.update(rightAcc, Util.UPDATE_PERIOD);
 	} //end updateGearboxes
 	
-	private void updateHeading(double leftTorque, double rightTorque, double dt) {
+	private void updateHeading(double dt) {
 		angularSpeed = (kWheelRad / (2 * kPivotArm)) * (rightGearbox.getVel() - leftGearbox.getVel());
 		double angDisp = angularSpeed * dt;
 		

@@ -14,7 +14,7 @@ class ModelTest {
 	
 	@BeforeAll
 	public static void setUp() {
-		gb = new Gearbox(8.2554, new Motor(2.6, 105, 5676, 1.8), 2); //NEO
+		gb = new Gearbox(8.2554, new Motor(Util.NEO), 2); //NEO
 //		gb = new Gearbox(6.6447, new Motor(2.41, 131, 5330, 2.7), 2); //CIM
 		r = new Robot(4, 153, 30, 30, gb);
 	}
@@ -25,11 +25,11 @@ class ModelTest {
 		System.out.println();
 	}
 	
-//	@Test
+	@Test
 	void gearboxTorqueTest() {
 		double torque = gb.calcTorque(12);
 		
-		double correctValue = 42.928;
+		double correctValue = 55.476;
 		assertEquals("Torque should be " + correctValue + ", calculated to be " + torque, correctValue, torque, 1);
 	}
 	
@@ -43,7 +43,7 @@ class ModelTest {
 			Util.println("", t, lgb.getPos(), lgb.getVel(), lgb.getAcc(), rgb.getPos(), rgb.getVel(), rgb.getAcc());
 			t += Util.UPDATE_PERIOD;
 		}
-		double correctDisplacement = 123;
+		double correctDisplacement = 132;
 		assertEquals(correctDisplacement, r.getAveragePos(), 1);
 	}
 	

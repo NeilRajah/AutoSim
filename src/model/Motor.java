@@ -13,7 +13,7 @@ public class Motor {
 	public static final double MAX_VOLTAGE = 12.0; //max voltage in Volts
 	
 	//Attributes
-	//Configured
+	//Configured	
 	private double kStallTorque; //stall torque in Nm
 	private double kStallCurrent; //stall current in Amps
 	private double kFreeSpeed; //free speed in RPM
@@ -25,16 +25,34 @@ public class Motor {
 
 	/**
 	 * Create a motor with given parameters
-	 * double kStallTorque - stall torque in Nm
-	 * double kStallCurrent - stall current in Amps
-	 * double kFreeSpeed - free speed in RPM
-	 * double kFreeCurrent - free current in Amps
+	 * double freeSpeed - free speed in RPM
+	 * double freeCurrent - free current in Amps
+	 * double stallTorque - stall torque in Nm
+	 * double stallCurrent - stall current in Amps
 	 */
-	public Motor(double stallTorque, double stallCurrent, double freeSpeed, double freeCurrent) {
-		this.kStallTorque = stallTorque;
-		this.kStallCurrent = stallCurrent;
+	public Motor(double freeSpeed, double freeCurrent, double stallTorque, double stallCurrent) {
 		this.kFreeSpeed = freeSpeed;
 		this.kFreeCurrent = freeCurrent;
+		this.kStallTorque = stallTorque;
+		this.kStallCurrent = stallCurrent;
+		
+		//calculated values
+		//resistance across is total voltage divided by stall current
+		kResistance = MAX_VOLTAGE/kStallCurrent;
+		
+		//angular velocity of the motor per volt applied
+		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (MAX_VOLTAGE - (kResistance * kFreeCurrent) + Util.V_INTERCEPT);
+	} //end constructor
+	
+	/**
+	 * Create a motor with an array of parameters
+	 * double[] parameters - free speed, free current, stall torque and stall current of the motor
+	 */
+	public Motor(double[] parameters) {
+		this.kFreeSpeed = parameters[0];
+		this.kFreeCurrent = parameters[1];
+		this.kStallTorque = parameters[2];
+		this.kStallCurrent = parameters[3];
 		
 		//calculated values
 		//resistance across is total voltage divided by stall current
@@ -44,6 +62,8 @@ public class Motor {
 		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (MAX_VOLTAGE - (kResistance * kFreeCurrent) + Util.V_INTERCEPT);
 	} //end constructor
 
+	//Attributes
+	
 	/**
 	 * Get the stall torque of the motor
 	 * return kStallTorque - stall torque of the motor in Nm
@@ -60,7 +80,7 @@ public class Motor {
 		return kStallCurrent;
 	} //end getStallCurrent
 	
-	/** MAY REMOVE
+	/**
 	 * Get the free speed of the motor 
 	 * return kFreeSpeed - free speed of the motor in radians/second
 	 */
@@ -68,13 +88,21 @@ public class Motor {
 		return kFreeSpeed;
 	} //end getFreeSpeed
 	
-	/** MAY REMOVE
+	/**
 	 * Get the free current of the motor
 	 * return kFreeCurrent - free current of the motor in Amps
 	 */
 	public double getFreeCurrent() {
 		return kFreeCurrent;
 	} //end getFreeCurrent
+	
+	/**
+	 * Get the parameters of the motor in an array
+	 * return - array of motor parameters
+	 */
+	public double[] getParameters() {
+		return new double[] {kFreeSpeed, kFreeCurrent, kStallTorque, kStallCurrent};
+	} //end getParameters
 	
 	/**
 	 * Get the resistance constant of the motor

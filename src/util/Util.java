@@ -13,6 +13,13 @@ public class Util {
 	public static final double UPDATE_PERIOD = 0.005; //5ms
 	public static final double V_INTERCEPT = 0.206; //voltage required to overcome frictional losses
 	
+	//Motors (values from https://motors.vex.com/)
+	public static final double[] NEO = new double[] {5880, 1.3, 3.36, 166}; //
+	public static final double[] CIM = new double[] {5330, 2.7, 2.41, 131}; //
+	public static final double[] MINI_CIM = new double[] {5840, 3, 1.41, 89};  //
+	public static final double[] PRO_775 = new double[] {18730, 0.7, 0.71, 134}; //
+	public static final double[] FALCON_500 = new double[] {6380, 1.5, 4.69, 257}; //
+	
 	public static void println(String ... s) {
 		for(String str : s) {
 			System.out.print(s + " ");
