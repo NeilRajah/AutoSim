@@ -14,22 +14,20 @@ class ModelTest {
 	
 	@BeforeAll
 	public static void setUp() {
-		gb = new Gearbox(8.2554, new Motor(Util.NEO), 2); //NEO
-//		gb = new Gearbox(6.6447, new Motor(2.41, 131, 5330, 2.7), 2); //CIM
+		gb = new Gearbox(8.5521, new Motor(Util.NEO), 2); //NEO
 		r = new Robot(4, 153, 30, 30, gb);
 	}
 	
 	@AfterEach
 	public void reset() {
 		r.reset();
-		System.out.println();
 	}
 	
 	@Test
 	void gearboxTorqueTest() {
 		double torque = gb.calcTorque(12);
 		
-		double correctValue = 55.476;
+		double correctValue = 57.47;
 		assertEquals("Torque should be " + correctValue + ", calculated to be " + torque, correctValue, torque, 1);
 	}
 	
@@ -37,47 +35,63 @@ class ModelTest {
 	void displacementTest() { 
 		double t = 0.00;
 		while (t <= 1.0 + Util.UPDATE_PERIOD) {
-			Gearbox lgb = r.getLeftGearbox();
-			Gearbox rgb = r.getRightGearbox();
 			r.update(12, 12);
-			Util.println("", t, lgb.getPos(), lgb.getVel(), lgb.getAcc(), rgb.getPos(), rgb.getVel(), rgb.getAcc());
 			t += Util.UPDATE_PERIOD;
 		}
-		double correctDisplacement = 132;
+		double correctDisplacement = 128.6;
 		assertEquals(correctDisplacement, r.getAveragePos(), 1);
 	}
 	
-//	@Test
-	void poseTest() {
+	@Test
+	void poseTestX() {
 		double t = 0.00;
+		
+		r.setHeading(2);
+		
 		while (t <= 1.0 + Util.UPDATE_PERIOD) {
 			r.update(12,12);
 			t += Util.UPDATE_PERIOD;
 		}
-		Point correctPoint = new Point(0,123);
+		
+		Point correctPoint = new Point(-53.5, 116.9);
+		assertEquals(correctPoint.getX(), r.getPoint().getX(), 1);
+	}
+	
+	@Test
+	void poseTestY() {
+		double t = 0.00;
+		
+		r.setHeading(2);
+		
+		while (t <= 1.0 + Util.UPDATE_PERIOD) {
+			r.update(12,12);
+			t += Util.UPDATE_PERIOD;
+		}
+
+		Point correctPoint = new Point(-53.5, 116.9);
 		assertEquals(correctPoint.getY(), r.getPoint().getY(), 1);
 	}
 	
-//	@Test
+	@Test
 	void headingTest() {
 		double t = 0.00;
-		while (t <= 0.01 + Util.UPDATE_PERIOD) {
-			Gearbox lgb = r.getLeftGearbox();
-			Gearbox rgb = r.getRightGearbox();
+		while (t <= 1.00 + Util.UPDATE_PERIOD) {
 			r.update(-12, 12);
-			Util.println("Time: " + t +" | ", lgb.getVel(), rgb.getVel(), lgb.getAcc(), rgb.getAcc());
 			t += Util.UPDATE_PERIOD;
-			System.out.println();
 		}
-		double correctHeading = 500;
+		double correctHeading = 510;
 		assertEquals(correctHeading, Math.toDegrees(r.getHeading()), 1);
 	}
 	
-//	@Test
-	void signTest() {
-		for (double t = 0; t <= 1.00; t += Util.UPDATE_PERIOD) {
-			
+	
+	@Test
+	void speedTest() {
+		double t = 0.00;
+		while (t <= 1.00 + Util.UPDATE_PERIOD) {
+			r.update(12, 12);
+			t += Util.UPDATE_PERIOD;
 		}
+		double correctSpeed = 12;
+		assertEquals(correctSpeed, r.getLinearVel(), 1);
 	}
-
 }

@@ -22,6 +22,7 @@ public class Motor {
 	//Calculated
 	private double kResistance; //resistance across the motor
 	private double kVoltage; //radians/second per volt applied to the motor
+	private double kTorque; //Nm of torque per amp applied to the motor
 
 	/**
 	 * Create a motor with given parameters
@@ -54,14 +55,24 @@ public class Motor {
 		this.kStallTorque = parameters[2];
 		this.kStallCurrent = parameters[3];
 		
-		//calculated values
+		//compute other constants
+		computeConstants();		
+	} //end constructor
+
+	/**
+	 * Compute constants of the motor
+	 */
+	private void computeConstants() {
 		//resistance across is total voltage divided by stall current
 		kResistance = MAX_VOLTAGE/kStallCurrent;
 		
 		//angular velocity of the motor per volt applied
 		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (MAX_VOLTAGE - (kResistance * kFreeCurrent) + Util.V_INTERCEPT);
-	} //end constructor
-
+		
+		//Nm of torque per amp applied to the motor
+		kTorque = kStallTorque/kStallCurrent;
+	} //end computeConstants
+	
 	//Attributes
 	
 	/**
@@ -119,4 +130,12 @@ public class Motor {
 	public double getVoltageConstant() {
 		return kVoltage;
 	} //end getFreeCurrent
+	
+	/**
+	 * Get the torque constant of the motor
+	 * return - Nm of torque per amp applied to the motor
+	 */
+	public double getTorqueConstant() {
+		return kTorque;
+	} //end getTorqueConstant
 } //end Motor

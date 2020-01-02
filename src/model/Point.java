@@ -9,7 +9,8 @@ package model;
 public class Point {
 	//Attributes
 	//Configured
-	private double x, y; //x and y position of the point
+	private double x; //x position of the point
+	private double y; //y position of the point
 	
 	/**
 	 * Create an (x,y) point
@@ -53,10 +54,15 @@ public class Point {
 		this.y = y;
 	} //end setY
 	
+	/**
+	 * Translate the point a given magnitude at a given angle
+	 * double magnitude - distance to translate the point
+	 * double angle - angle to translate the point at
+	 */
 	public void translate(double magnitude, double angle) {
-		this.x += magnitude * Math.sin(angle);
-		this.y += magnitude * Math.cos(angle);
-	}
+		this.x += magnitude * Math.cos(angle);
+		this.y += magnitude * Math.sin(angle);
+	} //end translate
 	
 	/**
 	 * Calculate the distance between two points using the Pythagorean theorem
@@ -66,7 +72,7 @@ public class Point {
 	 */
 	public static double calcDistance(Point p1, Point p2) {
 		return Math.hypot(p2.getX() - p1.getX(), p2.getY() - p1.getY());
-	} //return calcDistance
+	} //endd calcDistance
 	
 	/**
 	 * Calculate the angle between two points in radians from the x-axis
@@ -75,22 +81,23 @@ public class Point {
 	 * return - angle between the two point in radians from the x-axis
 	 */
 	public static double calcAngleRad(Point p1, Point p2) {
+		//calculate deltas
 		double deltaX = p2.getX() - p1.getX();
 		double deltaY = p2.getY() - p1.getY();
 		double theta = 0;
 		
 		if (deltaX == 0) {
-			if (deltaY > 0)
+			if (deltaY > 0) //point above
 				theta = 0;
-			else if (deltaY < 0)
+			else if (deltaY < 0) //point below
 				theta = 180;
 		} else if (deltaY == 0) {
-			if (deltaX > 0) 
+			if (deltaX > 0) //point to right
 				theta = 90;
 			else if (deltaX < 0)
-				theta = -90;
+				theta = -90; //point to left
 		} else {
-			theta = Math.atan(deltaY/deltaX); 
+			theta = Math.atan(deltaY/deltaX); //anywhere else 
 		} //if
 		
 		return theta;
@@ -113,6 +120,7 @@ public class Point {
 	 * double range - how close current point can be to target point
 	 */
 	public static boolean isWithinBounds(Point target, Point current, double range) {
+		//calculate deltas
 		double xDiff = Math.abs(target.getX() - current.getX());
 		double yDiff = Math.abs(target.getY() - current.getY());
 		

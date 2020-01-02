@@ -6,6 +6,8 @@
  */
 package model;
 
+import util.Util;
+
 public class Gearbox {
 	//Attributes
 	//Configured
@@ -14,10 +16,14 @@ public class Gearbox {
 	private double kNumMotors; //number of motors in the gearbox
 	
 	//Calculated
-	private double kTorque; //Nm per amp applied to the motor
 	private double kPosition; //amount the motor has turned in radians
 	private double kVelocity; //velocity of the motor in radians per second
 	private double kAcceleration; //acceleration of the motor in radians per second^2
+	
+	//Computed constants
+	private double cVoltage; //constant proportional to voltage in torque calculations
+	private double cVelocity; //constant proportional to velocity in torque calculations
+	
 	/**
 	 * Create a gearbox with given parameters
 	 * double kGearRatio - gear reduction of the gearbox
@@ -30,11 +36,21 @@ public class Gearbox {
 		this.kNumMotors = numMotors;
 		
 		//calculate constants
-		kTorque = (numMotors * motor.getStallTorque()) / motor.getStallCurrent();
+		computeConstants();
 		
 		//set the kinematics to zero
 		reset();
 	} //end constructor
+	
+	/**
+	 * Compute constants of the gearbox
+	 */
+	private void computeConstants() {
+		//constants used in torque calculation
+		cVoltage = (kGearRatio * kMotor.getTorqueConstant() * kNumMotors) / (kMotor.getResistanceConstant());
+		cVelocity = -(kGearRatio * kGearRatio * kMotor.getTorqueConstant() * kNumMotors) / 
+						(kMotor.getResistanceConstant() * kMotor.getVoltageConstant());
+	} //end computeConstants
 	
 	//Attributes
 	/**
@@ -60,32 +76,6 @@ public class Gearbox {
 	public double[] getMotorParameters() {
 		return kMotor.getParameters();
 	} //end getMotorName
-	
-	//Constants
-	
-	/**
-	 * Get the torque constant of the gearbox
-	 * return - gearbox stall torque divided by gearbox stall current
-	 */
-	public double getTorqueConstant() {
-		return kTorque;
-	} //end getTorqueConstant
-	
-	/**
-	 * Get the voltage constant of the gearbox
-	 * return - voltage constant of the motors used in the gearbox
-	 */
-	public double getVoltageConstant() {
-		return kMotor.getVoltageConstant();
-	} //end getVoltageConstant
-	
-	/**
-	 * Get the electrical resistance in the gearbox
-	 * return - resistance across the motors used in the gearbox
-	 */
-	public double getResistanceConstant() {
-		return kMotor.getResistanceConstant();
-	} //end getResistanceConstant
 	
 	//Kinematics
 	
@@ -121,21 +111,22 @@ public class Gearbox {
 	 * return - calculated torque based on voltage
 	 */
 	public double calcTorque(double voltage) {
-		//torque is proportional to voltage applied and angular velocity of the motor
-		double cVoltage = (kGearRatio * kTorque) / (kMotor.getResistanceConstant());
-		double cVelocity = -(kGearRatio * kGearRatio * kTorque) / (kMotor.getResistanceConstant() * kMotor.getVoltageConstant());
-		
+		//torque is proportional to voltage applied and angular velocity of the motor		
 		return cVoltage * voltage + cVelocity * kVelocity;
 	} ///end calcTorque
 	
 	/**
 	 * Update the position and velocity of the gearbox by assuming constant acceleration in a timestamp
-	 * double dt - time interval of constant acceleration
+	 * double acceleration - acceleration of the gearbox for this timestamp
 	 */
-	public void update(double acceleration, double dt) {
-		this.kAcceleration = acceleration;
-		this.kVelocity += this.kAcceleration * dt; //v2 = v1 + at
-		this.kPosition += this.kVelocity * dt + 0.5 * this.kAcceleration * dt * dt; //constant vel in that time interval
+	public void update(double acceleration) {
+		this.kAcceleration = acceleration; //save the acceleration to memory
+		
+		//v2 = v1 + at
+		this.kVelocity += this.kAcceleration * Util.UPDATE_PERIOD; 
+		
+		//d2 = d1 + vt + 0.5at^2
+		this.kPosition += this.kVelocity * Util.UPDATE_PERIOD + 0.5 * this.kAcceleration * Util.UPDATE_PERIOD * Util.UPDATE_PERIOD;
 	} //end update
 	
 	/**
