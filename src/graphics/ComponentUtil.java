@@ -1,3 +1,9 @@
+/**
+ * ComponentUtil
+ * Author: Neil Balaskandarajah
+ * Created on: 02/01/2019
+ * Utility for making components
+ */
 package graphics;
 
 import java.awt.GridBagConstraints;

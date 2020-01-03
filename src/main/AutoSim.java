@@ -35,5 +35,4 @@ public class AutoSim {
 		w.addRobot(r);
 		w.launch();
 	} //end main
-
 } //end AutoSim

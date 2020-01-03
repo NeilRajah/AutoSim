@@ -25,11 +25,16 @@ public class Environment extends JComponent implements Component {
 	//Attributes
 	private int width; //width of the environment
 	private int height; //height of the environment
+	
+	private BufferedImage field; //field image
 	private ArrayList<Robot> robots; //robots
+	private UIBar bar; //user interface bar to update
 	
-	//Constants
-	private BufferedImage FIELD; //field image
-	
+	/**
+	 * The environment the robot is simulated in
+	 * int width - width of the component
+	 * int height - height of the component
+	 */
 	public Environment(int width, int height) {
 		super();
 		
@@ -40,7 +45,7 @@ public class Environment extends JComponent implements Component {
 		
 		//open field image
 		try {
-			FIELD = ImageIO.read(getClass().getResource("/resources/2019Field.jpeg"));
+			field = ImageIO.read(getClass().getResource("/resources/2019Field.jpeg"));
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} //try-catch
@@ -50,6 +55,7 @@ public class Environment extends JComponent implements Component {
 	} //end constructor
 	
 	//Robot
+	
 	/**
 	 * Add a robot to the list
 	 * Robot r - robot to add to the list
@@ -92,9 +98,7 @@ public class Environment extends JComponent implements Component {
 		Graphics2D g2 = (Graphics2D) g; //Graphics2D for better graphics
 	    
 		//white background, will be replaced by field or grid
-//		g2.setColor(Color.white);
-//		g2.fillRect(0, 0, width, height);
-		g2.drawImage(FIELD, 0, 0, null);
+		g2.drawImage(field, 0, 0, null);
 		
 		//move origin to bottom left
 		g2.scale(1.0, -1.0);
@@ -103,9 +107,28 @@ public class Environment extends JComponent implements Component {
 		//stroke for lines
 		g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
 
-		//draw elements
+		//draw all robots
 		for (Robot r : robots) {
 			Painter.drawRobot(g2, r); //draw the robot
-		}
+		} //loop
 	} //end paintComponent
+	
+	//User Interaction
+	
+	/**
+	 * Add a UI bar
+	 * UIBar bar - bar to store for the environment to update
+	 */
+	public void addUIBar(UIBar bar) {
+		this.bar = bar;
+	} //end addUIBar
+	
+	/**
+	 * Set the mouse coordinates for the UI to draw
+	 * int x - x location of the mouse
+	 * int y - y location of the mouse
+	 */
+	public void setCursorLocation(int x, int y) {
+		bar.setCursorLocation(x, y);
+	} //end setCursorLocation
 } //end Environment

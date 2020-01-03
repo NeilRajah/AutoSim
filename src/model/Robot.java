@@ -9,6 +9,7 @@ package model;
 
 import java.awt.Color;
 
+import main.AutoSim;
 import util.Util;
 
 public class Robot {
@@ -91,7 +92,7 @@ public class Robot {
 	public void reset() {
 		averagePos = 0;
 		heading = 0;
-		point = new Point(0,0);
+		point = new Point(162, kLength/(2 * Util.INCHES_TO_METERS) + 2); //middle platform
 		leftGearbox.reset();
 		rightGearbox.reset();
 		angularVel = 0;
@@ -262,4 +263,20 @@ public class Robot {
 			color = Color.YELLOW;
 		} //if
 	} //end getColor
+	
+	/**
+	 * Get the width of the robot in pixels
+	 * return - width of robot in pixels
+	 */
+	public int getWidthPixels() {
+		return (int) ((kWidth * AutoSim.ppi) / Util.INCHES_TO_METERS);
+	} //end getWidthPixels
+	
+	/**
+	 * Get the length of the robot in pixels
+	 * return - width of robot in pixels
+	 */
+	public int getLengthPixels() {
+		return (int) ((kLength * AutoSim.ppi) / Util.INCHES_TO_METERS);
+	} //end getLengthPixels
 } //end Robot

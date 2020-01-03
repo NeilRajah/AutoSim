@@ -39,28 +39,22 @@ public class Window extends JFrame {
 		mainPanel.setLayout(new GridBagLayout());
 		
 		//environment where robot acts in
-//		System.out.println(AutoSim.screenWidth +" "+ AutoSim.screenHeight +" "+ (AutoSim.ppi * AutoSim.fieldWidth));
-		int width = AutoSim.ppi * Util.FIELD_WIDTH;
+		int width = AutoSim.ppi * Util.FIELD_WIDTH; //convert from inches to pixels
 		int height = AutoSim.ppi * Util.FIELD_HEIGHT;
-//		int width = 324, height = 324;
-		Util.println(width, height, AutoSim.ppi);
 		env = new Environment(width, height);
-//		GridBagConstraints envGBC = createGBC(0,0, 1, 1);
-//		mainPanel.add(env, envGBC);
-//		mainPanel.add(env, ComponentUtil.createGBC(0, 0));
-//		mainPanel.add(env);
+		mainPanel.add(env, ComponentUtil.createGBC(0, 0));
 		
-		//UI Bar		
-		Util.println(width, height / 10);
-		bar = new UIBar(width, height / 10);
-//		GridBagConstraints barGBC = createGBC(0,1, 1, 1);
-		mainPanel.add(bar, ComponentUtil.createGBC(1, 0));
-//		JTextField text = new JTextField();
-//		GridBagConstraints textGBC = createGBC(0,1, 1, 0.1);
-//		mainPanel.add(text, textGBC);
+		//UI Bar
+		bar = new UIBar(width, height / 15);
+		mainPanel.add(bar, ComponentUtil.createGBC(0, 1));
+		
+		//add UI bar to environment
+		env.addUIBar(bar);
+		
+		//add controllers
+		EnvironmentController envCtrl = new EnvironmentController(env);
+		env.addMouseMotionListener(envCtrl);
 	} //end layoutView
-	
-	
 	
 	/**
 	 * Add a robot to the environment
@@ -79,8 +73,7 @@ public class Window extends JFrame {
 		this.setContentPane(mainPanel);
 		this.setUndecorated(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		this.pack();
-		this.setSize(2000, 2000);
+		this.pack();
 		this.setResizable(false); //scale window components
 		this.setLocation(600, 50); //change to center of screen
 		this.setVisible(true);
