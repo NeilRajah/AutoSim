@@ -40,7 +40,8 @@ public class Robot {
 	private double kPivotArm; //distance from robot center to wheel in meters (used in torque calculations)
 	private double fP; //constant used in gearbox acceleration calculation
 	private double fM; //constant used in gearbox acceleration calculation
-	private double topSpeed; //top speed of the robot
+	private double maxLinSpeed; //top linear speed of the robot
+	private double maxAngSpeed; //top angular speed of the robot
 	
 	/**
 	 * Create a robot with base parameters
@@ -81,9 +82,10 @@ public class Robot {
 		fM = (1/kMass) - (kPivotArm * kPivotArm)/kMOI;
 		fP = (1/kMass) + (kPivotArm * kPivotArm)/kMOI;
 		
-		//top speed
-		topSpeed = (Math.PI * leftGearbox.getMotorParameters()[0] * kWheelRad)/
+		//top speeds
+		maxLinSpeed = (Math.PI * leftGearbox.getMotorParameters()[0] * kWheelRad)/
 					(360 * leftGearbox.getGearRatio() * Util.INCHES_TO_METERS);
+		maxAngSpeed = (24 * maxLinSpeed * Util.INCHES_TO_METERS) / (kWidth);
 	} //end computeConstants
 	
 	/**
@@ -99,6 +101,19 @@ public class Robot {
 		linearVel = 0;
 		color = Color.YELLOW;
 	} //end reset
+	
+	/**
+	 * Set the robot into waiting state
+	 */
+	public void waitState() {
+		//reset speeds
+		angularVel = 0;
+		linearVel = 0;
+		leftGearbox.zeroVel();
+		rightGearbox.zeroVel();
+		
+		color = Color.yellow;
+	} //end waitState
 	
 	//Kinematics
 	
@@ -127,12 +142,20 @@ public class Robot {
 	} //end getAngularVel
 	
 	/**
-	 * Get the top speed of the robot
-	 * return topSpeed - top speed of the robot in ft/s
+	 * Get the max linear speed of the robot
+	 * return maxLinSpeed - top linear speed of the robot in ft/s
 	 */
-	public double getTopSpeed() {
-		return topSpeed;
-	} //end getTopSpeed
+	public double getMaxLinSpeed() {
+		return maxLinSpeed;
+	} //end getMaxLinSpeed
+	
+	/**
+	 * Get the max angular speed of the robot
+	 * return maxAngSpeed - top angular speed of the robot in rad/s
+	 */
+	public double getMaxAngSpeed() {
+		return maxAngSpeed;
+	} //end getMaxAngSpeed
 	
 	//Pose
 	
@@ -230,6 +253,7 @@ public class Robot {
 	} //end update pose
 	
 	//Graphics
+	
 	/**
 	 * Get the color of the robot
 	 * return - color based on direction scaled to speed
@@ -237,6 +261,14 @@ public class Robot {
 	public Color getColor() {
 		return color;
 	} //end getColor
+	
+	/**
+	 * Set the color of the robot
+	 * Color c - new Color for the robot
+	 */
+	public void setColor(Color c) {
+		this.color = c;
+	} //end setColor
 	
 	/**
 	 * Get the color of the robot
@@ -250,7 +282,7 @@ public class Robot {
 	 */
 	private void updateColor() {
 		//percentage of top speed
-		double modifier = Math.abs(linearVel) / topSpeed;
+		double modifier = Math.abs(linearVel) / maxLinSpeed;
 		int val = 127 + (int) (128 * modifier);
 		
 		if (linearVel > 0) { //moving forward
@@ -262,7 +294,7 @@ public class Robot {
 		} else { //not moving
 			color = Color.YELLOW;
 		} //if
-	} //end getColor
+	} //end updateColor
 	
 	/**
 	 * Get the width of the robot in pixels

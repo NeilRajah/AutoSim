@@ -22,6 +22,25 @@ public class Util {
 	public static final double[] PRO_775 = new double[] {18730, 0.7, 0.71, 134}; //
 	public static final double[] FALCON_500 = new double[] {6380, 1.5, 4.69, 257}; //
 	
+	//Calculations
+	/*
+	 * Clamp a number between two values
+	 * double num - number to clamp
+	 * double low - bottom value
+	 * double high - high value
+	 */
+	public static double clampNum(double num, double low, double high) {
+		if (num > high) { //above limit
+			return high;
+		} else if (num < low) { //below limit
+			return low;
+		} else { //between limit
+			return num;
+		} //if
+	} //end clampNum
+	
+	//Output
+	
 	public static void println(String ... s) {
 		for(String str : s) {
 			System.out.print(s + " ");

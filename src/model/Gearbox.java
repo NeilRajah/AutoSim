@@ -96,6 +96,13 @@ public class Gearbox {
 	} //end getVel
 	
 	/**
+	 * Zero the velocity of the gearbox
+	 */
+	public void zeroVel() {
+		kVelocity = 0;
+	} //end zeroVel
+	
+	/**
 	 * Get the acceleration of the gearbox
 	 * return acceleration - acceleration of the gearbox in radians
 	 */

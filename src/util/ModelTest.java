@@ -99,8 +99,14 @@ class ModelTest {
 	}
 	
 	@Test
-	void topSpeedTest() {
+	void topLinSpeedTest() {
 		double correctTopSpeed = 12;
-		assertEquals(correctTopSpeed, r.getTopSpeed(), 1);
+		assertEquals(correctTopSpeed, r.getMaxLinSpeed(), 1);
+	}
+	
+	@Test
+	void topAngSpeedTest() {
+		double correctTopSpeed = 9.6;
+		assertEquals(correctTopSpeed, r.getMaxAngSpeed(), 1);
 	}
 }
