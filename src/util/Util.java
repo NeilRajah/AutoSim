@@ -12,6 +12,8 @@ public class Util {
 	public static final double LBS_TO_KG = 0.453592;
 	public static final double UPDATE_PERIOD = 0.005; //5ms
 	public static final double V_INTERCEPT = 0.206; //voltage required to overcome frictional losses
+	public static final int FIELD_WIDTH = 324; 
+	public static final int FIELD_HEIGHT = 324;
 	
 	//Motors (values from https://motors.vex.com/)
 	public static final double[] NEO = new double[] {5880, 1.3, 3.36, 166}; //

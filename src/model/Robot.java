@@ -39,6 +39,7 @@ public class Robot {
 	private double kPivotArm; //distance from robot center to wheel in meters (used in torque calculations)
 	private double fP; //constant used in gearbox acceleration calculation
 	private double fM; //constant used in gearbox acceleration calculation
+	private double topSpeed; //top speed of the robot
 	
 	/**
 	 * Create a robot with base parameters
@@ -78,6 +79,10 @@ public class Robot {
 		//constants used in force calculations
 		fM = (1/kMass) - (kPivotArm * kPivotArm)/kMOI;
 		fP = (1/kMass) + (kPivotArm * kPivotArm)/kMOI;
+		
+		//top speed
+		topSpeed = (Math.PI * leftGearbox.getMotorParameters()[0] * kWheelRad)/
+					(360 * leftGearbox.getGearRatio() * Util.INCHES_TO_METERS);
 	} //end computeConstants
 	
 	/**
@@ -91,6 +96,7 @@ public class Robot {
 		rightGearbox.reset();
 		angularVel = 0;
 		linearVel = 0;
+		color = Color.YELLOW;
 	} //end reset
 	
 	//Kinematics
@@ -118,6 +124,14 @@ public class Robot {
 	public double getAngularVel() {
 		return angularVel;
 	} //end getAngularVel
+	
+	/**
+	 * Get the top speed of the robot
+	 * return topSpeed - top speed of the robot in ft/s
+	 */
+	public double getTopSpeed() {
+		return topSpeed;
+	} //end getTopSpeed
 	
 	//Pose
 	
@@ -165,6 +179,9 @@ public class Robot {
 		
 		//update the pose of the robot
 		updatePose();
+		
+		//update the graphics of the robot
+		updateGraphics();
 	} //end update
 	
 	/**
@@ -210,4 +227,39 @@ public class Robot {
 		//update heading
 		heading += angularVel * Util.UPDATE_PERIOD;
 	} //end update pose
+	
+	//Graphics
+	/**
+	 * Get the color of the robot
+	 * return - color based on direction scaled to speed
+	 */
+	public Color getColor() {
+		return color;
+	} //end getColor
+	
+	/**
+	 * Get the color of the robot
+	 */
+	private void updateGraphics() {
+		updateColor();
+	} //end updateGraphics
+	
+	/**
+	 * Update the color of the robot
+	 */
+	private void updateColor() {
+		//percentage of top speed
+		double modifier = Math.abs(linearVel) / topSpeed;
+		int val = 127 + (int) (128 * modifier);
+		
+		if (linearVel > 0) { //moving forward
+			color = new Color(0, val, 0); //green
+			
+		} else if (linearVel < 0) { //reversing
+			color = new Color(val, 0, 0); //red
+			
+		} else { //not moving
+			color = Color.YELLOW;
+		} //if
+	} //end getColor
 } //end Robot

@@ -8,7 +8,12 @@
 package main;
 
 import java.awt.Toolkit;
+
 import graphics.Window;
+import model.Gearbox;
+import model.Motor;
+import model.Robot;
+import util.Util;
 
 public class AutoSim {
 	//Constants
@@ -19,15 +24,15 @@ public class AutoSim {
 	//Pixels Per Inch (ppi), used for scaling to different screen resolutions
 	public static final int ppi = (int) Math.ceil(5.0 * (SCREEN_WIDTH/3840.0));
 	
-	//Field dimensions (inches)
-	public static final int fieldWidth = 324;
-	public static final int fieldHeight = 324;
-	
 	/**
 	 * Create a Window and launch the program
 	 */
 	public static void main(String[] args) {
+		Gearbox gb = new Gearbox(8.5521, new Motor(Util.NEO), 2);
+		Robot r = new Robot(4, 153, 30, 30, gb);
+		
 		Window w = new Window();
+		w.addRobot(r);
 		w.launch();
 	} //end main
 

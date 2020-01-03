@@ -6,23 +6,23 @@
  */
 package graphics;
 
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import main.AutoSim;
+import model.Robot;
 import util.Util;
 
 public class Window extends JFrame {
 	private JPanel mainPanel; //main panel for display
+	private Environment env; //environment
+	private UIBar bar; //user interface bar
 	
 	/**
 	 * Create a window
-	 * @param width Width of the window in pixels
-	 * @param height Height of the window in pixels
+	 * Robot r - robot to be simulated
 	 */
 	public Window() {
 		super();
@@ -36,43 +36,39 @@ public class Window extends JFrame {
 	private void layoutView() {
 		//main panel that holds all components
 		mainPanel = new JPanel();
-//		mainPanel.setLayout(new GridBagLayout());
+		mainPanel.setLayout(new GridBagLayout());
 		
 		//environment where robot acts in
 //		System.out.println(AutoSim.screenWidth +" "+ AutoSim.screenHeight +" "+ (AutoSim.ppi * AutoSim.fieldWidth));
-		int width = AutoSim.ppi * AutoSim.fieldWidth;
-		int height = AutoSim.ppi * AutoSim.fieldHeight;
+		int width = AutoSim.ppi * Util.FIELD_WIDTH;
+		int height = AutoSim.ppi * Util.FIELD_HEIGHT;
 //		int width = 324, height = 324;
 		Util.println(width, height, AutoSim.ppi);
-		Environment env = new Environment(width, height);
-//		GridBagConstraints envGBC = createGBC(0,0, 1, 0.9);
+		env = new Environment(width, height);
+//		GridBagConstraints envGBC = createGBC(0,0, 1, 1);
 //		mainPanel.add(env, envGBC);
-		mainPanel.add(env);
+//		mainPanel.add(env, ComponentUtil.createGBC(0, 0));
+//		mainPanel.add(env);
 		
-		//text field (UI placeholder)
-		JTextField text = new JTextField();
-		GridBagConstraints textGBC = createGBC(0,1, 1, 0.1);
+		//UI Bar		
+		Util.println(width, height / 10);
+		bar = new UIBar(width, height / 10);
+//		GridBagConstraints barGBC = createGBC(0,1, 1, 1);
+		mainPanel.add(bar, ComponentUtil.createGBC(1, 0));
+//		JTextField text = new JTextField();
+//		GridBagConstraints textGBC = createGBC(0,1, 1, 0.1);
 //		mainPanel.add(text, textGBC);
 	} //end layoutView
 	
+	
+	
 	/**
-	 * Create a GridBagConstraints object based on parameters for the layout
-	 * int gridx - x position to contrain to
-	 * int gridy - y position to constrain to
-	 * double weightx - x weight to contrain to
-	 * double weighty - y weight to constrain to
-	 * return gbc - GridBagConstraints with parameters
+	 * Add a robot to the environment
+	 * Robot r - robot to add to environment
 	 */
-	private GridBagConstraints createGBC(int gridx, int gridy, double weightx, double weighty) {
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = gridx;
-		gbc.gridy = gridy;
-		gbc.weightx = weightx;
-		gbc.weighty = weighty;
-		gbc.fill = GridBagConstraints.BOTH; //default to filling entire cell
-		
-		return gbc;
-	} //end createGBC
+	public void addRobot(Robot r) {
+		env.addRobot(r);
+	} //end addRobot
 	
 	/**
 	 * Configure and launch the window
@@ -83,9 +79,10 @@ public class Window extends JFrame {
 		this.setContentPane(mainPanel);
 		this.setUndecorated(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.pack();
+//		this.pack();
+		this.setSize(2000, 2000);
 		this.setResizable(false); //scale window components
-		this.setLocation(0, 0); //change to center to screen
+		this.setLocation(600, 50); //change to center of screen
 		this.setVisible(true);
 	} //end launch
 

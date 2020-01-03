@@ -1,4 +1,4 @@
-package model;
+package util;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,7 +6,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import util.Util;
+import model.Gearbox;
+import model.Motor;
+import model.Point;
+import model.Robot;
 
 class ModelTest {
 	static Gearbox gb;
@@ -93,5 +96,11 @@ class ModelTest {
 		}
 		double correctSpeed = 12;
 		assertEquals(correctSpeed, r.getLinearVel(), 1);
+	}
+	
+	@Test
+	void topSpeedTest() {
+		double correctTopSpeed = 12;
+		assertEquals(correctTopSpeed, r.getTopSpeed(), 1);
 	}
 }

@@ -10,31 +10,38 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import main.AutoSim;
+import model.Robot;
 
 public class Painter {
 	
-	public static void drawRobot(Graphics2D g2) {
-		g2.translate(500, 500);
+	/**
+	 * Draw the robot to the screen
+	 * @param g2
+	 */
+	public static void drawRobot(Graphics2D g2, Robot r) {
+		//translate to center of roboot
+		g2.translate(r.getPoint().getX()*AutoSim.ppi, r.getPoint().getY()*AutoSim.ppi);
 		
-		g2.setColor(Color.GREEN);
+		g2.setColor(r.getColor());
 		int rectWidth = AutoSim.ppi * 30;
-		g2.fillRoundRect(-rectWidth/2, -rectWidth/2, rectWidth, rectWidth, 10, 10);
+		int cornerRad = AutoSim.ppi * 6;
+		g2.fillRoundRect(-rectWidth/2, -rectWidth/2, rectWidth, rectWidth, cornerRad, cornerRad);
 		
 		g2.setColor(Color.black);
 		int wheelWidth = 5;
 		int wheelLength = 30;
-		g2.fillRoundRect(-rectWidth/2 + (rectWidth - wheelLength)/2, -rectWidth/2, wheelLength, wheelWidth, 2, 2);
-		g2.fillRoundRect(-rectWidth/2 + (rectWidth - wheelLength)/2, rectWidth/2 - wheelWidth, wheelLength, wheelWidth, 2, 2);
+		g2.fillRoundRect(-rectWidth/2 + (rectWidth - wheelLength)/2, -rectWidth/2, wheelLength, wheelWidth, 5, 5);
+		g2.fillRoundRect(-rectWidth/2 + (rectWidth - wheelLength)/2, rectWidth/2 - wheelWidth, wheelLength, wheelWidth, 5, 5);
 
 		g2.setColor(Color.BLACK);
-		int r = rectWidth/2 + 15;
-		g2.drawLine(0, 0, r, 0);
+		int rad = rectWidth/2 + 15;
+		g2.drawLine(0, 0, rad, 0);
 		
 		int rHead = 10;
-		g2.translate(r, 0);
+		g2.translate(rad, 0);
 		g2.rotate(Math.toRadians(90));
 		g2.drawLine(0, 0, rHead, rHead);
 		g2.rotate(Math.toRadians(90));
 		g2.drawLine(0, 0, rHead, rHead);
-	}
+	} //end drawRobot
 } //end Painter
