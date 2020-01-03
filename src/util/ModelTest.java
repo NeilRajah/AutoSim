@@ -6,19 +6,26 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import loops.DriveDistance;
+import loops.DriveLoop;
 import model.Gearbox;
 import model.Motor;
+import model.PIDController;
 import model.Point;
 import model.Robot;
 
 class ModelTest {
 	static Gearbox gb;
 	static Robot r;
+	static DriveLoop driveLoop;
 	
 	@BeforeAll
 	public static void setUp() {
 		gb = new Gearbox(8.5521, new Motor(Util.NEO), 2); //NEO
 		r = new Robot(4, 153, 30, 30, gb);
+		PIDController drivePID = new PIDController(Util.kP_DRIVE, Util.kI_DRIVE, Util.kD_DRIVE, r.getMaxLinSpeed());
+		PIDController turnPID = new PIDController(Util.kP_TURN, Util.kI_TURN, Util.kD_TURN, r.getMaxLinSpeed());
+		driveLoop = new DriveLoop(r, drivePID, turnPID);
 	}
 	
 	@AfterEach
@@ -108,5 +115,12 @@ class ModelTest {
 	void topAngSpeedTest() {
 		double correctTopSpeed = 9.6;
 		assertEquals(correctTopSpeed, r.getMaxAngSpeed(), 1);
+	}
+	
+	@Test
+	void driveDistanceTest() {
+		DriveDistance dd = new DriveDistance(driveLoop, 100, 1, 12);
+		dd.run();
+		assertEquals(150, r.getAveragePos(), 1);
 	}
 }

@@ -15,6 +15,16 @@ public class Util {
 	public static final int FIELD_WIDTH = 324; 
 	public static final int FIELD_HEIGHT = 324;
 	
+	//PID constants
+	public static final double kP_DRIVE = 0.5;
+	public static final double kI_DRIVE = 0.0;
+	public static final double kD_DRIVE = 0.02;
+
+	public static final double kP_TURN = 0.0;
+	public static final double kI_TURN = 0.0;
+	public static final double kD_TURN = 0.0;
+	
+	
 	//Motors (values from https://motors.vex.com/)
 	public static final double[] NEO = new double[] {5880, 1.3, 3.36, 166}; //
 	public static final double[] CIM = new double[] {5330, 2.7, 2.41, 131}; //
@@ -72,4 +82,17 @@ public class Util {
 			System.out.printf("%.3f\t", num);
 		}
 	}
+	
+	/*
+	 * Pauses the thread for a specified amount of time
+	 * long delay - time in milliseconds the pause the thread
+	 */
+	public static void pause(long delay) {
+		try {
+			Thread.sleep(delay);
+		} catch (InterruptedException t) {
+			t.printStackTrace();
+		}
+	} //end pause
+
 } //end Util

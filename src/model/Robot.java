@@ -157,6 +157,30 @@ public class Robot {
 		return maxAngSpeed;
 	} //end getMaxAngSpeed
 	
+	/**
+	 * Get the position of the left gearbox
+	 * return - left gearbox position in radians
+	 */
+	public double getLeftPos() {
+		return leftGearbox.getPos();
+	} //end getLeftPos
+	
+	/**
+	 * Get the position of the right gearbox
+	 * return - right gearbox position in radians
+	 */
+	public double getRightPos() {
+		return rightGearbox.getPos();
+	} //end getRightPos
+	
+	public boolean isSlowerThanPercent(double percent) {
+		if (Math.abs(linearVel) < percent * maxLinSpeed) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	//Pose
 	
 	/**
