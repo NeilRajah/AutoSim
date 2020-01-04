@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import loops.DriveDistance;
 import loops.DriveLoop;
+import loops.DriveToGoal;
+import model.FieldPositioning;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
@@ -63,7 +65,7 @@ class ModelTest {
 			t += Util.UPDATE_PERIOD;
 		}
 		
-		Point correctPoint = new Point(-53.5, 116.9);
+		Point correctPoint = new Point(-116.9, -53.5);
 		assertEquals(correctPoint.getX(), r.getPoint().getX(), 1);
 	}
 	
@@ -78,7 +80,7 @@ class ModelTest {
 			t += Util.UPDATE_PERIOD;
 		}
 
-		Point correctPoint = new Point(-53.5, 116.9);
+		Point correctPoint = new Point(-116.9, -53.5);
 		assertEquals(correctPoint.getY(), r.getPoint().getY(), 1);
 	}
 	
@@ -121,6 +123,20 @@ class ModelTest {
 	void driveDistanceTest() {
 		DriveDistance dd = new DriveDistance(driveLoop, 100, 1, 12);
 		dd.run();
-		assertEquals(150, r.getAveragePos(), 1);
+		assertEquals(100, r.getAveragePos(), 1);
+	}
+	
+	@Test
+	void yawTest() {
+		r.setHeadingDegrees(10);
+		assertEquals(10, r.getYaw(), 1);
+	}
+	
+	@Test
+	void driveToGoalTest() {
+		DriveToGoal d2g = new DriveToGoal(driveLoop, FieldPoints.ll2Plus, 1, 12, 0, false);
+		d2g.run();
+		Util.println(d2g.getPoses().size());
+		assertEquals(1, FieldPositioning.calcDistance(FieldPoints.ll2Plus, driveLoop.getRobot().getPoint()), 1);
 	}
 }

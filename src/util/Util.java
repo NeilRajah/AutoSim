@@ -16,21 +16,20 @@ public class Util {
 	public static final int FIELD_HEIGHT = 324;
 	
 	//PID constants
-	public static final double kP_DRIVE = 0.5;
+	public static final double kP_DRIVE = 0.4; //0.32
 	public static final double kI_DRIVE = 0.0;
-	public static final double kD_DRIVE = 0.02;
+	public static final double kD_DRIVE = 1.25;
 
-	public static final double kP_TURN = 0.0;
+	public static final double kP_TURN = 0.05;
 	public static final double kI_TURN = 0.0;
-	public static final double kD_TURN = 0.0;
-	
+	public static final double kD_TURN = 0.05;
 	
 	//Motors (values from https://motors.vex.com/)
-	public static final double[] NEO = new double[] {5880, 1.3, 3.36, 166}; //
-	public static final double[] CIM = new double[] {5330, 2.7, 2.41, 131}; //
-	public static final double[] MINI_CIM = new double[] {5840, 3, 1.41, 89};  //
-	public static final double[] PRO_775 = new double[] {18730, 0.7, 0.71, 134}; //
-	public static final double[] FALCON_500 = new double[] {6380, 1.5, 4.69, 257}; //
+	public static final double[] NEO = new double[] {5880, 1.3, 3.36, 166}; 
+	public static final double[] CIM = new double[] {5330, 2.7, 2.41, 131}; 
+	public static final double[] MINI_CIM = new double[] {5840, 3, 1.41, 89}; 
+	public static final double[] PRO_775 = new double[] {18730, 0.7, 0.71, 134};
+	public static final double[] FALCON_500 = new double[] {6380, 1.5, 4.69, 257}; 
 	
 	//Calculations
 	/*

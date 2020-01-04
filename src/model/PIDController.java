@@ -20,7 +20,6 @@ public class PIDController {
 //	private double setpoint; //goal value controller is trying to reach
 	private double errorSum; //sum of all errors
 	private double lastError; //previous error
-//	private double epsilon; //range to be within to be considered "at goal"
 	private boolean atTarget; //whether within epsilon bounds
 
 	/**
@@ -73,6 +72,15 @@ public class PIDController {
 		return kD;
 	} //end getD
 	
+	/**
+	 * Reset the controller for the next set of calculations
+	 */
+	public void reset() {
+		errorSum = 0;
+		lastError = 0;
+		atTarget = false;
+	} //end reset
+	
 	//Calculations
 	
 	/**
@@ -82,10 +90,7 @@ public class PIDController {
 	 * double epsilon - range the controller can be in to be considered "at goal"
 	 * return - calculated PID output in volts
 	 */
-	public double calcPID(double setpoint, double current, double epsilon) {
-		//set attributes
-//		this.setpoint = setpoint;
-		
+	public double calcPID(double setpoint, double current, double epsilon) {		
 		//calculate error
 		double error = setpoint - current;
 		
@@ -100,7 +105,9 @@ public class PIDController {
 		double iOut = kI * errorSum;
 		
 		//derivative output
-		double dOut = kD * (error - lastError);
+		double dOut = 0;
+		if (lastError != 0)
+			dOut = kD * (error - lastError);
 		lastError = error;
 		
 		return pOut + iOut + dOut;

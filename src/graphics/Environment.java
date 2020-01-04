@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
+import model.Pose;
 import model.Robot;
 
 public class Environment extends JComponent implements Component {
@@ -27,8 +28,10 @@ public class Environment extends JComponent implements Component {
 	private int height; //height of the environment
 	
 	private BufferedImage field; //field image
-	private ArrayList<Robot> robots; //robots
 	private UIBar bar; //user interface bar to update
+	
+	private ArrayList<Pose> poses;
+	private int poseIndex;
 	
 	/**
 	 * The environment the robot is simulated in
@@ -50,19 +53,28 @@ public class Environment extends JComponent implements Component {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} //try-catch
 		
-		//initialize list of robots
-		robots = new ArrayList<Robot>();
+		//reset values
+		poseIndex = 0;
 	} //end constructor
 	
-	//Robot
+	//Pose
 	
-	/**
-	 * Add a robot to the list
-	 * Robot r - robot to add to the list
-	 */
-	public void addRobot(Robot r) {
-		robots.add(r);
-	} //end addRobot
+	public void addPoses(ArrayList<Pose> poses) {
+		this.poses = poses;
+	}
+	
+	public void incrementPoseIndex() {
+		poseIndex++;
+		repaint();
+	}
+	
+	public void resetPoseIndex() {
+		poseIndex = 0;
+	}
+	
+	public void setPoseIndex(int index) {
+		poseIndex = index;
+	}
 	
 	//Graphics
 	
@@ -108,9 +120,12 @@ public class Environment extends JComponent implements Component {
 		g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
 
 		//draw all robots
-		for (Robot r : robots) {
-			Painter.drawRobot(g2, r); //draw the robot
-		} //loop
+//		for (Robot r : robots) {
+//			Painter.drawRobot(g2, r); //draw the robot
+//		} //loop
+		if (poses != null) {
+			Painter.drawPose(g2, poses.get(poseIndex));
+		}
 	} //end paintComponent
 	
 	//User Interaction

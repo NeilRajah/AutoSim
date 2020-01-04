@@ -8,10 +8,14 @@ package loops;
 
 import java.util.ArrayList;
 
+import model.Pose;
+import util.Util;
+
 public abstract class CommandGroup {
 	//Attributes
 	private ArrayList<Command> commands; //all commands to be run
 	private boolean isRunning = false; //whether the command is running
+	private ArrayList<Pose> poses;
 	
 	/*
 	 * Create a command group
@@ -25,6 +29,7 @@ public abstract class CommandGroup {
 	 */
 	private void initialize() {
 		commands = new ArrayList<Command>();
+		poses = new ArrayList<Pose>();
 	} //end initialize
 	
 	/*
@@ -42,6 +47,8 @@ public abstract class CommandGroup {
 		isRunning = true;
 //		boolean commandRunning = false;
 		
+		Util.println("CG:", commands.size());
+		
 		for (int i = 0; i < commands.size(); i++) {
 //			if (!commandRunning) {
 //				commands.get(i).run();
@@ -54,6 +61,8 @@ public abstract class CommandGroup {
 //			} //if
 			
 			commands.get(i).run();
+			poses.addAll(commands.get(i).getPoses());
+			System.out.println("poses length: " + commands.get(i).getPoses().size());
 			
 //			if (commands.get(i).isRunning()) {
 //				if (commands.get(i).isFinished()) {
@@ -73,4 +82,8 @@ public abstract class CommandGroup {
 	public boolean isRunning() {
 		return isRunning;
 	} //end isRunning
+	
+	public ArrayList<Pose> getPoses() {
+		return poses;
+	}
 } //end class

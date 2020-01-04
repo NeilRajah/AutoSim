@@ -7,11 +7,13 @@
 package graphics;
 
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import main.AutoSim;
+import model.Pose;
 import model.Robot;
 import util.Util;
 
@@ -56,20 +58,20 @@ public class Window extends JFrame {
 		env.addMouseMotionListener(envCtrl);
 	} //end layoutView
 	
-	/**
-	 * Add a robot to the environment
-	 * Robot r - robot to add to environment
-	 */
-	public void addRobot(Robot r) {
-		env.addRobot(r);
-	} //end addRobot
+	public void addPoses(ArrayList<Pose> poses) {
+		env.addPoses(poses);
+	}
+	
+	public void incrementPoseIndex() {
+		env.incrementPoseIndex();
+	}
 	
 	/**
 	 * Configure and launch the window
 	 */
 	public void launch() {
 		//configure frame and set it to visible
-		this.setTitle("AutoSim");
+		this.setTitle("AutoSim by Neil Balaskandarajah");
 		this.setContentPane(mainPanel);
 		this.setUndecorated(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

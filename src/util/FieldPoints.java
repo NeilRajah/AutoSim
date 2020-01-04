@@ -14,6 +14,7 @@ public class FieldPoints {
 	 //level 2
     public static final Point RIGHT_LEVEL_2 = new Point(207, 40);
     public static final Point LEFT_LEVEL_2 = new Point(117, 40);
+    public static final Point ll2Plus = new Point(150, 140);
 
     //off platform
     public static final Point RIGHT_OFF_PLATFORM = new Point(207, 115);

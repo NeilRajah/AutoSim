@@ -94,7 +94,8 @@ public class Robot {
 	public void reset() {
 		averagePos = 0;
 		heading = 0;
-		point = new Point(162, kLength/(2 * Util.INCHES_TO_METERS) + 2); //middle platform
+//		point = new Point(162, kLength/(2 * Util.INCHES_TO_METERS) + 2); //middle platform
+		point = new Point(0,0);
 		leftGearbox.reset();
 		rightGearbox.reset();
 		angularVel = 0;
@@ -192,6 +193,31 @@ public class Robot {
 	} //end getPoint
 	
 	/**
+	 * Get the x position of the robot
+	 * return - x position of robot
+	 */
+	public double getX() {
+		return point.getX();
+	} //end getX
+	
+	/**
+	 * Get the y position of the robot
+	 * return - y position of robot
+	 */
+	public double getY() {
+		return point.getY();
+	} //end getY
+	
+	public void setXY(Point p) {
+		point = new Point(p.getX(), p.getY());
+	}
+	
+	public Pose getPose() {
+		return new Pose(new Point(point.getX(), point.getY()), heading, 
+						new Color(color.getRed(), color.getGreen(), color.getBlue()));	
+	}
+	
+	/**
 	 * Get the heading of the robot
 	 * return heading - heading of the robot in radians
 	 */
@@ -206,6 +232,37 @@ public class Robot {
 	public void setHeading(double heading) {
 		this.heading = heading;
 	} //end setHeading
+	
+	public void setHeadingDegrees(double heading) {
+		this.heading = Math.toRadians(heading);
+	}
+	
+	/**
+	 * Get the yaw of the robot in degrees
+	 * return yaw - robot yaw in degrees
+	 */
+	public double getYaw() {
+		yaw = Math.toDegrees(heading);
+
+		// normalize to 0-360 degree range
+		if (yaw > 360) {
+			while (yaw > 360) {
+				yaw -= 360;
+			}
+		} else if (yaw < 0) {
+			while (yaw < 0) {
+				yaw += 360;
+			}
+		}
+
+		// set to negative if greater than 180
+		if (yaw > 180) {
+			yaw -= 360;
+		}
+
+		return yaw;
+	} // end getYaw
+
 
 	//Dynamics
 	
@@ -215,6 +272,9 @@ public class Robot {
 	 * @param rightVoltage - voltage applied to right gearbox
 	 */
 	public void update(double leftVoltage, double rightVoltage) {
+		leftVoltage = Util.clampNum(leftVoltage, -12, 12);
+		rightVoltage = Util.clampNum(rightVoltage, -12, 12);
+		
 		//calculate force exerted by each gearbox on robot
 		double leftForce = leftGearbox.calcTorque(leftVoltage) / kWheelRad;
 		double rightForce = rightGearbox.calcTorque(rightVoltage) / kWheelRad;
@@ -269,7 +329,7 @@ public class Robot {
 		
 		//update average position and coordinates
 		double newPos = disp * kWheelRad / Util.INCHES_TO_METERS;
-		point.translate(newPos - averagePos, heading);
+		point.translate(newPos - averagePos, heading + Math.PI/2);
 		averagePos = newPos;
 		
 		//update heading
@@ -306,7 +366,7 @@ public class Robot {
 	 */
 	private void updateColor() {
 		//percentage of top speed
-		double modifier = Math.abs(linearVel) / maxLinSpeed;
+		double modifier = Math.min(1, Math.abs(linearVel) / maxLinSpeed);
 		int val = 127 + (int) (128 * modifier);
 		
 		if (linearVel > 0) { //moving forward

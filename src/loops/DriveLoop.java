@@ -12,6 +12,7 @@ import model.FieldPositioning;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import util.Util;
 
 public class DriveLoop {
 	//Attributes
@@ -23,13 +24,13 @@ public class DriveLoop {
 	//Updated
 	private STATE state; //state the robot is in
 	
-	private Point goalPoint; //point to drive to
-	private double goalDist; //distance to drive
-	private double tolerance; //epsilon to be within
-	private double topSpeed; //max allowable speed
-	private double minSpeed; //min allowable speed
-	private double goalAngle; //angle to turn to
-	private double goalYaw; //yaw to turn to
+	private Point goalPoint; 	//point to drive to
+	private double goalDist; 	//distance to drive
+	private double tolerance; 	//epsilon to be within
+	private double topSpeed; 	//max allowable speed
+	private double minSpeed; 	//min allowable speed
+	private double goalAngle; 	//angle to turn to
+	private boolean reverse; 	//driving backwards or not
 	
 	//States
 	public static enum STATE {
@@ -57,7 +58,6 @@ public class DriveLoop {
 		goalPoint = robot.getPoint();
 		goalDist = 0;
 		goalAngle = 0;
-		goalYaw = 0;
 		minSpeed = 0;
 		topSpeed = 0;
 		tolerance = 0;
@@ -143,44 +143,70 @@ public class DriveLoop {
 		this.goalAngle = robot.getHeading();
 		
 		this.state = STATE.DRIVE_DISTANCE;
+		
+		drivePID.reset();
+		turnPID.reset();
 	}
 	
 	private void driveDistanceLoop() {
-		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
+//		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
+		double driveOut = drivePID.calcPID(goalDist, robot.getAveragePos(), tolerance);
 		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), 1);
 		
-		robot.update(driveOut + turnOut, driveOut - turnOut);
+		robot.update(driveOut - turnOut, driveOut + turnOut);
 	}
 	
 	//turn angle
 	
-	public void setTurnAngle(double angle, double tolerance) {
+	public void setTurnAngle(double angle, double topSpeed, double tolerance) {
 		this.goalAngle = angle;
+		this.topSpeed = topSpeed;
 		this.tolerance = tolerance;
 		
 		this.state = STATE.TURN_ANGLE;
+		
+		drivePID.reset();
+		turnPID.reset();
 	}
 	
 	private void turnAngleLoop() {
-		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), 1);
+//		double turnOut = turnPID.calcRegulatedPID(goalAngle, robot.getHeading(), tolerance, topSpeed, 0);
+		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), tolerance);
 		
-		robot.update(turnOut, -turnOut);
+		robot.update(-turnOut, turnOut);
 	}
 	
 	//drive to goal
 	
-	public void setDriveToGoal(Point goal, double epsilon, double topSpeed, double minSpeed, boolean reverse) {
-		this.goalDist = FieldPositioning.calcDistance(goal, robot.getPoint());
-		this.tolerance = epsilon;
+	public void setDriveToGoal(double dist, double yaw, double range, double topSpeed, double minSpeed, boolean reverse) {
+		updateDriveToGoal(dist, yaw, range, topSpeed, minSpeed, reverse);
+		
+		drivePID.reset();
+		turnPID.reset();
+	}
+	
+	public void updateDriveToGoal(double dist, double yaw, double range, double topSpeed, double minSpeed, boolean reverse) {
+		this.goalDist = dist;
+		this.goalAngle = yaw;
+		this.tolerance = range;
 		this.topSpeed = topSpeed;
 		this.minSpeed = minSpeed;
+		this.reverse = reverse;
 		
 		this.state = STATE.DRIVE_TO_GOAL;
 	}
 	
 	private void driveToGoalLoop() {
 		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
-		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), 1);
+		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), Math.toRadians(1));
+
+//		Util.println(driveOut, turnOut);
+//		Util.println("distError:", goalDist - robot.getAveragePos());
+//		Util.println("angleError:", goalAngle - robot.getHeading());
+//		Util.println("driveOut:", driveOut);
+//		Util.println("turnout:", turnOut);
+		Util.println(goalDist);
+		System.out.println();
 		
 		robot.update(driveOut + turnOut, driveOut - turnOut);
 	}

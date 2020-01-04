@@ -6,6 +6,10 @@
  */
 package loops;
 
+import java.util.ArrayList;
+
+import model.Pose;
+
 public abstract class Command implements Runnable {
 	//Attributes
 	private boolean isRunning; //whether the command is running or not
@@ -57,4 +61,9 @@ public abstract class Command implements Runnable {
 	public boolean isRunning() {
 		return isRunning;
 	} //end isRunning
+	
+	/*
+	 * Get the list of poses 
+	 */
+	public abstract ArrayList<Pose> getPoses(); 
 } //end class
