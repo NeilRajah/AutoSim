@@ -14,7 +14,7 @@ import graphics.Window;
 import loops.Command;
 import loops.CommandGroup;
 import loops.DriveLoop;
-import loops.TestGroup;
+import loops.EightCellAuto;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
@@ -63,9 +63,9 @@ public class AutoSim {
 	} //end main
 	
 	private static void initialize() {
-		Gearbox gb = new Gearbox(8.5521, new Motor(Util.NEO), 2);
-		Robot r = new Robot(4, 153, 30, 30, gb);
-		r.setXY(FieldPoints.LEFT_LEVEL_2);
+		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2);
+		Robot r = new Robot(6, 153, 30, 30, gb);
+		r.setXY(FieldPoints.AUTO_SHOT);
 		Painter.length = r.getLengthPixels();
 		Painter.width = r.getWidthPixels();
 		
@@ -78,7 +78,10 @@ public class AutoSim {
 		
 //		c.run();
 		
-		cg = new TestGroup();
+//		cg = new TrenchCycleLow();
+//		cg = new TrenchCycleFast();
+//		cg = new TrenchCycleLong();
+		cg = new EightCellAuto();
 		cg.start();
 	}
 } //end AutoSim

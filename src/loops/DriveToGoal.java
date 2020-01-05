@@ -13,6 +13,7 @@ public class DriveToGoal extends Command {
 	
 	private Point goalPoint; //goal point to drive to
 	private double initDist;
+	private double initHeading;
 	private double scale;
 	
 	private double setpoint;
@@ -43,6 +44,7 @@ public class DriveToGoal extends Command {
 	@Override
 	protected void initialize() {
 		initDist = driveLoop.getRobot().getAveragePos();
+		initHeading = driveLoop.getRobot().getHeading();
 		updateSetpoints();
 		driveLoop.setDriveToGoal(setpoint, goalAngle, tolerance, topSpeed*scale, minSpeed, reverse);
 	}
@@ -51,6 +53,7 @@ public class DriveToGoal extends Command {
 	protected void execute() {	
 		updateSetpoints();
 		driveLoop.updateDriveToGoal(setpoint, goalAngle, tolerance, topSpeed*scale, minSpeed, reverse);
+//		Util.println("scaled top speed:", topSpeed*scale, scale, topSpeed);
 		driveLoop.onLoop();		
 		
 		counter++;
@@ -58,7 +61,9 @@ public class DriveToGoal extends Command {
 
 	@Override
 	protected void savePose() {
-		poses.add(driveLoop.getRobot().getPose());
+		Pose pose = driveLoop.getRobot().getPose();
+		poses.add(pose);
+//		Util.println("Poses:", counter, pose.getPoint().getX(), pose.getPoint().getY(), pose.getHeading());
 	}
 
 	@Override
@@ -66,9 +71,9 @@ public class DriveToGoal extends Command {
 		if (FieldPositioning.isWithinBounds(goalPoint, driveLoop.getRobot().getPoint(), tolerance)) {
 			return true;
 		} 
-		else if (counter >= 5/Util.UPDATE_PERIOD) {
-			return true;
-		} 
+//		else if (counter >= 2/Util.UPDATE_PERIOD) {
+////			return true;
+//		} 
 		else {
 			return false;
 		}
@@ -93,30 +98,41 @@ public class DriveToGoal extends Command {
 			setpoint = driveLoop.getRobot().getAveragePos() + (reverse ? -dist : dist);
 			
 			//yaw setpoint
+//			Util.println("robot yaw:", driveLoop.getRobot().getYaw());
 			double yaw = FieldPositioning.calcGoalYaw(driveLoop.getRobot().getPoint(), goalPoint);
 			yaw = yaw + (reverse ? -Math.signum(yaw)*180 : 0);
-			
+//			Util.println("relative yaw:", yaw);
+//			
 			double deltaAngle = yaw - driveLoop.getRobot().getYaw();
-			
+//			Util.println("deltaAngle:", deltaAngle);
+//			
 			if (Math.abs(deltaAngle) >= (360 - Math.abs(deltaAngle))) {
 				yaw = (Math.signum(driveLoop.getRobot().getYaw()* 180 - driveLoop.getRobot().getYaw())
 								- (Math.signum(yaw)*180 - yaw));
+			} else {
+				yaw = deltaAngle;
 			}
-			goalAngle = yaw + driveLoop.getRobot().getHeading();
+//			Util.println("wrapped yaw:", yaw);
+			goalAngle = Math.toRadians(yaw) + driveLoop.getRobot().getHeading();
+//			Util.println("goalAngle:", Math.toDegrees(yaw));
+//			goalAngle = FieldPositioning.calcAngleRad(driveLoop.getRobot().getPoint(), goalPoint)
+//						+ driveLoop.getRobot().getHeading();
+//			goalAngle = Math.toRadians(yaw);
 		}
 		
 		//scale
-		double dA = Math.abs(goalAngle - driveLoop.getRobot().getHeading());
+		double dA = Math.abs(Math.toDegrees(goalAngle - driveLoop.getRobot().getHeading()));
 		scale = calcScale(dA);
+//		scale = 1.0;
 		
-		Util.println("Setpoints:", setpoint, goalAngle, topSpeed*scale);
+//		Util.println("scale:", scale);
+//		Util.println("Setpoints:", setpoint, goalAngle, topSpeed*scale);
 	}
 	
 	/**
 	 * Calculate the scalar value for the linear output based on the heading error
 	 */
 	private double calcScale(double dA) {
-		
 		//if difference is greater than 90
 		if (dA > 90) {
 			return 0; //do not move linearly, only turn

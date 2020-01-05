@@ -9,6 +9,8 @@ package graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
+import util.Util;
+
 public class EnvironmentController implements MouseMotionListener {
 	//Attributes
 	Environment env;

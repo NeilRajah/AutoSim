@@ -12,20 +12,22 @@ public class TurnAngle extends Command {
 	private double tolerance;
 	private double topSpeed;
 	private double angle;
+	private boolean relative;
 	double initTime = System.currentTimeMillis();
 	
-	public TurnAngle(DriveLoop loop, double angle, double tolerance, double topSpeed) {
+	public TurnAngle(DriveLoop loop, double angle, double tolerance, double topSpeed, boolean relative) {
 		this.loop = loop;
 		
 		this.angle = Math.toRadians(angle);
 		this.tolerance = Math.toRadians(tolerance);
 		this.topSpeed = topSpeed;
+		this.relative = relative;
 		poses = new ArrayList<Pose>();
 	}
 
 	@Override
 	protected void initialize() {
-		loop.setTurnAngle(angle, topSpeed, tolerance);
+		loop.setTurnAngle(angle, topSpeed, tolerance, relative);
 	}
 
 	@Override

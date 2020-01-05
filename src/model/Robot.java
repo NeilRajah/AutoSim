@@ -263,6 +263,10 @@ public class Robot {
 		return yaw;
 	} // end getYaw
 
+	public void setYaw(double yaw) {
+		this.yaw = yaw;
+		this.heading = Math.toRadians(yaw);
+	}
 
 	//Dynamics
 	
@@ -329,7 +333,7 @@ public class Robot {
 		
 		//update average position and coordinates
 		double newPos = disp * kWheelRad / Util.INCHES_TO_METERS;
-		point.translate(newPos - averagePos, heading + Math.PI/2);
+		point.translate(newPos - averagePos, heading);
 		averagePos = newPos;
 		
 		//update heading

@@ -6,6 +6,8 @@
  */
 package model;
 
+import util.Util;
+
 public class FieldPositioning {
 
 	/**
@@ -17,6 +19,7 @@ public class FieldPositioning {
 	public static double calcGoalYaw(Point current, Point goal) {
 		double dx = goal.getX() - current.getX();
 		double dy = goal.getY() - current.getY();
+//		Util.println("dx,dy:", dx, dy);
 		
 		double goalYaw = 0;
 		

@@ -62,7 +62,7 @@ public abstract class CommandGroup {
 			
 			commands.get(i).run();
 			poses.addAll(commands.get(i).getPoses());
-			System.out.println("poses length: " + commands.get(i).getPoses().size());
+//			System.out.println("poses length: " + commands.get(i).getPoses().size());
 			
 //			if (commands.get(i).isRunning()) {
 //				if (commands.get(i).isFinished()) {
@@ -74,6 +74,8 @@ public abstract class CommandGroup {
 		} //loop
 		
 		isRunning = false;
+		
+		Util.println("TIME:", poses.size() * Util.UPDATE_PERIOD);
 	} //end start
 	
 	/*

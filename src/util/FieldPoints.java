@@ -11,48 +11,34 @@ import model.Point;
 
 public class FieldPoints {
 	//Points
-	 //level 2
-    public static final Point RIGHT_LEVEL_2 = new Point(207, 40);
-    public static final Point LEFT_LEVEL_2 = new Point(117, 40);
-    public static final Point ll2Plus = new Point(150, 140);
-
-    //off platform
-    public static final Point RIGHT_OFF_PLATFORM = new Point(207, 115);
-    public static final Point LEFT_OFF_PLATFORM = new Point(117, 115);
-
-    //rocket
-    public static final Point RIGHT_CLOSE_ROCKET = new Point(283,165);
-    public static final Point RIGHT_FAR_ROCKET = new Point(264,285);
-
-    public static final Point RIGHT_ROCKET = new Point(312,230);
-    public static final Point CLOSE_RIGHT_ROCKET_SCORE = new Point(299, 195);
-
-    public static final Point LEFT_CLOSE_ROCKET = new Point(41,165);
-    public static final Point LEFT_FAR_ROCKET = new Point(60, 295);
-    public static final Point LEFT_ROCKET = new Point(12,230);
-    public static final Point CLOSE_LEFT_ROCKET_SCORE = new Point(25, 195);
-
-    //feeder
-    public static final Point PRE_RIGHT_FEEDER = new Point(300, 60);
-    public static final Point RIGHT_FEEDER = new Point(300, 0);
-
-    public static final Point PRE_LEFT_FEEDER = new Point(24, 60);
-    public static final Point LEFT_FEEDER = new Point(24, 18); //24,0
-
-    //ejection distances
-    public static final double CARGO_SHIP_EJECT_DIST = 6.5;
-    public static final double ROCKET_EJECT_DIST = 3;
-
-    //cargo ship
-    public static final Point CLOSE_RIGHT_CARGO_PRE_SCORE = new Point(230, 260);
-    public static final Point MID_RIGHT_CARGO_PRE_SCORE = new Point(230, 286);
-    public static final Point PRE_CLOSE_RIGHT_CARGO = new Point(134, 235);
-    public static final Point CLOSE_RIGHT_CARGO = new Point(176, 254);
-    public static final Point MID_RIGHT_CARGO = new Point(176, 280);
-
-    public static final Point CLOSE_LEFT_CARGO_PRE_SCORE = new Point(94, 260);
-    public static final Point MID_LEFT_CARGO_PRE_SCORE = new Point(94, 286);
-    public static final Point PRE_CLOSE_LEFT_CARGO = new Point(190, 235);
-    public static final Point CLOSE_LEFT_CARGO = new Point(148, 254);
-    public static final Point MID_LEFT_CARGO = new Point(148, 280);
+	public static final Point MID_INITIATION = new Point(162, 522);
+	
+	public static final Point GOAL_TEST = new Point(192, 580);
+	
+	public static final Point MID_BLUE = new Point(202, 344);
+	public static final Point MID_RED = new Point(118, 301);
+	
+	public static final Point LOADING_BLUE = new Point(222, 15);
+	public static final Point LOADING_RED = new Point(100,634);
+	
+	public static final Point TARGET_BLUE = new Point(231, 630);
+	public static final Point TARGET_RED = new Point(94, 15);
+	
+	public static final Point CONTROL_PANEL_BLUE = new Point(293, 214);
+	public static final Point CONTROL_PANEL_RED = new Point(25, 433);
+	
+	public static final Point TRENCH_SHOT_BLUE = new Point(293, 414);
+	public static final Point TRENCH_SHOT_RED = new Point(25, 233);
+	
+	public static final Point RDVZ = new Point(233, 440);
+	public static final Point RDVZ_MID = new Point(232, 314);
+	public static final Point RDVZ_MID2 = new Point(222, 264);
+	
+	public static final Point AUTO_POS_ONE = new Point(138, 430);
+	public static final Point AUTO_POS_TWO = new Point(146, 398);
+	public static final Point AUTO_POS_THREE = new Point(178, 411);
+	public static final Point AUTO_POS_FOUR = new Point(200, 405);
+	public static final Point AUTO_POS_FIVE = new Point(212, 370);
+	public static final Point AUTO_SHOT = new Point(248,522);
+	
 } //end class

@@ -158,8 +158,8 @@ public class DriveLoop {
 	
 	//turn angle
 	
-	public void setTurnAngle(double angle, double topSpeed, double tolerance) {
-		this.goalAngle = angle;
+	public void setTurnAngle(double angle, double topSpeed, double tolerance, boolean relative) {
+		this.goalAngle = angle + (relative ? robot.getHeading() : 0);
 		this.topSpeed = topSpeed;
 		this.tolerance = tolerance;
 		
@@ -198,17 +198,21 @@ public class DriveLoop {
 	
 	private void driveToGoalLoop() {
 		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
+//		double driveOut = drivePID.calcPID(goalDist, robot.getAveragePos(), tolerance);
 		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), Math.toRadians(1));
 
+//		driveOut = 0;
+//		turnOut = 0;
 //		Util.println(driveOut, turnOut);
 //		Util.println("distError:", goalDist - robot.getAveragePos());
 //		Util.println("angleError:", goalAngle - robot.getHeading());
 //		Util.println("driveOut:", driveOut);
 //		Util.println("turnout:", turnOut);
-		Util.println(goalDist);
-		System.out.println();
+//		Util.println(goalDist);
+//		System.out.println();
+//		Util.println("d2g loop:", driveOut, turnOut);
 		
-		robot.update(driveOut + turnOut, driveOut - turnOut);
+		robot.update(driveOut - turnOut, driveOut + turnOut);
 	}
 	
 } //end class

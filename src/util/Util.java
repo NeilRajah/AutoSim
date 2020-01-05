@@ -12,7 +12,7 @@ public class Util {
 	public static final double LBS_TO_KG = 0.453592;
 	public static final double UPDATE_PERIOD = 0.005; //5ms
 	public static final double V_INTERCEPT = 0.206; //voltage required to overcome frictional losses
-	public static final int FIELD_WIDTH = 324; 
+	public static final int FIELD_WIDTH = 648; 
 	public static final int FIELD_HEIGHT = 324;
 	
 	//PID constants
@@ -20,7 +20,7 @@ public class Util {
 	public static final double kI_DRIVE = 0.0;
 	public static final double kD_DRIVE = 1.25;
 
-	public static final double kP_TURN = 0.05;
+	public static final double kP_TURN = 7.5;
 	public static final double kI_TURN = 0.0;
 	public static final double kD_TURN = 0.05;
 	

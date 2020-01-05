@@ -28,11 +28,14 @@ class ModelTest {
 		PIDController drivePID = new PIDController(Util.kP_DRIVE, Util.kI_DRIVE, Util.kD_DRIVE, r.getMaxLinSpeed());
 		PIDController turnPID = new PIDController(Util.kP_TURN, Util.kI_TURN, Util.kD_TURN, r.getMaxLinSpeed());
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
+		r.setXY(FieldPoints.MID_INITIATION);
 	}
 	
 	@AfterEach
 	public void reset() {
 		r.reset();
+		r.setXY(FieldPoints.MID_INITIATION);
+//		r.setXY(new Point(0,0));
 	}
 	
 	@Test
@@ -134,9 +137,9 @@ class ModelTest {
 	
 	@Test
 	void driveToGoalTest() {
-		DriveToGoal d2g = new DriveToGoal(driveLoop, FieldPoints.ll2Plus, 1, 12, 0, false);
+		DriveToGoal d2g = new DriveToGoal(driveLoop, FieldPoints.GOAL_TEST, 1, 12, 0, false);
 		d2g.run();
 		Util.println(d2g.getPoses().size());
-		assertEquals(1, FieldPositioning.calcDistance(FieldPoints.ll2Plus, driveLoop.getRobot().getPoint()), 1);
+		assertEquals(1, FieldPositioning.calcDistance(FieldPoints.GOAL_TEST, driveLoop.getRobot().getPoint()), 1);
 	}
 }

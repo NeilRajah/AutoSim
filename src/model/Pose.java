@@ -49,4 +49,8 @@ public class Pose {
 	public Color getColor() {
 		return color;
 	} //end getColor
+	
+	public void setColor(Color clr) {
+		this.color = clr;
+	}
 } //end class

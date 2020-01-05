@@ -60,7 +60,7 @@ public class Point {
 	 * double angle - angle to translate the point at
 	 */
 	public void translate(double magnitude, double angle) {
-		this.x += magnitude * Math.cos(angle);
-		this.y += magnitude * Math.sin(angle);
+		this.x += magnitude * Math.sin(angle);
+		this.y += magnitude * Math.cos(angle);
 	} //end translate
 } //end Point

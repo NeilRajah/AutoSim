@@ -19,8 +19,10 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
+import main.AutoSim;
+import model.Point;
 import model.Pose;
-import model.Robot;
+import util.FieldPoints;
 
 public class Environment extends JComponent implements Component {
 	//Attributes
@@ -48,7 +50,7 @@ public class Environment extends JComponent implements Component {
 		
 		//open field image
 		try {
-			field = ImageIO.read(getClass().getResource("/resources/2019Field.jpeg"));
+			field = ImageIO.read(getClass().getResource("/resources/2020Field.png"));
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} //try-catch
@@ -112,12 +114,19 @@ public class Environment extends JComponent implements Component {
 		//white background, will be replaced by field or grid
 		g2.drawImage(field, 0, 0, null);
 		
-		//move origin to bottom left
-		g2.scale(1.0, -1.0);
-		g2.translate(0, -height);
+//		move origin to bottom left
+//		g2.scale(1.0, 1.0);
+//		g2.translate(0, 0);
 		
 		//stroke for lines
 		g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+		
+//		g2.setColor(Color.blue);
+//		g2.fillOval((int) (AutoSim.ppi * FieldPoints.MID_INITIATION.getY()), 
+//					(int) (AutoSim.ppi * FieldPoints.MID_INITIATION.getX()), 50, 50);
+//
+//		g2.fillOval((int) (AutoSim.ppi * FieldPoints.GOAL_TEST.getY()), 
+//					(int) (AutoSim.ppi * FieldPoints.GOAL_TEST.getX()), 50, 50);
 
 		//draw all robots
 //		for (Robot r : robots) {
@@ -126,6 +135,7 @@ public class Environment extends JComponent implements Component {
 		if (poses != null) {
 			Painter.drawPose(g2, poses.get(poseIndex));
 		}
+//		Painter.drawPose(g2, new Pose(FieldPoints.MID_INITIATION, Math.PI/2, Color.GREEN));
 	} //end paintComponent
 	
 	//User Interaction

@@ -77,7 +77,7 @@ public class Window extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setResizable(false); //scale window components
-		this.setLocation(600, 50); //change to center of screen
+		this.setLocation(0, 50); //change to center of screen
 		this.setVisible(true);
 	} //end launch
 

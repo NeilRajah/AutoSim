@@ -124,9 +124,11 @@ public class PIDController {
 	 */
 	public double calcRegulatedPID(double setpoint, double current, double epsilon, double topSpeed, double minSpeed) {
 		double output = calcPID(setpoint, current, epsilon);
-		double topLimit = 12 * (topSpeed / this.topSpeed);
-		double botLimit = 12 * (minSpeed / this.topSpeed);
+		double topLimit = 12 * (Math.abs(topSpeed) / this.topSpeed);
+		double botLimit = -12 * (Math.abs(topSpeed) / this.topSpeed);
+//		Util.println("output:", output, topLimit, botLimit, topSpeed, this.topSpeed);
 		
-		return Util.clampNum(output, botLimit, topLimit);
+		return Math.signum(topSpeed) * Util.clampNum(output, botLimit, topLimit);
+//		return output;
 	} //end calcRegulatedPID
 } //end class
