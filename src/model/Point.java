@@ -14,8 +14,8 @@ public class Point {
 	
 	/**
 	 * Create an (x,y) point
-	 * double x - x-value of the point
-	 * double y - y-value of the point
+	 * @param x - x-value of the point
+	 * @param y - y-value of the point
 	 */
 	public Point(double x, double y) {
 		this.x = x;
@@ -24,7 +24,7 @@ public class Point {
 
 	/**
 	 * Get the x value of the point
-	 * return x - x value of the point
+	 * @return x - x value of the point
 	 */
 	public double getX() {
 		return x;
@@ -32,7 +32,7 @@ public class Point {
 	
 	/**
 	 * Set the x value of the point
-	 * double x - new x value for the point
+	 * @param x - new x value for the point
 	 */
 	public void setX(double x) {
 		this.x = x;
@@ -40,7 +40,7 @@ public class Point {
 	
 	/**
 	 * Get the y value of the point
-	 * return y - y value of the point
+	 * @return y - y value of the point
 	 */
 	public double getY() {
 		return y;
@@ -48,7 +48,7 @@ public class Point {
 	
 	/**
 	 * Set the y value of the point
-	 * double y - new y value for the point
+	 * @param y - new y value for the point
 	 */
 	public void setY(double y) {
 		this.y = y;
@@ -56,11 +56,12 @@ public class Point {
 	
 	/**
 	 * Translate the point a given magnitude at a given angle
-	 * double magnitude - distance to translate the point
-	 * double angle - angle to translate the point at
+	 * @param magnitude - distance to translate the point
+	 * @param angle - angle to translate the point at
 	 */
 	public void translate(double magnitude, double angle) {
-		this.x += magnitude * Math.sin(angle);
+		//sin and cos flipped because x and y of field are flipped
+		this.x += magnitude * Math.sin(angle); 
 		this.y += magnitude * Math.cos(angle);
 	} //end translate
 } //end Point

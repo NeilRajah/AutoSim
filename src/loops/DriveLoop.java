@@ -8,11 +8,8 @@ package loops;
 
 import java.awt.Color;
 
-import model.FieldPositioning;
 import model.PIDController;
-import model.Point;
 import model.Robot;
-import util.Util;
 
 public class DriveLoop {
 	//Attributes
@@ -23,29 +20,25 @@ public class DriveLoop {
 	
 	//Updated
 	private STATE state; //state the robot is in
-	
-	private Point goalPoint; 	//point to drive to
 	private double goalDist; 	//distance to drive
 	private double tolerance; 	//epsilon to be within
 	private double topSpeed; 	//max allowable speed
 	private double minSpeed; 	//min allowable speed
 	private double goalAngle; 	//angle to turn to
-	private boolean reverse; 	//driving backwards or not
 	
-	//States
+	//States the robot can be in
 	public static enum STATE {
 		WAITING, 		//initial
 		DRIVE_TO_GOAL,	//point to point driving
 		DRIVE_DISTANCE, //PID distance driving
 		TURN_ANGLE, 	//PID angle turning
-		FINISHED 		//finished command group
 	} //end enum
 	
 	/**
 	 * Create a loop with a robot
-	 * Robot robot - robot to be controlled by the loop
-	 * PIDController drivePID - PID controller for driving
-	 * PIDController turnPID - PID controller for turning
+	 * @param robot - robot to be controlled by the loop
+	 * @param drivePID - PID controller for driving
+	 * @param turnPID - PID controller for turning
 	 */
 	public DriveLoop(Robot robot, PIDController drivePID, PIDController turnPID) {
 		//set attributes
@@ -55,7 +48,6 @@ public class DriveLoop {
 		
 		//default cases
 		state = STATE.WAITING;
-		goalPoint = robot.getPoint();
 		goalDist = 0;
 		goalAngle = 0;
 		minSpeed = 0;
@@ -67,7 +59,7 @@ public class DriveLoop {
 	
 	/**
 	 * Get the state the robot is in
-	 * return state - state the robot is in
+	 * @return state - state the robot is in
 	 */
 	public STATE getState() {
 		return state;
@@ -75,7 +67,7 @@ public class DriveLoop {
 	
 	/**
 	 * Set the state of the robot
-	 * STATE state - new state of the robot
+	 * @return state - new state of the robot
 	 */
 	public void setState(STATE state) {
 		this.state = state;
@@ -109,110 +101,161 @@ public class DriveLoop {
 				//pid
 				turnAngleLoop();
 				break;
-				
-			//finished
-			case FINISHED:
-				robot.setColor(Color.BLUE);
-				break;
 		} //switch-case
 	} //end onLoop
 	
+	/**
+	 * Get the robot being controlled by the loop
+	 * @return robot - robot being controlled
+	 */
 	public Robot getRobot() {
 		return robot;
-	}
+	} //end getRobot
 	
-	//controller
+	/**
+	 * Get whether or not the PID controller for driving is at its target
+	 * @return - isDone of drivePID
+	 */
 	public boolean isDrivePIDAtTarget() {
 		return drivePID.isDone();
-	}
+	} //end isDrivePIDAtTarget
 	
+	/**
+	 * Get whether or not the PID controller for turning is at its target
+	 * @return - isDone of turnPID
+	 */
 	public boolean isTurnPIDAtTarget() {
 		return turnPID.isDone();
-	}
+	} //end isTurnPIDAtTarget
 	
+	/**
+	 * Get whether or not the robot being controlled is moving slower than a percent of its top speed
+	 * @param percent - percent of its top speed between -1 and 1
+	 * @return - isSlowerThanPercent of robot
+	 */
 	public boolean isRobotSlowerThanPercent(double percent) {
 		return robot.isSlowerThanPercent(percent); 
-	}
+	} //end isRobotSlowerThanPercent
 	
-	//drive distance
+	//DriveDistance state
 	
-	public void setDriveDistance(double distance, double topSpeed, double tolerance) {
+	/**
+	 * Set the loop to the DriveDistance state
+	 * @param distance - distance from current position to drive to in inches
+	 * @param topSpeed - top speed to be below in ft/s
+	 * @param tolerance - range to be within in inches
+	 */
+	public void setDriveDistanceState(double distance, double topSpeed, double tolerance) {
+		//configure loop parameters
 		this.goalDist = distance + robot.getAveragePos();
 		this.topSpeed = topSpeed;
 		this.tolerance = tolerance;
 		this.goalAngle = robot.getHeading();
 		
+		//set the state
 		this.state = STATE.DRIVE_DISTANCE;
 		
+		//reset the PID controllers
 		drivePID.reset();
 		turnPID.reset();
-	}
+	} //end setDriveDistanceState
 	
+	/**
+	 * Drive the robot with PID control to a distance target below a top speed until it gets to its target
+	 */
 	private void driveDistanceLoop() {
-//		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
-		double driveOut = drivePID.calcPID(goalDist, robot.getAveragePos(), tolerance);
+		//calculate feedback control outputs
+		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
 		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), 1);
 		
+		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);
-	}
+	} //end driveDistanceLoop
 	
-	//turn angle
+	//TurnAngle state
 	
-	public void setTurnAngle(double angle, double topSpeed, double tolerance, boolean relative) {
+	/**
+	 * Set the loop to the TurnAngle state
+	 * @param angle - angle for the robot to turn to in radians
+	 * @param topSpeed - top speed to be below in ft/s
+	 * @param tolerance - tolerance to be within in radians
+	 * @param relative - whether or not angle is relative to the robot's current heading or the zero
+	 */
+	public void setTurnAngleState(double angle, double topSpeed, double tolerance, boolean relative) {
+		//configure loop parameters
 		this.goalAngle = angle + (relative ? robot.getHeading() : 0);
 		this.topSpeed = topSpeed;
 		this.tolerance = tolerance;
 		
+		//set state
 		this.state = STATE.TURN_ANGLE;
 		
+		//reset the PID controllers
 		drivePID.reset();
 		turnPID.reset();
-	}
+	} //end setTurnAngleState
 	
+	/**
+	 * Turn the robot with PID control to a distance target below a top speed until it gets to its target
+	 */
 	private void turnAngleLoop() {
-//		double turnOut = turnPID.calcRegulatedPID(goalAngle, robot.getHeading(), tolerance, topSpeed, 0);
-		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), tolerance);
+		//calculate controller output
+		double turnOut = turnPID.calcRegulatedPID(goalAngle, robot.getHeading(), tolerance, topSpeed, 0);
 		
+		//set respective sides
 		robot.update(-turnOut, turnOut);
-	}
+	} //end turnAngleLoop
 	
-	//drive to goal
+	//DriveToGoal state
 	
-	public void setDriveToGoal(double dist, double yaw, double range, double topSpeed, double minSpeed, boolean reverse) {
-		updateDriveToGoal(dist, yaw, range, topSpeed, minSpeed, reverse);
+	/**
+	 * Set the loop to the DriveToGoal state
+	 * @param dist - distance to drive to in inches
+	 * @param angle - angle to drive to in radians
+	 * @param range - distance from goal point to be within in inches
+	 * @param topSpeed - top speed to be under in ft/s
+	 * @param minSpeed - minimum speed to be over in ft/s
+	 * @param reverse - whether to drive to the goal point in reverse or not
+	 */
+	public void setDriveToGoalState(double dist, double angle, double range, double topSpeed, double minSpeed, boolean reverse) {
+		//update the parameters
+		updateDriveToGoalState(dist, angle, range, topSpeed, minSpeed, reverse);
 		
+		//reset the controllers
 		drivePID.reset();
 		turnPID.reset();
-	}
+	} //end setDriveToGoalState
 	
-	public void updateDriveToGoal(double dist, double yaw, double range, double topSpeed, double minSpeed, boolean reverse) {
+	/**
+	 * Update the DriveToGoal state parameters
+	 * @param dist - distance to drive to in inches
+	 * @param angle - angle to drive to in radians
+	 * @param range - distance from goal point to be within in inches
+	 * @param topSpeed - top speed to be under in ft/s
+	 * @param minSpeed - minimum speed to be over in ft/s
+	 * @param reverse - whether to drive to the goal point in reverse or not
+	 */
+	public void updateDriveToGoalState(double dist, double yaw, double range, double topSpeed, double minSpeed, boolean reverse) {
+		//configure loop parameters
 		this.goalDist = dist;
 		this.goalAngle = yaw;
 		this.tolerance = range;
 		this.topSpeed = topSpeed;
 		this.minSpeed = minSpeed;
-		this.reverse = reverse;
 		
+		//set state
 		this.state = STATE.DRIVE_TO_GOAL;
-	}
+	} //end updateDriveToGoalState
 	
+	/**
+	 * Drive the robot to a goal point using the P2P control scheme
+	 */
 	private void driveToGoalLoop() {
+		//calculate controller outputs
 		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
-//		double driveOut = drivePID.calcPID(goalDist, robot.getAveragePos(), tolerance);
 		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), Math.toRadians(1));
-
-//		driveOut = 0;
-//		turnOut = 0;
-//		Util.println(driveOut, turnOut);
-//		Util.println("distError:", goalDist - robot.getAveragePos());
-//		Util.println("angleError:", goalAngle - robot.getHeading());
-//		Util.println("driveOut:", driveOut);
-//		Util.println("turnout:", turnOut);
-//		Util.println(goalDist);
-//		System.out.println();
-//		Util.println("d2g loop:", driveOut, turnOut);
 		
+		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);
-	}
-	
+	} //end driveToGoalLoop	
 } //end class

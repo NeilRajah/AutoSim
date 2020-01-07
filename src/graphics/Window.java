@@ -14,17 +14,16 @@ import javax.swing.JPanel;
 
 import main.AutoSim;
 import model.Pose;
-import model.Robot;
 import util.Util;
 
 public class Window extends JFrame {
+	//Attributes
 	private JPanel mainPanel; //main panel for display
 	private Environment env; //environment
 	private UIBar bar; //user interface bar
 	
 	/**
 	 * Create a window
-	 * Robot r - robot to be simulated
 	 */
 	public Window() {
 		super();
@@ -58,27 +57,33 @@ public class Window extends JFrame {
 		env.addMouseMotionListener(envCtrl);
 	} //end layoutView
 	
+	/**
+	 * Add the poses for the environment to draw
+	 * @param poses - poses to add
+	 */
 	public void addPoses(ArrayList<Pose> poses) {
 		env.addPoses(poses);
-	}
+	} //end addPoses
 	
+	/**
+	 * Increment the environment's pose index
+	 */
 	public void incrementPoseIndex() {
 		env.incrementPoseIndex();
-	}
+	} //end incrementPoseIndex
 	
 	/**
 	 * Configure and launch the window
 	 */
 	public void launch() {
 		//configure frame and set it to visible
-		this.setTitle("AutoSim by Neil Balaskandarajah");
+		this.setTitle("AutoSim");
 		this.setContentPane(mainPanel);
 		this.setUndecorated(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
-		this.setResizable(false); //scale window components
-		this.setLocation(0, 50); //change to center of screen
+		this.setResizable(false); 
+		this.setLocation(10, 10);
 		this.setVisible(true);
 	} //end launch
-
 } //end Window

@@ -1,69 +1,92 @@
+/**
+ * TurnAngle
+ * Author: Neil Balaskandarajah
+ * Created on: 03/01/2020
+ * Use PID control to turn to an angle within a tolerance
+ */
+
 package loops;
 
 import java.util.ArrayList;
 
 import model.Pose;
-import util.Util;
 
 public class TurnAngle extends Command {
-	private DriveLoop loop;
-	private ArrayList<Pose> poses;
+	//Attributes
+	//General
+	private DriveLoop loop; //drivetrain loop to update
+	private ArrayList<Pose> poses; //list of poses to update for drawing
 	
-	private double tolerance;
-	private double topSpeed;
-	private double angle;
-	private boolean relative;
-	double initTime = System.currentTimeMillis();
+	//Specific
+	private double angle; //angle to turn to in degrees
+	private double tolerance; //tolerance to be within in degrees
+	private double topSpeed; //maximum linear wheel speed in ft/s
+	private boolean relative; //whether the angle is relative to the current heading or not
 	
+	/**
+	 * Turn the robot to an angle within a specific tolerance below a top speed
+	 * @param loop - drivetrain loop to update
+	 * @param angle - angle to turn to in degrees
+	 * @param tolerance - tolerance to be within in degrees
+	 * @param topSpeed - maximum linear wheel speed in ft/s
+	 * @param relative - whether the angle is relative to the current heading or not
+	 */
 	public TurnAngle(DriveLoop loop, double angle, double tolerance, double topSpeed, boolean relative) {
+		//set attributes
 		this.loop = loop;
-		
 		this.angle = Math.toRadians(angle);
 		this.tolerance = Math.toRadians(tolerance);
 		this.topSpeed = topSpeed;
 		this.relative = relative;
+		
+		//initialize the list of poses
 		poses = new ArrayList<Pose>();
-	}
+	} //end constructor
 
-	@Override
+	/**
+	 * Initialize the command by setting the state machine state and corresponding values
+	 */
 	protected void initialize() {
-		loop.setTurnAngle(angle, topSpeed, tolerance, relative);
-	}
+		loop.setTurnAngleState(angle, topSpeed, tolerance, relative);
+	} //end initialize
 
-	@Override
+	/**
+	 * Execute the command by running the command
+	 */
 	protected void execute() {
 		loop.onLoop();
-//		Util.println(angle, loop.getRobot().getHeading());
-	}
+	} //end execute
 
-	@Override
+	/**
+	 * Save the pose of the robot to the list
+	 */
 	protected void savePose() {
 		poses.add(loop.getRobot().getPose());
-	}
+	} //end savePose
 
-	@Override
+	/**
+	 * Return whether the robot is moving slowly within the target or not
+	 * @return - true if it is, false if it is not
+	 */
 	protected boolean isFinished() {
 		if (loop.isTurnPIDAtTarget() && loop.isRobotSlowerThanPercent(0.05)) {
-			System.out.println("TurnAngle isFinished():" + 
-								loop.isTurnPIDAtTarget() +" "+ 
-								loop.isRobotSlowerThanPercent(0.05));
 			return true;
-		} else if (System.currentTimeMillis() - initTime > 3000) {
-			return true;
-		} else {
+		}  else {
 			return false;
-		}
-	}
+		} //if
+	} //end isFinished
 
-	@Override
-	protected void end() {
-		// TODO Auto-generated method stub
-//		System.out.println("donezies");
-	}
+	/**
+	 * Run at the end of the command
+	 */
+	protected void end() {}
 
-	@Override
+	/**
+	 * Get the list of poses
+	 * @return poses - list of poses for animation
+	 */
 	public ArrayList<Pose> getPoses() {
 		return poses;
-	}
+	} //end getPoses
+} //end class
 
-}

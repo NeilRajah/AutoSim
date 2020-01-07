@@ -6,8 +6,6 @@
  */
 package model;
 
-import util.Util;
-
 public class FieldPositioning {
 
 	/**
@@ -19,7 +17,6 @@ public class FieldPositioning {
 	public static double calcGoalYaw(Point current, Point goal) {
 		double dx = goal.getX() - current.getX();
 		double dy = goal.getY() - current.getY();
-//		Util.println("dx,dy:", dx, dy);
 		
 		double goalYaw = 0;
 		
@@ -29,32 +26,33 @@ public class FieldPositioning {
 				goalYaw = 90; //dead right
 			} else if (dx < 0) {
 				goalYaw = -90; //dead left
-			}
+			} //if
 		} else if (dx == 0) { //if no change in x
 			if(dy > 0) {
 				goalYaw = 0; //dead ahead
 			} else if (dy < 0) {
 				goalYaw = 180; //dead behind
-			}
+			} //if
 		} else {
 			if (dy < 0) { //point is behind you
 				if (dx > 0) {
 					goalYaw = 90 - Math.toDegrees(Math.atan(dy/dx)); //behind and right
 				} else if (dx < 0) {
 					goalYaw = -90 - Math.toDegrees(Math.atan(dy/dx)); //behind and left
-				}
+				} //if
 			} else { //anywhere else
 				goalYaw = Math.toDegrees(Math.atan2(dx,dy));
-			}
-		}
+			} //if
+		} //if
+		
 		return goalYaw;
 	} //end calcGoalYaw
 
 	/**
 	 * Calculate the distance between two points using the Pythagorean theorem
-	 * Point p1 - first point
-	 * Point p2 - second point
-	 * return - absolute distance between the two points
+	 * @param p1 - first point
+	 * @param p2 - second point
+	 * @return - absolute distance between the two points
 	 */
 	public static double calcDistance(Point p1, Point p2) {
 		return Math.hypot(p2.getX() - p1.getX(), p2.getY() - p1.getY());
@@ -62,9 +60,9 @@ public class FieldPositioning {
 	
 	/**
 	 * Calculate the angle between two points in radians from the x-axis
-	 * Point p1 - first point
-	 * Point p2 - second point
-	 * return - angle between the two point in radians from the x-axis
+	 * @param p1 - first point
+	 * @param p2 - second point
+	 * @return - angle between the two point in radians from the x-axis
 	 */
 	public static double calcAngleRad(Point p1, Point p2) {
 		//calculate deltas
@@ -91,9 +89,9 @@ public class FieldPositioning {
 	
 	/**
 	 * Calculate the angle between two points in degrees from the x-axis
-	 * Point p1 - first point
-	 * Point p2 - second point
-	 * return - angle between the two point in degrees from the x-axis
+	 * @param p1 - first point
+	 * @param p2 - second point
+	 * @return - angle between the two point in degrees from the x-axis
 	 */
 	public static double calcAngleDeg(Point p1, Point p2) {
 		return Math.toDegrees(calcAngleRad(p1, p2));
@@ -101,16 +99,16 @@ public class FieldPositioning {
 	
 	/**
 	 * Check if two points are close enough to another within a range
-	 * Point target - target point to be close to
-	 * Point current - point to check closeness of
-	 * double range - how close current point can be to target point
+	 * @param target - target point to be close to
+	 * @param current - point to check closeness of
+	 * @param range - how close current point can be to target point
 	 */
 	public static boolean isWithinBounds(Point target, Point current, double range) {
 		//calculate deltas
-		double xDiff = Math.abs(target.getX() - current.getX());
-		double yDiff = Math.abs(target.getY() - current.getY());
+		double dx = Math.abs(target.getX() - current.getX());
+		double dy = Math.abs(target.getY() - current.getY());
 		
-		if (xDiff < range && yDiff < range) {
+		if (dx < range && dy < range) {
 			return true;
 		} else {
 			return false;

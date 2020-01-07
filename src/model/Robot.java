@@ -52,6 +52,7 @@ public class Robot {
 	 * Gearbox gearbox - drive gearboxes
 	 */
 	public Robot(double wheelDia, double mass, double length, double width, Gearbox gearbox) {
+		//set attributes in metric units
 		this.kMass = mass * Util.LBS_TO_KG; //convert to kg
 		this.kLength = length * Util.INCHES_TO_METERS; //convert to m
 		this.kWidth = width * Util.INCHES_TO_METERS; //convert to m
@@ -94,7 +95,6 @@ public class Robot {
 	public void reset() {
 		averagePos = 0;
 		heading = 0;
-//		point = new Point(162, kLength/(2 * Util.INCHES_TO_METERS) + 2); //middle platform
 		point = new Point(0,0);
 		leftGearbox.reset();
 		rightGearbox.reset();
@@ -120,7 +120,7 @@ public class Robot {
 	
 	/**
 	 * Get the average distance travelled by robot
-	 * return average - average distance travelled by robot in inches
+	 * @return average - average distance travelled by robot in inches
 	 */
 	public double getAveragePos() {
 		return averagePos;
@@ -128,7 +128,7 @@ public class Robot {
 	
 	/**
 	 * Get the linear velocity of the robot
-	 * return linearSpeed - linear speed of the robot in inches per second
+	 * @return linearSpeed - linear speed of the robot in inches per second
 	 */
 	public double getLinearVel() {
 		return linearVel;
@@ -136,7 +136,7 @@ public class Robot {
 	
 	/**
 	 * Get the angular velocity of the robot
-	 * return angularSpeed - angular speed of the robot in radians per second
+	 * @return angularSpeed - angular speed of the robot in radians per second
 	 */
 	public double getAngularVel() {
 		return angularVel;
@@ -144,7 +144,7 @@ public class Robot {
 	
 	/**
 	 * Get the max linear speed of the robot
-	 * return maxLinSpeed - top linear speed of the robot in ft/s
+	 * @return maxLinSpeed - top linear speed of the robot in ft/s
 	 */
 	public double getMaxLinSpeed() {
 		return maxLinSpeed;
@@ -152,7 +152,7 @@ public class Robot {
 	
 	/**
 	 * Get the max angular speed of the robot
-	 * return maxAngSpeed - top angular speed of the robot in rad/s
+	 * @return maxAngSpeed - top angular speed of the robot in rad/s
 	 */
 	public double getMaxAngSpeed() {
 		return maxAngSpeed;
@@ -160,7 +160,7 @@ public class Robot {
 	
 	/**
 	 * Get the position of the left gearbox
-	 * return - left gearbox position in radians
+	 * @return - left gearbox position in radians
 	 */
 	public double getLeftPos() {
 		return leftGearbox.getPos();
@@ -168,25 +168,30 @@ public class Robot {
 	
 	/**
 	 * Get the position of the right gearbox
-	 * return - right gearbox position in radians
+	 * @return - right gearbox position in radians
 	 */
 	public double getRightPos() {
 		return rightGearbox.getPos();
 	} //end getRightPos
 	
+	/**
+	 * Check if the robot's speed is lower than a percent of its top speed
+	 * @param percent - percent of the top speed to be under between -1 and 1
+	 * @return - true if under, false if equal or over
+	 */
 	public boolean isSlowerThanPercent(double percent) {
 		if (Math.abs(linearVel) < percent * maxLinSpeed) {
 			return true;
 		} else {
 			return false;
-		}
-	}
+		} //if
+	} //end isSlowerThanPercent
 	
 	//Pose
 	
 	/**
 	 * Get the coordinates of the robot
-	 * return - (x,y) values of the robot
+	 * @return - (x,y) values of the robot as a point
 	 */
 	public Point getPoint() {
 		return new Point(point.getX(), point.getY());
@@ -194,7 +199,7 @@ public class Robot {
 	
 	/**
 	 * Get the x position of the robot
-	 * return - x position of robot
+	 * @return - x position of robot
 	 */
 	public double getX() {
 		return point.getX();
@@ -202,24 +207,32 @@ public class Robot {
 	
 	/**
 	 * Get the y position of the robot
-	 * return - y position of robot
+	 * @return - y position of robot
 	 */
 	public double getY() {
 		return point.getY();
 	} //end getY
 	
+	/**
+	 * Set the (x,y) coordinates of the robot
+	 * @param p - new (x,y) coordinates of the robot
+	 */
 	public void setXY(Point p) {
 		point = new Point(p.getX(), p.getY());
-	}
+	} //end setXY
 	
+	/**
+	 * Get the pose of the robot
+	 * @return - current pose of the robot
+	 */
 	public Pose getPose() {
 		return new Pose(new Point(point.getX(), point.getY()), heading, 
 						new Color(color.getRed(), color.getGreen(), color.getBlue()));	
-	}
+	} //end getPose
 	
 	/**
 	 * Get the heading of the robot
-	 * return heading - heading of the robot in radians
+	 * @return heading - heading of the robot in radians
 	 */
 	public double getHeading() {
 		return heading;
@@ -227,46 +240,54 @@ public class Robot {
 	
 	/**
 	 * Set the heading of the robot
-	 * double heading - heading in radians for the robot to point at
+	 * @param heading - heading in radians for the robot to point at
 	 */
 	public void setHeading(double heading) {
 		this.heading = heading;
 	} //end setHeading
 	
+	/**
+	 * Set the heading of the robot in degrees
+	 * @param heading - heading in degrees to set the robot to
+	 */
 	public void setHeadingDegrees(double heading) {
 		this.heading = Math.toRadians(heading);
-	}
+	} //end setHeadingDegrees
 	
 	/**
 	 * Get the yaw of the robot in degrees
-	 * return yaw - robot yaw in degrees
+	 * @param yaw - robot yaw in degrees
 	 */
 	public double getYaw() {
-		yaw = Math.toDegrees(heading);
+		yaw = Math.toDegrees(heading); //convert heading to degrees
 
 		// normalize to 0-360 degree range
 		if (yaw > 360) {
 			while (yaw > 360) {
 				yaw -= 360;
-			}
+			} //loop
 		} else if (yaw < 0) {
 			while (yaw < 0) {
 				yaw += 360;
-			}
-		}
+			} //loop
+		} //if
 
 		// set to negative if greater than 180
 		if (yaw > 180) {
 			yaw -= 360;
-		}
+		} //if
 
 		return yaw;
 	} // end getYaw
 
+	/**
+	 * Set the yaw (and heading) of the robot
+	 * @param yaw - yaw value to set the robot yaw to
+	 */
 	public void setYaw(double yaw) {
 		this.yaw = yaw;
 		this.heading = Math.toRadians(yaw);
-	}
+	} //end setYaw
 
 	//Dynamics
 	
@@ -276,8 +297,9 @@ public class Robot {
 	 * @param rightVoltage - voltage applied to right gearbox
 	 */
 	public void update(double leftVoltage, double rightVoltage) {
-		leftVoltage = Util.clampNum(leftVoltage, -12, 12);
-		rightVoltage = Util.clampNum(rightVoltage, -12, 12);
+		//clamp the voltages between min and max voltage values
+		leftVoltage = Util.clampNum(leftVoltage, -Util.MAX_VOLTAGE, Util.MAX_VOLTAGE);
+		rightVoltage = Util.clampNum(rightVoltage, -Util.MAX_VOLTAGE, Util.MAX_VOLTAGE);
 		
 		//calculate force exerted by each gearbox on robot
 		double leftForce = leftGearbox.calcTorque(leftVoltage) / kWheelRad;
@@ -298,8 +320,8 @@ public class Robot {
 	
 	/**
 	 * Calculate the accelerations of each side of the drive
-	 * double leftTorque - torque of the left gearbox
-	 * double rightTorque - torque of the right gearbox
+	 * @param leftTorque - torque of the left gearbox
+	 * @param rightTorque - torque of the right gearbox
 	 */
 	private void updateGearboxes(double leftForce, double rightForce) {
 		//calculate accelerations using forces
@@ -344,7 +366,7 @@ public class Robot {
 	
 	/**
 	 * Get the color of the robot
-	 * return - color based on direction scaled to speed
+	 * @return - color based on direction scaled to speed
 	 */
 	public Color getColor() {
 		return color;
@@ -352,14 +374,14 @@ public class Robot {
 	
 	/**
 	 * Set the color of the robot
-	 * Color c - new Color for the robot
+	 * @param c - new Color for the robot
 	 */
 	public void setColor(Color c) {
 		this.color = c;
 	} //end setColor
 	
 	/**
-	 * Get the color of the robot
+	 * Update the robot graphics
 	 */
 	private void updateGraphics() {
 		updateColor();
@@ -386,7 +408,7 @@ public class Robot {
 	
 	/**
 	 * Get the width of the robot in pixels
-	 * return - width of robot in pixels
+	 * @return - width of robot in pixels
 	 */
 	public int getWidthPixels() {
 		return (int) ((kWidth * AutoSim.ppi) / Util.INCHES_TO_METERS);
@@ -394,7 +416,7 @@ public class Robot {
 	
 	/**
 	 * Get the length of the robot in pixels
-	 * return - width of robot in pixels
+	 * @return - width of robot in pixels
 	 */
 	public int getLengthPixels() {
 		return (int) ((kLength * AutoSim.ppi) / Util.INCHES_TO_METERS);

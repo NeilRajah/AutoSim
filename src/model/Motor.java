@@ -2,16 +2,13 @@
  * Motor
  * Author: Neil Balaskandarajah
  * Created on: 28/12/2019
- * Physics model for a standard DC motor
+ * Simple physics model of a standard DC motor
  */
 package model;
 
 import util.Util;
 
 public class Motor {
-	//Constants
-	public static final double MAX_VOLTAGE = 12.0; //max voltage in Volts
-	
 	//Attributes
 	//Configured	
 	private double kStallTorque; //stall torque in Nm
@@ -26,10 +23,10 @@ public class Motor {
 
 	/**
 	 * Create a motor with given parameters
-	 * double freeSpeed - free speed in RPM
-	 * double freeCurrent - free current in Amps
-	 * double stallTorque - stall torque in Nm
-	 * double stallCurrent - stall current in Amps
+	 * @param freeSpeed - free speed in RPM
+	 * @param freeCurrent - free current in Amps
+	 * @param stallTorque - stall torque in Nm
+	 * @param stallCurrent - stall current in Amps
 	 */
 	public Motor(double freeSpeed, double freeCurrent, double stallTorque, double stallCurrent) {
 		this.kFreeSpeed = freeSpeed;
@@ -37,12 +34,8 @@ public class Motor {
 		this.kStallTorque = stallTorque;
 		this.kStallCurrent = stallCurrent;
 		
-		//calculated values
-		//resistance across is total voltage divided by stall current
-		kResistance = MAX_VOLTAGE/kStallCurrent;
-		
-		//angular velocity of the motor per volt applied
-		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (MAX_VOLTAGE - (kResistance * kFreeCurrent) + Util.V_INTERCEPT);
+		//compute other constants
+		computeConstants();
 	} //end constructor
 	
 	/**
@@ -64,10 +57,10 @@ public class Motor {
 	 */
 	private void computeConstants() {
 		//resistance across is total voltage divided by stall current
-		kResistance = MAX_VOLTAGE/kStallCurrent;
+		kResistance = Util.MAX_VOLTAGE/kStallCurrent;
 		
 		//angular velocity of the motor per volt applied
-		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (MAX_VOLTAGE - (kResistance * kFreeCurrent) + Util.V_INTERCEPT);
+		kVoltage = (kFreeSpeed * (Math.PI/30.0)) / (Util.MAX_VOLTAGE - (kResistance * kFreeCurrent) + Util.V_INTERCEPT);
 		
 		//Nm of torque per amp applied to the motor
 		kTorque = kStallTorque/kStallCurrent;
@@ -77,7 +70,7 @@ public class Motor {
 	
 	/**
 	 * Get the stall torque of the motor
-	 * return kStallTorque - stall torque of the motor in Nm
+	 * @return kStallTorque - stall torque of the motor in Nm
 	 */
 	public double getStallTorque() {
 		return kStallTorque;
@@ -85,7 +78,7 @@ public class Motor {
 	
 	/**
 	 * Get the stall current of the motor
-	 * return kStallCurrent - stall current of the motor in Amps
+	 * @return kStallCurrent - stall current of the motor in Amps
 	 */
 	public double getStallCurrent() {
 		return kStallCurrent;
@@ -93,7 +86,7 @@ public class Motor {
 	
 	/**
 	 * Get the free speed of the motor 
-	 * return kFreeSpeed - free speed of the motor in radians/second
+	 * @return kFreeSpeed - free speed of the motor in radians/second
 	 */
 	public double getFreeSpeed() {
 		return kFreeSpeed;
@@ -101,7 +94,7 @@ public class Motor {
 	
 	/**
 	 * Get the free current of the motor
-	 * return kFreeCurrent - free current of the motor in Amps
+	 * @return kFreeCurrent - free current of the motor in Amps
 	 */
 	public double getFreeCurrent() {
 		return kFreeCurrent;
@@ -109,7 +102,7 @@ public class Motor {
 	
 	/**
 	 * Get the parameters of the motor in an array
-	 * return - array of motor parameters
+	 * @return - array of motor parameters
 	 */
 	public double[] getParameters() {
 		return new double[] {kFreeSpeed, kFreeCurrent, kStallTorque, kStallCurrent};
@@ -117,7 +110,7 @@ public class Motor {
 	
 	/**
 	 * Get the resistance constant of the motor
-	 * return - resistance across the motor in Ohms
+	 * @return - resistance across the motor in Ohms
 	 */
 	public double getResistanceConstant() {
 		return kResistance;
@@ -125,7 +118,7 @@ public class Motor {
 	
 	/**
 	 * Get the voltage constant of the motor
-	 * return - radians/second per volt applied to the motor
+	 * @return - radians/second per volt applied to the motor
 	 */
 	public double getVoltageConstant() {
 		return kVoltage;
@@ -133,7 +126,7 @@ public class Motor {
 	
 	/**
 	 * Get the torque constant of the motor
-	 * return - Nm of torque per amp applied to the motor
+	 * @return - Nm of torque per amp applied to the motor
 	 */
 	public double getTorqueConstant() {
 		return kTorque;

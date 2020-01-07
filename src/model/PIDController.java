@@ -17,18 +17,18 @@ public class PIDController {
 	private double topSpeed; //max velocity of the robot
 
 	//Calculated
-//	private double setpoint; //goal value controller is trying to reach
 	private double errorSum; //sum of all errors
 	private double lastError; //previous error
 	private boolean atTarget; //whether within epsilon bounds
 
 	/**
 	 * Create a PID controller with gains
-	 * double p - proportionality constant
-	 * double i - integral constant
-	 * double d- derivative constant
+	 * @param p - proportionality constant
+	 * @param i - integral constant
+	 * @param d- derivative constant
 	 */
 	public PIDController(double p, double i, double d, double topSpeed) {
+		//set attributes
 		kP = p;
 		kI = i;
 		kD = d;
@@ -42,7 +42,7 @@ public class PIDController {
 	
 	/**
 	 * Return whether the error is within the epsilon bounds or not
-	 * return atTarget - whether controller is at target
+	 * @return atTarget - whether controller is at target
 	 */
 	public boolean isDone() {
 		return atTarget;
@@ -50,7 +50,7 @@ public class PIDController {
 
 	/**
 	 * Get the proportionality constant of the controller
-	 * return kP - proportionality constant
+	 * @return kP - proportionality constant
 	 */
 	public double getP() {
 		return kP;
@@ -58,7 +58,7 @@ public class PIDController {
 
 	/**
 	 * Get the integral constant of the controller
-	 * return kI - integral constant
+	 * @return kI - integral constant
 	 */
 	public double getI() {
 		return kI;
@@ -66,7 +66,7 @@ public class PIDController {
 
 	/**
 	 * Get the derivative constant of the controller
-	 * return kD - derivative constant
+	 * @return kD - derivative constant
 	 */
 	public double getD() {
 		return kD;
@@ -85,10 +85,10 @@ public class PIDController {
 	
 	/**
 	 * Calculate the PID output based on the setpoint, current value and tolerance
-	 * double setpoint - setpoint to reach
-	 * double current - current value
-	 * double epsilon - range the controller can be in to be considered "at goal"
-	 * return - calculated PID output in volts
+	 * @param setpoint - setpoint to reach
+	 * @param current - current value
+	 * @param epsilon - range the controller can be in to be considered "at goal"
+	 * @return - calculated PID output in volts
 	 */
 	public double calcPID(double setpoint, double current, double epsilon) {		
 		//calculate error
@@ -110,25 +110,24 @@ public class PIDController {
 			dOut = kD * (error - lastError);
 		lastError = error;
 		
+		//output is sum of each constant's output
 		return pOut + iOut + dOut;
 	} //end calcPID
 	
 	/**
 	 * Calculate a regulated PID output based on setpoint, current value and tolerance
-	 * double setpoint - setpoint to reach
-	 * double current - current value
-	 * double epsilon - range the controller can be in to be considered "at goal"
-	 * double topSpeed - top of speed limit
-	 * double minSpeed - bottom of speed limit
-	 * return - regulated PID output in volts
+	 * @param setpoint - setpoint to reach
+	 * @param current - current value
+	 * @param epsilon - range the controller can be in to be considered "at goal"
+	 * @param topSpeed - top of speed limit
+	 * @param minSpeed - bottom of speed limit
+	 * @return - regulated PID output in volts
 	 */
 	public double calcRegulatedPID(double setpoint, double current, double epsilon, double topSpeed, double minSpeed) {
 		double output = calcPID(setpoint, current, epsilon);
 		double topLimit = 12 * (Math.abs(topSpeed) / this.topSpeed);
 		double botLimit = -12 * (Math.abs(topSpeed) / this.topSpeed);
-//		Util.println("output:", output, topLimit, botLimit, topSpeed, this.topSpeed);
 		
 		return Math.signum(topSpeed) * Util.clampNum(output, botLimit, topLimit);
-//		return output;
 	} //end calcRegulatedPID
 } //end class

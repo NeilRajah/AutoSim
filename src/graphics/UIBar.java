@@ -16,7 +16,6 @@ import java.io.File;
 import javax.swing.JComponent;
 
 import main.AutoSim;
-import util.Util;
 
 public class UIBar extends JComponent implements Component {
 	//Attributes
@@ -30,8 +29,8 @@ public class UIBar extends JComponent implements Component {
 	
 	/**
 	 * Create a bar for user interaction
-	 * int width - width of the component
-	 * int height - height of the component
+	 * @param width - width of the component
+	 * @param height - height of the component
 	 */
 	public UIBar(int width, int height) {
 		super();
@@ -51,23 +50,22 @@ public class UIBar extends JComponent implements Component {
 
 	//Graphics
 
-	@Override
 	/**
 	 * Return the width of the environment
+	 * @return width - width of component in pixels
 	 */
 	public int width() {
 		return width;
 	} //end width
 
-	@Override
 	/**
 	 * Return the height of the environment
+	 * @return height - height of component in pixels
 	 */
 	public int height() {
 		return height;		
 	} //end height
 	
-	@Override
 	/**
 	 * Update the environment
 	 */
@@ -77,8 +75,8 @@ public class UIBar extends JComponent implements Component {
 	
 	/**
 	 * Update the cursor location
-	 * int x - x position of cursor
-	 * int y - y position of cursor
+	 * @param x - x position of cursor
+	 * @param y - y position of cursor
 	 */
 	public void setCursorLocation(int x, int y) {
 		//x and y values in inches
@@ -91,7 +89,7 @@ public class UIBar extends JComponent implements Component {
 	
 	/**
 	 * Draw the information to the bar
-	 * Graphics g - used for drawing
+	 * @param g - used for drawing
 	 */
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g; //g2 for better drawing
@@ -113,7 +111,7 @@ public class UIBar extends JComponent implements Component {
 	
 	/**
 	 * Set the font of the component
-	 * Graphics2D g2 - used for drawing
+	 * @param g2 - used for drawing
 	 */
 	private void setFont(Graphics2D g2) {
 		Font f = new Font(Font.SANS_SERIF, Font.PLAIN, (int) fontSize); //default font
