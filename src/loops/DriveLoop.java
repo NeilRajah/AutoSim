@@ -10,6 +10,7 @@ import java.awt.Color;
 
 import model.PIDController;
 import model.Robot;
+import util.Util;
 
 public class DriveLoop {
 	//Attributes
@@ -149,6 +150,7 @@ public class DriveLoop {
 		//configure loop parameters
 		this.goalDist = distance + robot.getAveragePos();
 		this.topSpeed = topSpeed;
+		this.minSpeed = 0;
 		this.tolerance = tolerance;
 		this.goalAngle = robot.getHeading();
 		
@@ -158,6 +160,8 @@ public class DriveLoop {
 		//reset the PID controllers
 		drivePID.reset();
 		turnPID.reset();
+
+		Util.println(goalDist, this.tolerance);
 	} //end setDriveDistanceState
 	
 	/**
@@ -167,6 +171,8 @@ public class DriveLoop {
 		//calculate feedback control outputs
 		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
 		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), 1);
+		
+		Util.println(drivePID.isDone()+" ", driveOut, robot.getAveragePos());
 		
 		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);

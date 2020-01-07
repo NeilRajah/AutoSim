@@ -10,6 +10,7 @@ package loops;
 import java.util.ArrayList;
 
 import model.Pose;
+import util.Util;
 
 public class DriveDistance extends Command {
 	//Attributes
@@ -45,6 +46,7 @@ public class DriveDistance extends Command {
 	 */
 	protected void initialize() {
 		loop.setDriveDistanceState(distance + tolerance, topSpeed, tolerance);
+		System.out.println(tolerance/distance);
 	} //end initialize
 
 	/**
@@ -66,7 +68,7 @@ public class DriveDistance extends Command {
 	 * @return - true if it is, false if it is not
 	 */
 	protected boolean isFinished() {
-		if (loop.isDrivePIDAtTarget() && loop.isRobotSlowerThanPercent(0.05)) {
+		if (loop.isDrivePIDAtTarget() && loop.isRobotSlowerThanPercent(Util.kP_DRIVE * tolerance)) {
 			return true;
 		} else {
 			return false;

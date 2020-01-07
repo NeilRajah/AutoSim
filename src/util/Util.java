@@ -15,6 +15,7 @@ public class Util {
 	public static final int FIELD_WIDTH = 648; //inches
 	public static final int FIELD_HEIGHT = 324; //inches
 	public static final double MAX_VOLTAGE = 12.0; //max voltage in Volts
+	public static final double LOOKAHEAD_DIST = 6; //additional distance to look ahead
 	
 	//PID constants
 	//DrivePID constants
@@ -73,7 +74,7 @@ public class Util {
 	 */
 	public static void println(double ... d) {
 		for(double dbl : d) {
-			System.out.print(dbl + " "); //print each with a space in between
+			System.out.printf("%.4f ", dbl); //four decimal places
 		} //loop
 		System.out.println();
 	} //end println

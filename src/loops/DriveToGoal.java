@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import model.FieldPositioning;
 import model.Point;
 import model.Pose;
+import util.Util;
 
 public class DriveToGoal extends Command {
 	//Attributes
@@ -20,13 +21,14 @@ public class DriveToGoal extends Command {
 	
 	//Specific
 	private Point goalPoint; //goal point to drive to
-	private double scale; //amount to scale the top speed by
 	private double setpoint; //distance to drive to in inches
 	private double goalAngle; //angle to drive to in radians
 	private double tolerance; //tolerance to be within in inches
 	private double topSpeed; //top speed of robot in ft/s
 	private double minSpeed; //min speed of robot in ft/s
 	private boolean reverse; //whether the robot is driving backwards or not
+	private double scale; //amount to scale the top speed by
+	private double lookahead; //additional distance to add onto setpoint to cruise to minSpeed
 	
 	/**
 	 * Drive to a goal point using the P2P control scheme
@@ -48,6 +50,10 @@ public class DriveToGoal extends Command {
 		
 		//initialize the list of poses
 		this.poses = new ArrayList<Pose>();
+		
+		//calculate the lookahead distance
+		this.lookahead = (Util.MAX_VOLTAGE * minSpeed) / (topSpeed * Util.kP_DRIVE) + Util.LOOKAHEAD_DIST;
+		this.lookahead *= reverse ? -1 : 1;
 	} //end constructor
 
 	/**
@@ -113,7 +119,7 @@ public class DriveToGoal extends Command {
 			
 			//angle setpoint
 			goalAngle = Math.toRadians(calcDeltaAngle()) + loop.getRobot().getHeading();
-		} //
+		} //if
 		
 		//scale for top speed
 		double dA = Math.abs(Math.toDegrees(goalAngle - loop.getRobot().getHeading()));

@@ -15,7 +15,7 @@ import loops.Command;
 import loops.CommandGroup;
 import loops.DriveDistance;
 import loops.DriveLoop;
-import loops.routines.TrenchCycleLow;
+import loops.routines.DriveToGoalDemo;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
@@ -45,7 +45,7 @@ public class AutoSim {
 		
 		//create the window, add poses and launch it
 		Window w = new Window();
-		w.addPoses(c.getPoses());
+		w.addPoses(cg.getPoses());
 		w.launch();
 		
 		//loop for running simulation
@@ -76,6 +76,7 @@ public class AutoSim {
 		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2); //14ft/s 2 NEO gearbox each side
 		Robot r = new Robot(6, 153, 30, 30, gb); //153lb 6" wheel dia 30"x30" chassis
 		r.setXY(FieldPoints.AUTO_SHOT); //starting (x,y) position
+		r.setHeadingDegrees(180);
 		
 		//set graphics parameters for drawing the robot
 		Painter.robotLength = r.getLengthPixels();
@@ -87,13 +88,15 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-		cg = new TrenchCycleLow();
+//		cg = new TrenchCycleLow();
 //		cg = new TrenchCycleFast();
 //		cg = new TrenchCycleLong();
 //		cg = new EightCellAuto(); 
-//		cg.start(); //run the simulation
+		cg = new DriveToGoalDemo();
+		cg.start(); //run the simulation
 		
-		c = new DriveDistance(driveLoop, -100, 1, 12);
-		c.run();
+		//creating a single command
+//		c = new DriveDistance(driveLoop, 100, 20, 12);
+//		c.run();
 	} //end initialize
 } //end AutoSim
