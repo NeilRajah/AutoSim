@@ -30,7 +30,7 @@ public class AutoSim {
 	public static final int SCREEN_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height);
 	
 	//Pixels Per Inch (ppi), used for scaling to different screen resolutions
-	public static final int ppi = (int) Math.ceil(5.0 * (SCREEN_WIDTH/3840.0));
+	public static final int ppi = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
 	
 	//Command
 	public static DriveLoop driveLoop;
@@ -41,6 +41,7 @@ public class AutoSim {
 	 * Create a Window and launch the program
 	 */
 	public static void main(String[] args) {
+		System.out.println(ppi);
 		initialize(); //initialize the program
 		
 		//create the window, add poses and launch it

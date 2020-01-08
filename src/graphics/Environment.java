@@ -10,6 +10,7 @@ import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class Environment extends JComponent implements Component {
 	private int height; //height of the environment
 	
 	//Elements
-	private BufferedImage field; //field image
+	private Image field; //field image
 	private UIBar bar; //user interface bar to update
 	
 	//Updated
@@ -50,6 +51,9 @@ public class Environment extends JComponent implements Component {
 		//open field image
 		try {
 			field = ImageIO.read(getClass().getResource("/resources/2020Field.png"));
+			
+			//scale the image for the machine's screen resolution
+			field = field.getScaledInstance(width, height, BufferedImage.SCALE_FAST); 
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} //try-catch
