@@ -46,7 +46,6 @@ public class DriveDistance extends Command {
 	 */
 	protected void initialize() {
 		loop.setDriveDistanceState(distance + tolerance, topSpeed, tolerance);
-		System.out.println(tolerance/distance);
 	} //end initialize
 
 	/**

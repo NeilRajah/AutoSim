@@ -24,8 +24,10 @@ public class Painter {
 	 * @param x - x position to draw to
 	 * @param y - y position to draw to
 	 */
-	public static void drawString(Graphics2D g2, String str, int x, int y) {
+	public static void drawFlippedString(Graphics2D g2, String str, int x, int y) {
+		g2.scale(1.0, -1.0);
 		g2.drawString(str, x, -y);
+		g2.scale(1.0, -1.0);
 	} //end drawString
 	
 	/**

@@ -172,8 +172,6 @@ public class DriveLoop {
 		double driveOut = drivePID.calcRegulatedPID(goalDist, robot.getAveragePos(), tolerance, topSpeed, minSpeed);
 		double turnOut = turnPID.calcPID(goalAngle, robot.getHeading(), 1);
 		
-		Util.println(drivePID.isDone()+" ", driveOut, robot.getAveragePos());
-		
 		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);
 	} //end driveDistanceLoop

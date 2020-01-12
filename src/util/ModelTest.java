@@ -25,15 +25,15 @@ import model.Robot;
 
 class ModelTest {
 	//Attributes
-	private Gearbox gb; //drive gearbox
-	private Robot r; //robot 
-	private DriveLoop driveLoop; //loop controlling robot
+	private static Gearbox gb; //drive gearbox
+	private static Robot r; //robot 
+	private static DriveLoop driveLoop; //loop controlling robot
 	
 	@BeforeAll
 	/**
 	 * Set up the suite by creating the robot
 	 */
-	private void setUp() {
+	private static void setUp() {
 		gb = new Gearbox(8.5521, new Motor(Util.NEO), 2); //2 NEO 12ft/s drive
 		r = new Robot(4, 153, 30, 30, gb); //4" wheel dia 153lb 30"x30" 
 		PIDController drivePID = new PIDController(Util.kP_DRIVE, Util.kI_DRIVE, Util.kD_DRIVE, r.getMaxLinSpeed());
@@ -90,7 +90,7 @@ class ModelTest {
 			t += Util.UPDATE_PERIOD;
 		} //loop
 		
-		Point correctPoint = new Point(-116.9, -53.5); //(r, theta) = (128.6, 2)
+		Point correctPoint = new Point(116.9, -53.5); //(r, theta) = (128.6, 2)
 		assertEquals(correctPoint.getX(), r.getPoint().getX(), 1);
 	} //end poseTestX
 	
@@ -108,7 +108,7 @@ class ModelTest {
 			t += Util.UPDATE_PERIOD;
 		} //loop
 
-		Point correctPoint = new Point(-116.9, -53.5); //(r, theta) = (128.6, 2)
+		Point correctPoint = new Point(116.9, -53.5); //(r, theta) = (128.6, 2)
 		assertEquals(correctPoint.getY(), r.getPoint().getY(), 1);
 	} //end poseTestY
 	

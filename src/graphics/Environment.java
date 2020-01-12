@@ -73,19 +73,25 @@ public class Environment extends JComponent implements Component {
 	} //end addPoses
 	
 	/**
+	 * Get the number of poses in the environment
+	 * @return - number of poses in the poses list if the list is not null
+	 */
+	public int getNumPoses() {
+		if (poses != null) {
+			return poses.size();
+		} else {
+			return 0;
+		} //if
+	} //end getNumPoses
+	
+	/**
 	 * Increment the pose index by one and repaint the component
 	 */
 	public void incrementPoseIndex() {
 		poseIndex++;
+		bar.setTime(poseIndex);
 		repaint();
 	} //end incrementPoseIndex
-	
-	/**
-	 * Set the pose index to zero
-	 */
-	public void resetPoseIndex() {
-		poseIndex = 0;
-	} //end resetPoseIndex
 	
 	/**
 	 * Set the pose index to a specified value

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import loops.Command;
+import loops.CommandGroup;
 import main.AutoSim;
 import model.Pose;
 import util.Util;
@@ -58,21 +60,6 @@ public class Window extends JFrame {
 	} //end layoutView
 	
 	/**
-	 * Add the poses for the environment to draw
-	 * @param poses - poses to add
-	 */
-	public void addPoses(ArrayList<Pose> poses) {
-		env.addPoses(poses);
-	} //end addPoses
-	
-	/**
-	 * Increment the environment's pose index
-	 */
-	public void incrementPoseIndex() {
-		env.incrementPoseIndex();
-	} //end incrementPoseIndex
-	
-	/**
 	 * Configure and launch the window
 	 */
 	public void launch() {
@@ -86,4 +73,44 @@ public class Window extends JFrame {
 		this.setLocation(10, 10);
 		this.setVisible(true);
 	} //end launch
+	
+	/**
+	 * Add a Command to be animated
+	 * @param c - Command to be animated
+	 */
+	public void addCommand(Command c) {
+		c.run();
+		env.addPoses(c.getPoses());
+	} //end addCommand
+	
+	/**
+	 * Add a CommandGroup to be animated
+	 * @param cg - CommandGroup to be animated
+	 */
+	public void addCommandGroup(CommandGroup cg) {
+		cg.run();
+		env.addPoses(cg.getPoses());
+	} //end addCommandGroup
+	
+	/**
+	 * Run the animation
+	 */
+	public void runAnimation() {
+		//loop for running simulation
+		Runnable loop = () -> {
+			//1 second delay from open to simulation launch
+			Util.pause(1000);
+			
+			//loop through all poses every 5 milliseconds
+			for (int i = 1; i < env.getNumPoses(); i++) {
+				env.incrementPoseIndex();
+				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
+			} //loop
+			System.out.println("ran");
+		};
+		
+		//create and run the thread
+		Thread t = new Thread(loop);
+		t.start();
+	} //end runAnimation	
 } //end Window

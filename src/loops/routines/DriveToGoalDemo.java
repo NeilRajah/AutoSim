@@ -51,7 +51,7 @@ public class DriveToGoalDemo extends CommandGroup {
 				reverse = false;
 				
 			} else { //other points
-				topSpeed = Math.random() * loop.getRobot().getMaxLinSpeed();
+				topSpeed = Math.random() * (loop.getRobot().getMaxLinSpeed()/2) + loop.getRobot().getMaxLinSpeed()/2;
 				reverse = Math.random() > 0.5;
 				minSpeed = topSpeed/2;								
 			} //if

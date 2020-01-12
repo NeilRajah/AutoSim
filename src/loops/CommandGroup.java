@@ -43,10 +43,8 @@ public abstract class CommandGroup {
 	/**
 	 * Runs the entire command group
 	 */
-	public void start() {
+	public void run() {
 		isRunning = true;
-		
-		Util.println("CG:", commands.size()); //print number of commands in the group
 		
 		//run each command and add its poses to the total list
 		for (int i = 0; i < commands.size(); i++) {
@@ -55,8 +53,6 @@ public abstract class CommandGroup {
 		} //loop
 		
 		isRunning = false;
-		
-		Util.println("TIME:", poses.size() * Util.UPDATE_PERIOD); //print total time for command group
 	} //end start
 	
 	/**

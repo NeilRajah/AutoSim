@@ -16,6 +16,7 @@ import java.io.File;
 import javax.swing.JComponent;
 
 import main.AutoSim;
+import util.Util;
 
 public class UIBar extends JComponent implements Component {
 	//Attributes
@@ -25,6 +26,7 @@ public class UIBar extends JComponent implements Component {
 	
 	//Updated
 	private String cursorLoc; //x,y location of cursor in inches
+	private String time; //time from start in seconds
 	private float fontSize; //font size
 	
 	/**
@@ -43,6 +45,7 @@ public class UIBar extends JComponent implements Component {
 		//update constants
 		fontSize = (float) (height / 1.75);
 		cursorLoc = "(x,y): 0 0";
+		time = "Time: 0.000";
 		
 		//draw default information
 		repaint();
@@ -72,6 +75,17 @@ public class UIBar extends JComponent implements Component {
 	public void update() {	
 		repaint();
 	} //end update
+	
+	/**
+	 * Update the time since the animation started
+	 * @param index - number of frames elapsed in animation
+	 */
+	public void setTime(int index) {
+		//each frame is one update period long
+		time = String.format("Time: %.3f", index * Util.UPDATE_PERIOD); 	
+
+		repaint();
+	} //end setTime
 	
 	/**
 	 * Update the cursor location
@@ -106,7 +120,9 @@ public class UIBar extends JComponent implements Component {
 		
 		//draw text
 		g2.setColor(Color.black);
-		Painter.drawString(g2, cursorLoc, 0, height/10);
+		
+		Painter.drawFlippedString(g2, cursorLoc, 0, height/10);
+		Painter.drawFlippedString(g2, time, 1000, height/10);
 	} //end paintComponent
 	
 	/**
