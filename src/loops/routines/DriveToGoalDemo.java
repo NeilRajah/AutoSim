@@ -8,17 +8,18 @@
 package loops.routines;
 
 import loops.CommandGroup;
-import loops.DriveDistance;
 import loops.DriveLoop;
 import loops.DriveToGoal;
-import loops.TurnAngle;
+import loops.Wait;
 import main.AutoSim;
 import model.Point;
-import util.FieldPoints;
 import util.Util;
 
 public class DriveToGoalDemo extends CommandGroup {
 
+	/**
+	 * Drive between ten random points on the field
+	 */
 	public DriveToGoalDemo() {
 		DriveLoop loop = AutoSim.driveLoop; //get the main loop
 		
@@ -58,6 +59,9 @@ public class DriveToGoalDemo extends CommandGroup {
 			
 			//add the command to the group
 			add(new DriveToGoal(loop, new Point(x,y), 1, topSpeed, minSpeed, reverse));
+			
+			//wait for a split second before running next command
+			add(new Wait(loop, 0.2));
 		} //loop
 	} //end constructor
 } //end class

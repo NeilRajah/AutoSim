@@ -1,7 +1,5 @@
-/model/
 /graphics/
-/main/
-/util/
-/resources/
 /loops/
-/routines/
+/main/
+/model/
+/util/

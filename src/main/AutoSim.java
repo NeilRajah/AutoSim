@@ -13,14 +13,12 @@ import graphics.Painter;
 import graphics.Window;
 import loops.Command;
 import loops.CommandGroup;
-import loops.DriveDistance;
 import loops.DriveLoop;
-import loops.routines.DriveToGoalDemo;
+import loops.routines.StraightProfileTest;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
 import model.Robot;
-import util.FieldPoints;
 import util.Util;
 
 public class AutoSim {
@@ -59,8 +57,6 @@ public class AutoSim {
 		//create robot
 		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2); //14ft/s 2 NEO gearbox each side
 		Robot r = new Robot(6, 153, 30, 30, gb); //153lb 6" wheel dia 30"x30" chassis
-		r.setXY(FieldPoints.AUTO_SHOT); //starting (x,y) position
-		r.setHeadingDegrees(180);
 		
 		//set graphics parameters for drawing the robot
 		Painter.robotLength = r.getLengthPixels();
@@ -76,10 +72,7 @@ public class AutoSim {
 //		cg = new TrenchCycleFast();
 //		cg = new TrenchCycleLong();
 //		cg = new EightCellAuto(); 
-		cg = new DriveToGoalDemo();
-		
-		//creating a single command
-//		c = new DriveDistance(driveLoop, 100, 20, 12);
-//		c.run();
+//		cg = new DriveToGoalDemo();
+		cg = new StraightProfileTest();
 	} //end initialize
 } //end AutoSim

@@ -7,6 +7,7 @@
 package graphics;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -34,6 +35,9 @@ public class Environment extends JComponent implements Component {
 	//Updated
 	private ArrayList<Pose> poses; //list of robot poses to draw
 	private int poseIndex; //index in pose list of pose to draw
+	
+	//Debug
+	private boolean debug = true; //whether to display the field or not
 	
 	/**
 	 * The environment the robot is simulated in
@@ -134,7 +138,13 @@ public class Environment extends JComponent implements Component {
 		Graphics2D g2 = (Graphics2D) g; //Graphics2D for better graphics
 	    
 		//draw the field image as the background
-		g2.drawImage(field, 0, 0, null);
+		if (!debug) {
+			g2.drawImage(field, 0, 0, null);
+			
+		} else {
+			g2.setColor(Color.GRAY);
+			g2.fillRect(0, 0, width, height);
+		} //if
 		
 		//stroke for lines
 		g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));

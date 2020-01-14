@@ -59,7 +59,7 @@ public class DriveDistance extends Command {
 	 * Save the pose of the robot to the list
 	 */
 	protected void savePose() {
-		poses.add(loop.getRobot().getPose());
+		poses.add(loop.robot().getPose());
 	} //end savePose
 
 	/**

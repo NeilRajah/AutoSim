@@ -44,6 +44,14 @@ public class Gearbox {
 	} //end constructor
 	
 	/**
+	 * Safely get a copy of this gearbox
+	 * @return - identical copy of this gearbox
+	 */
+	public Gearbox clone() {
+		return new Gearbox(kGearRatio, new Motor(kMotor.getParameters()), kNumMotors);
+	} //end clone
+	
+	/**
 	 * Compute constants of the gearbox
 	 */
 	private void computeConstants() {

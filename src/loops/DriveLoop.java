@@ -106,12 +106,20 @@ public class DriveLoop {
 	} //end onLoop
 	
 	/**
-	 * Get the robot being controlled by the loop
-	 * @return robot - robot being controlled
+	 * Get a copy of the robot being controlled by the loop
+	 * @return - copy of robot being controlled
 	 */
 	public Robot getRobot() {
-		return robot;
+		return robot.clone();
 	} //end getRobot
+	
+	/**
+	 * Get the robot being controlled by the loop
+	 * @return robot - robot being controlled by loop
+	 */
+	public Robot robot() {
+		return robot;
+	} //end robot
 	
 	/**
 	 * Get whether or not the PID controller for driving is at its target

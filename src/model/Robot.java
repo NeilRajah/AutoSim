@@ -70,6 +70,21 @@ public class Robot {
 	} //end constructor
 	
 	/**
+	 * Safely get a copy of this Robot
+	 * @return - identical copy of this Robot 
+	 */
+	public Robot clone() {
+		//convert the constants to imperial
+		double wheelDia = kWheelRad * 2 / Util.INCHES_TO_METERS;
+		double mass = kMass / Util.LBS_TO_KG;
+		double length = kLength / Util.INCHES_TO_METERS;
+		double width = kWidth / Util.INCHES_TO_METERS;
+		
+		//left gearbox identical to right gearbox, doesn't matter which is used
+		return new Robot(wheelDia, mass, length, width, leftGearbox.clone());
+	} //end clone
+	
+	/**
 	 * Compute constants of the robot
 	 */
 	private void computeConstants() {

@@ -28,6 +28,10 @@ public class Util {
 	public static final double kI_TURN = 0.0;
 	public static final double kD_TURN = 0.05;
 	
+	//Motion Profiling Constants (calculated with model)
+	public static final double kV = 0.182; //ft/s -> V is 0.0833333
+	public static final double kA = 0.0203;
+	
 	//Motors (values from https://motors.vex.com/)
 	//Free Speed (RPM), Free Current (A), Stall Torque (Nm), Stall Current (A)
 	public static final double[] NEO = new double[] {5880, 1.3, 3.36, 166}; 

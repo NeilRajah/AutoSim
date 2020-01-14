@@ -1,0 +1,86 @@
+/**
+ * SetPose
+ * Author: Neil Balaskandarajah
+ * Created on: 13/01/2020
+ * Set the pose of the robot
+ */
+package loops;
+
+import java.util.ArrayList;
+
+import loops.DriveLoop.STATE;
+import model.Point;
+import model.Pose;
+
+public class SetPose extends Command {
+	//Attributes
+	//General
+	private DriveLoop loop; //drivetrain loop to update
+	private ArrayList<Pose> poses; //list of poses to update for drawing
+	
+	/**
+	 * Set the pose of the robot 
+	 * @param driveLoop - drivetrain loop to update
+	 * @param p - point to set (x,y) of robot to
+	 * @param heading - heading to set robot to in degrees
+	 */
+	public SetPose(DriveLoop driveLoop, Point p, double heading) {
+		//set attributes
+		this.loop = driveLoop;
+		poses = new ArrayList<Pose>();
+		
+		//set pose of robot
+		loop.getRobot().setXY(p);
+		loop.getRobot().setHeading(Math.toRadians(heading));
+		loop.setState(STATE.WAITING);
+	} //end constructor
+	
+	/**
+	 * Set the pose of the robot 
+	 * @param driveLoop - drivetrain loop to update
+	 * @param x - x value to set robot to
+	 * @param y - y value to set robot to
+	 * @param heading - heading to set robot to in degrees
+	 */
+	public SetPose(DriveLoop driveLoop, double x, double y, double heading) {
+		//set attributes
+		this.loop = driveLoop;
+		poses = new ArrayList<Pose>();
+		
+		//set pose of robot
+		loop.robot().setXY(new Point(x,y));
+		loop.robot().setHeading(Math.toRadians(heading));
+		loop.setState(STATE.WAITING);
+	} //end constructor
+
+	protected void initialize() {}
+	
+	protected void execute() {}
+
+	/**
+	 * Save the pose of the robot to the list
+	 */
+	protected void savePose() {
+		poses.add(loop.robot().getPose());
+	} //end savePose
+
+	/**
+	 * Return true upon initialization
+	 */
+	protected boolean isFinished() {
+		return true;
+	} //end isFinished
+
+	/**
+	 * Run at the end of the command
+	 */
+	protected void end() {} 
+
+	/**
+	 * Get the list of poses
+	 * @return poses - list of poses for animation
+	 */
+	public ArrayList<Pose> getPoses() {
+		return poses;
+	} //end getPoses
+} //end class

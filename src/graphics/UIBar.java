@@ -83,7 +83,6 @@ public class UIBar extends JComponent implements Component {
 	public void setTime(int index) {
 		//each frame is one update period long
 		time = String.format("Time: %.3f", index * Util.UPDATE_PERIOD); 	
-
 		repaint();
 	} //end setTime
 	
@@ -120,7 +119,6 @@ public class UIBar extends JComponent implements Component {
 		
 		//draw text
 		g2.setColor(Color.black);
-		
 		Painter.drawFlippedString(g2, cursorLoc, 0, height/10);
 		Painter.drawFlippedString(g2, time, 1000, height/10);
 	} //end paintComponent
