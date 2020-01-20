@@ -11,7 +11,7 @@ import java.awt.Toolkit;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.DriveToGoal;
+import commands.TimedVoltage;
 import graphics.Painter;
 import graphics.Window;
 import model.DriveLoop;
@@ -20,7 +20,6 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
-import util.FieldPoints;
 import util.Util;
 
 public class AutoSim {
@@ -72,7 +71,7 @@ public class AutoSim {
 		//create the command group
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
-		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 5, 12, 0, false));
-//		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));
+//		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 1, false));
+		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));
 	} //end initialize
 } //end AutoSim

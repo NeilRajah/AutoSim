@@ -187,15 +187,15 @@ class ModelTest {
 	void driveToGoalTest() {
 		DriveToGoal d2g = new DriveToGoal(driveLoop, FieldPoints.AUTO_POS_TWO, 1, 12, 0, false);
 		d2g.run();
-		assertEquals(1, FieldPositioning.calcDistance(FieldPoints.AUTO_POS_TWO, driveLoop.getRobot().getPoint()), 1);
+		assertEquals(1, FieldPositioning.calcDistance(FieldPoints.AUTO_POS_TWO, driveLoop.robot().getPoint()), 1);
 	} //end driveToGoalTest
 	
-//	@Test
+	@Test
 	/**
 	 * Calculate the constants
 	 */
 	void constantsTest() {
-		ConstantsTest ct = new ConstantsTest(AutoSim.driveLoop);
+		ConstantsTest ct = new ConstantsTest(driveLoop);
 		ct.execute();
 	} //end ConstantsTest
 } //end class

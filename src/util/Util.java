@@ -59,6 +59,11 @@ public class Util {
 		} //if
 	} //end clampNum
 	
+	public double regressedSlope(double[] x, double[] y) {
+		//stub
+		return 0.0;
+	}
+	
 	//Output
 	
 	/**

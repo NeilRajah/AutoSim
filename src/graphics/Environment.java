@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
+import main.AutoSim;
 import model.Pose;
 
 public class Environment extends JComponent implements Component {
@@ -152,7 +153,7 @@ public class Environment extends JComponent implements Component {
 		//draw the current pose
 		if (poses != null && !poses.isEmpty()) { //if the pose is not null or empty
 			Painter.drawPose(g2, poses.get(poseIndex));
-		} //if
+		} //if		
 	} //end paintComponent
 	
 	//User Interaction

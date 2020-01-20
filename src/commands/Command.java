@@ -52,7 +52,7 @@ public abstract class Command implements Runnable {
 		
 		//execute the command until it is finished
 		while(!this.isFinished() && !this.isTimedOut) {
-			isTimedOut = (System.currentTimeMillis() - initTime) > 500;
+			isTimedOut = (System.currentTimeMillis() - initTime) > 5000;
 			this.execute();
 			this.savePose();
 		} //loop

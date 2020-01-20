@@ -17,12 +17,14 @@ import util.Util;
 public class ConstantsTest {
 	//Attributes
 	private DriveLoop loop; //drivetrain loop to update
-	private ArrayList<Point> points; //voltage-velocity points
+	private double[] voltages;
+	private double[] velocities;
 	
 	public ConstantsTest(DriveLoop loop) {
 		//set attributes
 		this.loop = loop;
-		points = new ArrayList<Point>(); 
+		
+		//constant for test length (currently 5 seconds)
 	} //end constructor
 	
 	/**
@@ -41,7 +43,6 @@ public class ConstantsTest {
 			
 			//save the velocities and the voltages
 			double vel = loop.robot().getLinearVel();
-			points.add(new Point(volt, vel));
 			
 			//print point values
 			Util.tabPrint(volt, vel);
@@ -50,6 +51,9 @@ public class ConstantsTest {
 			//reset the robot
 			loop.robot().reset();
 		} //loop
+		
+		//regression
+		//print out kV
 	} //end calckV
 	
 	private void calckA() {

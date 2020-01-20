@@ -46,5 +46,8 @@ public class Painter {
 		
 		//draw back-end indicator (straight box so only round edges at front)
 		g2.fillRoundRect(-robotLength/2, -robotWidth/2, cornerRad, robotWidth, cornerRad/4, cornerRad/4);
+		
+		g2.translate(-p.getPoint().getY()*AutoSim.ppi, -p.getPoint().getX()*AutoSim.ppi);
+		g2.rotate(-p.getHeading());
 	} //end drawPose
 } //end Painter 
