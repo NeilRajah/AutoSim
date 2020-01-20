@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import loops.Command;
-import loops.CommandGroup;
+import commands.Command;
+import commands.CommandGroup;
 import main.AutoSim;
 import model.Pose;
 import util.Util;

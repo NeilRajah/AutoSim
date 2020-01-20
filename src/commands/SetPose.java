@@ -4,13 +4,14 @@
  * Created on: 13/01/2020
  * Set the pose of the robot
  */
-package loops;
+package commands;
 
 import java.util.ArrayList;
 
-import loops.DriveLoop.STATE;
+import model.DriveLoop;
 import model.Point;
 import model.Pose;
+import model.DriveLoop.STATE;
 
 public class SetPose extends Command {
 	//Attributes

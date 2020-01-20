@@ -13,9 +13,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import loops.DriveDistance;
-import loops.DriveLoop;
-import loops.DriveToGoal;
+import commands.DriveDistance;
+import commands.DriveToGoal;
+import commands.routines.ConstantsTest;
+import main.AutoSim;
+import model.DriveLoop;
 import model.FieldPositioning;
 import model.Gearbox;
 import model.Motor;
@@ -187,4 +189,13 @@ class ModelTest {
 		d2g.run();
 		assertEquals(1, FieldPositioning.calcDistance(FieldPoints.AUTO_POS_TWO, driveLoop.getRobot().getPoint()), 1);
 	} //end driveToGoalTest
+	
+//	@Test
+	/**
+	 * Calculate the constants
+	 */
+	void constantsTest() {
+		ConstantsTest ct = new ConstantsTest(AutoSim.driveLoop);
+		ct.execute();
+	} //end ConstantsTest
 } //end class

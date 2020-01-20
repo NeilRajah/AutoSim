@@ -4,12 +4,10 @@
  * Created on: 03/01/2019
  * State machine for the drivetrain
  */
-package loops;
+package model;
 
 import java.awt.Color;
 
-import model.PIDController;
-import model.Robot;
 import util.Util;
 
 public class DriveLoop {
@@ -168,8 +166,6 @@ public class DriveLoop {
 		//reset the PID controllers
 		drivePID.reset();
 		turnPID.reset();
-
-		Util.println(goalDist, this.tolerance);
 	} //end setDriveDistanceState
 	
 	/**

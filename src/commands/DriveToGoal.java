@@ -4,10 +4,11 @@
  * Created on: 03/01/2020
  * Drive the robot to an (x,y) position on the field
  */
-package loops;
+package commands;
 
 import java.util.ArrayList;
 
+import model.DriveLoop;
 import model.FieldPositioning;
 import model.Point;
 import model.Pose;
@@ -70,7 +71,8 @@ public class DriveToGoal extends Command {
 	protected void execute() {	
 		updateSetpoints();
 		loop.updateDriveToGoalState(setpoint, goalAngle, tolerance, topSpeed*scale, minSpeed, reverse);
-		loop.onLoop();		
+		loop.onLoop();	
+		Util.println("x,y:", loop.robot().getX(), loop.robot().getY());
 	} //end execute
 
 	/**

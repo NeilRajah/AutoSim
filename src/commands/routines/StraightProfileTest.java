@@ -5,13 +5,13 @@
  * Test the straight motion profile for a robot
  */
 
-package loops.routines;
+package commands.routines;
 
-import loops.CommandGroup;
-import loops.DriveDistance;
-import loops.DriveLoop;
-import loops.SetPose;
+import commands.CommandGroup;
+import commands.DriveDistance;
+import commands.SetPose;
 import main.AutoSim;
+import model.DriveLoop;
 
 public class StraightProfileTest extends CommandGroup {
 

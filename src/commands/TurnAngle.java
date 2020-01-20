@@ -1,43 +1,46 @@
 /**
- * DriveDistance
+ * TurnAngle
  * Author: Neil Balaskandarajah
  * Created on: 03/01/2020
- * Use PID control to drive a distance within a tolerance
+ * Use PID control to turn to an angle within a tolerance
  */
 
-package loops;
+package commands;
 
 import java.util.ArrayList;
 
+import model.DriveLoop;
 import model.Pose;
-import util.Util;
 
-public class DriveDistance extends Command {
+public class TurnAngle extends Command {
 	//Attributes
 	//General
 	private DriveLoop loop; //drivetrain loop to update
 	private ArrayList<Pose> poses; //list of poses to update for drawing
 	
 	//Specific
-	private double distance; //distance to drive in inches
-	private double tolerance; //tolerance to be within in inche
-	private double topSpeed; //top speed to drive at in inches
+	private double angle; //angle to turn to in degrees
+	private double tolerance; //tolerance to be within in degrees
+	private double topSpeed; //maximum linear wheel speed in ft/s
+	private boolean relative; //whether the angle is relative to the current heading or not
 	
 	/**
-	 * Drive the robot a specified distance within a tolerance and below a top speedd
+	 * Turn the robot to an angle within a specific tolerance below a top speed
 	 * @param loop - drivetrain loop to update
-	 * @param distance - distance to drive in inches
-	 * @param tolerance - tolerance to be within in inches
-	 * @param topSpeed - top speed to drive at in inches
+	 * @param angle - angle to turn to in degrees
+	 * @param tolerance - tolerance to be within in degrees
+	 * @param topSpeed - maximum linear wheel speed in ft/s
+	 * @param relative - whether the angle is relative to the current heading or not
 	 */
-	public DriveDistance(DriveLoop loop, double distance, double tolerance, double topSpeed) {
+	public TurnAngle(DriveLoop loop, double angle, double tolerance, double topSpeed, boolean relative) {
 		//set attributes
 		this.loop = loop;
-		this.distance = distance;
-		this.tolerance = tolerance; 
+		this.angle = Math.toRadians(angle);
+		this.tolerance = Math.toRadians(tolerance);
 		this.topSpeed = topSpeed;
+		this.relative = relative;
 		
-		//initialize poses list
+		//initialize the list of poses
 		poses = new ArrayList<Pose>();
 	} //end constructor
 
@@ -45,15 +48,15 @@ public class DriveDistance extends Command {
 	 * Initialize the command by setting the state machine state and corresponding values
 	 */
 	protected void initialize() {
-		loop.setDriveDistanceState(distance + tolerance, topSpeed, tolerance);
+		loop.setTurnAngleState(angle, topSpeed, tolerance, relative);
 	} //end initialize
 
 	/**
-	 * Execute the command by running the state machine
+	 * Execute the command by running the command
 	 */
 	protected void execute() {
 		loop.onLoop();
-	} //end onLoop
+	} //end execute
 
 	/**
 	 * Save the pose of the robot to the list
@@ -67,9 +70,9 @@ public class DriveDistance extends Command {
 	 * @return - true if it is, false if it is not
 	 */
 	protected boolean isFinished() {
-		if (loop.isDrivePIDAtTarget() && loop.isRobotSlowerThanPercent(Util.kP_DRIVE * tolerance)) {
+		if (loop.isTurnPIDAtTarget() && loop.isRobotSlowerThanPercent(0.05)) {
 			return true;
-		} else {
+		}  else {
 			return false;
 		} //if
 	} //end isFinished
@@ -77,7 +80,7 @@ public class DriveDistance extends Command {
 	/**
 	 * Run at the end of the command
 	 */
-	protected void end() {} 
+	protected void end() {}
 
 	/**
 	 * Get the list of poses
@@ -87,3 +90,4 @@ public class DriveDistance extends Command {
 		return poses;
 	} //end getPoses
 } //end class
+

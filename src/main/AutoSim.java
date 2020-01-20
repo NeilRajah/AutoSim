@@ -9,16 +9,18 @@ package main;
 
 import java.awt.Toolkit;
 
+import commands.CommandGroup;
+import commands.CommandList;
+import commands.DriveToGoal;
 import graphics.Painter;
 import graphics.Window;
-import loops.Command;
-import loops.CommandGroup;
-import loops.DriveLoop;
-import loops.routines.StraightProfileTest;
+import model.DriveLoop;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
+import model.Point;
 import model.Robot;
+import util.FieldPoints;
 import util.Util;
 
 public class AutoSim {
@@ -32,7 +34,6 @@ public class AutoSim {
 	
 	//Command
 	public static DriveLoop driveLoop;
-	private static Command c;
 	private static CommandGroup cg;
 	
 	/**
@@ -57,6 +58,7 @@ public class AutoSim {
 		//create robot
 		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2); //14ft/s 2 NEO gearbox each side
 		Robot r = new Robot(6, 153, 30, 30, gb); //153lb 6" wheel dia 30"x30" chassis
+		r.setXY(new Point(100,100));
 		
 		//set graphics parameters for drawing the robot
 		Painter.robotLength = r.getLengthPixels();
@@ -68,11 +70,9 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-//		cg = new TrenchCycleLow();
-//		cg = new TrenchCycleFast();
-//		cg = new TrenchCycleLong();
-//		cg = new EightCellAuto(); 
 //		cg = new DriveToGoalDemo();
-		cg = new StraightProfileTest();
+//		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
+		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 5, 12, 0, false));
+//		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));
 	} //end initialize
 } //end AutoSim

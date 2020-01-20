@@ -5,14 +5,14 @@
  * Long trench cycle right out of auto
  */
 
-package loops.routines;
+package commands.routines;
 
-import loops.CommandGroup;
-import loops.DriveDistance;
-import loops.DriveLoop;
-import loops.DriveToGoal;
-import loops.Wait;
+import commands.CommandGroup;
+import commands.DriveDistance;
+import commands.DriveToGoal;
+import commands.Wait;
 import main.AutoSim;
+import model.DriveLoop;
 import util.FieldPoints;
 
 public class TrenchCycleLong extends CommandGroup {

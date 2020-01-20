@@ -4,7 +4,7 @@
  * Created on: 03/01/2020
  * A group of commands to create routines
  */
-package loops;
+package commands;
 
 import java.util.ArrayList;
 

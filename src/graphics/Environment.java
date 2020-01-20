@@ -37,7 +37,7 @@ public class Environment extends JComponent implements Component {
 	private int poseIndex; //index in pose list of pose to draw
 	
 	//Debug
-	private boolean debug = true; //whether to display the field or not
+	private boolean debug = false; //whether to display the field or not
 	
 	/**
 	 * The environment the robot is simulated in

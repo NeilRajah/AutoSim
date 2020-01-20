@@ -4,7 +4,7 @@
  * Created on: 03/01/2020
  * Interface for running commands
  */
-package loops;
+package commands;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import model.Pose;
 public abstract class Command implements Runnable {
 	//Attributes
 	private boolean isRunning; //whether the command is running or not
+	private boolean isTimedOut; //whether the command times out or not
 	
 	/**
 	 * Runs once before command starts
@@ -45,10 +46,13 @@ public abstract class Command implements Runnable {
 	public void run() {
 		//initialize the command
 		isRunning = true;
+		isTimedOut = false;
 		this.initialize();
+		double initTime = System.currentTimeMillis();
 		
 		//execute the command until it is finished
-		while(!this.isFinished()) {
+		while(!this.isFinished() && !this.isTimedOut) {
+			isTimedOut = (System.currentTimeMillis() - initTime) > 500;
 			this.execute();
 			this.savePose();
 		} //loop
@@ -56,6 +60,7 @@ public abstract class Command implements Runnable {
 		//end the command
 		this.end();	
 		isRunning = false;
+		isTimedOut = false;
 	} //end run
 	
 	/**

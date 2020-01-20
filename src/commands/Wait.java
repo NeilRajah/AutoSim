@@ -4,13 +4,14 @@
  * Created on: 04/01/2020
  * Have the robot wait at its current position for an amount of time
  */
-package loops;
+package commands;
 
 import java.awt.Color;
 import java.util.ArrayList;
 
-import loops.DriveLoop.STATE;
+import model.DriveLoop;
 import model.Pose;
+import model.DriveLoop.STATE;
 import util.Util;
 
 public class Wait extends Command {

@@ -4,15 +4,15 @@
  * Created on: 04/01/2020
  * Fastest trench cycle right out of auto
  */
-package loops.routines;
+package commands.routines;
 
-import loops.CommandGroup;
-import loops.DriveDistance;
-import loops.DriveLoop;
-import loops.DriveToGoal;
-import loops.TurnAngle;
-import loops.Wait;
+import commands.CommandGroup;
+import commands.DriveDistance;
+import commands.DriveToGoal;
+import commands.TurnAngle;
+import commands.Wait;
 import main.AutoSim;
+import model.DriveLoop;
 import util.FieldPoints;
 
 public class TrenchCycleFast extends CommandGroup {

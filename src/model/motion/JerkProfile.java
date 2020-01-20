@@ -7,7 +7,7 @@
 
 package model.motion;
 
-import loops.DriveLoop;
+import model.DriveLoop;
 import model.Robot;
 import util.Util;
 
