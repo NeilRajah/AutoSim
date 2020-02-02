@@ -40,9 +40,8 @@ public class JerkProfile {
 	//error if rampDist > totalDist
 	
 	private void computeConstants() {
-		kA = Util.kA;
-		kV = Util.kV;
+		
 	}
 	
 	
-}
+} //end JerkProfile

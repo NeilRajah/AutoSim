@@ -29,8 +29,13 @@ public class Util {
 	public static final double kD_TURN = 0.05;
 	
 	//Motion Profiling Constants (calculated with model)
-	public static final double kV = 0.182; //ft/s -> V is 0.0833333
-	public static final double kA = 0.0203;
+	public static final double kV_MODEL = 0.182; //ft/s -> V is 0.0833333
+	public static final double kA_MODEL = 0.0203;
+	
+	//Motion Profiling Constants (calculated empirically)
+	//initialized to negative value for detecting errors in not assigning it
+	public static double kV_EMPIR = -1; //voltage -> ft/s
+	public static double kA_EMPIR = -1; //voltage -> ft/s^2
 	
 	//Motors (values from https://motors.vex.com/)
 	//Free Speed (RPM), Free Current (A), Stall Torque (Nm), Stall Current (A)
@@ -59,10 +64,72 @@ public class Util {
 		} //if
 	} //end clampNum
 	
-	public double regressedSlope(double[] x, double[] y) {
-		//stub
-		return 0.0;
-	}
+	/**
+	 * Calculate a slope of best fit for equally sized double arrays
+	 * Math based on videos by Eugene O'Loughlin:
+	 * https://youtu.be/2SCg8Kuh0tE
+	 * https://youtu.be/GhrxgbQnEEU
+	 * @param x - x values in data set
+	 * @param y - y values in data set
+	 * @return slope calculated using linear regression
+	 */
+	public static double regressedSlope(double[] x, double[] y) {
+		//throw error if arrays are not same length
+		if (x.length != y.length) {
+			String errorMsg = "Arrays must be same size!\n";
+			errorMsg += "x Array Size: " + x.length + "\n";
+			errorMsg += "y Array Size: " + y.length + "\n";
+			
+			throw new IllegalArgumentException(errorMsg);
+		} //if
+		
+		//compute average of each array
+		double xSum = 0.0, ySum = 0.0;
+		
+		for (int i = 0; i < x.length; i++) {
+			xSum += x[i];
+			ySum += y[i];
+		} //loop
+		
+		double xAvg = xSum / x.length;
+		double yAvg = ySum / y.length;
+		Util.println(xAvg, yAvg);
+		
+		//create deviation arrays 
+		double[] xDevs = new double[x.length];
+		double[] yDevs = new double[y.length];
+		
+		for (int i = 0; i < x.length; i++) {
+			xDevs[i] = x[i] - xAvg;
+			yDevs[i] = y[i] - yAvg;
+			//calculations for r and sx,sy here?
+		} //loop
+		
+		//compute Pearson's Coefficient
+		double rNum = 0.0;
+		double xDevSqr = 0.0, yDevSqr = 0.0;
+		
+		for (int i = 0; i < x.length; i++) {
+			rNum += xDevs[i] * yDevs[i];
+			xDevSqr += Math.pow(xDevs[i], 2);
+			yDevSqr += Math.pow(yDevs[i], 2);
+		} //loop
+		
+		double r = rNum / Math.sqrt(xDevSqr * yDevSqr);
+		
+		//compute standard deviations
+		double xStdDevNum = 0.0, yStdDevNum = 0.0;
+		
+		for (int i = 0; i < x.length; i++) {
+			xStdDevNum += Math.pow(xDevs[i], 2);
+			yStdDevNum += Math.pow(yDevs[i], 2);
+		} //loop
+		
+		double xStdDev = Math.sqrt(xStdDevNum / (x.length - 1));
+		double yStdDev = Math.sqrt(yStdDevNum / (y.length - 1));
+		
+		return r * (yStdDev / xStdDev);
+	} //end regressedSlope
 	
 	//Output
 	

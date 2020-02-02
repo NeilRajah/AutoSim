@@ -197,5 +197,7 @@ class ModelTest {
 	void constantsTest() {
 		ConstantsTest ct = new ConstantsTest(driveLoop);
 		ct.execute();
+		double correctSlope = 0.9908;
+		assertEquals(correctSlope, Util.kV_EMPIR, 1E-2);
 	} //end ConstantsTest
 } //end class

@@ -6,12 +6,9 @@
  */
 package commands.routines;
 
-import java.util.ArrayList;
-
 import commands.Command;
 import commands.TimedVoltage;
 import model.DriveLoop;
-import model.Point;
 import util.Util;
 
 public class ConstantsTest {
@@ -19,12 +16,20 @@ public class ConstantsTest {
 	private DriveLoop loop; //drivetrain loop to update
 	private double[] voltages;
 	private double[] velocities;
+	private double voltStep;
+	private int index;
 	
 	public ConstantsTest(DriveLoop loop) {
 		//set attributes
 		this.loop = loop;
+
+		//constants
+		voltStep = 0.1;
 		
-		//constant for test length (currently 5 seconds)
+		//variables
+		voltages = new double[(int) Math.ceil(Util.MAX_VOLTAGE / voltStep) + 1];
+		velocities = new double[voltages.length];
+		index = 0;
 	} //end constructor
 	
 	/**
@@ -35,14 +40,19 @@ public class ConstantsTest {
 		calckA();
 	} //end execute
 	
+	/**
+	 * Calculate using commands and linear regression
+	 */
 	private void calckV() {
-		for(double volt = 0; volt < Util.MAX_VOLTAGE; volt += 0.1) {
+		for(double volt = 0; volt < Util.MAX_VOLTAGE; volt += voltStep) {
 			//run the robot at a voltage for 5 seconds
 			Command c = new TimedVoltage(loop, volt, 5);
 			c.run();
 			
 			//save the velocities and the voltages
 			double vel = loop.robot().getLinearVel();
+			voltages[index] = volt;
+			velocities[index] = vel;
 			
 			//print point values
 			Util.tabPrint(volt, vel);
@@ -50,10 +60,11 @@ public class ConstantsTest {
 			
 			//reset the robot
 			loop.robot().reset();
+			index++;
 		} //loop
 		
-		//regression
-		//print out kV
+		Util.kV_EMPIR = Util.regressedSlope(voltages, velocities);
+		Util.println("kV:", Util.kV_EMPIR);
 	} //end calckV
 	
 	private void calckA() {
