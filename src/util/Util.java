@@ -45,6 +45,9 @@ public class Util {
 	public static final double[] PRO_775 = new double[] {18730, 0.7, 0.71, 134};
 	public static final double[] FALCON_500 = new double[] {6380, 1.5, 4.69, 257}; 
 	
+	//Path Constants
+	public static final int[] FIVENOMIAL_CONSTANTS = {1,5,10,5,1};
+	
 	//Calculations
 	
 	/**

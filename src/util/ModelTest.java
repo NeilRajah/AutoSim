@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import commands.DriveDistance;
 import commands.DriveToGoal;
 import commands.routines.ConstantsTest;
-import main.AutoSim;
 import model.DriveLoop;
 import model.FieldPositioning;
 import model.Gearbox;
@@ -24,6 +23,7 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import model.motion.QuinticBezierPath;
 
 class ModelTest {
 	//Attributes
@@ -200,4 +200,22 @@ class ModelTest {
 		double correctSlope = 0.9908;
 		assertEquals(correctSlope, Util.kV_EMPIR, 1E-2);
 	} //end ConstantsTest
+	
+	@Test
+	/**
+	 * Check if the length of the path is correct
+	 */
+	void pathLengthTest() {
+		QuinticBezierPath testPath = new QuinticBezierPath(new Point[] {
+    		new Point(7.3, 3.3),
+    		new Point(4.7, 11.9),
+    		new Point(32.3, 3.5),
+    		new Point(16.4, 25.2),
+    		new Point(24.2, 37.6),
+    		new Point(38.3, 24.8)
+    	});
+		System.out.println("PATH LENGTH:" + testPath.getLength());
+		double correctLength = 117.56;
+		assertEquals(correctLength, testPath.getLength(), 1);
+	} //end pathLengthsTest
 } //end class
