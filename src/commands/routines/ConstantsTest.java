@@ -50,21 +50,20 @@ public class ConstantsTest {
 			c.run();
 			
 			//save the velocities and the voltages
-			double vel = loop.robot().getLinearVel();
+			double vel = loop.getRobot().getLinearVel();
 			voltages[index] = volt;
 			velocities[index] = vel;
 			
 			//print point values
-			Util.tabPrint(volt, vel);
-			System.out.println();
+//			Util.tabPrint(volt, vel);
 			
 			//reset the robot
-			loop.robot().reset();
+			loop.getRobot().reset();
 			index++;
 		} //loop
 		
 		Util.kV_EMPIR = Util.regressedSlope(voltages, velocities);
-		Util.println("kV:", Util.kV_EMPIR);
+//		Util.println("kV:", Util.kV_EMPIR);
 	} //end calckV
 	
 	private void calckA() {

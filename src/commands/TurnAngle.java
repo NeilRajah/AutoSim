@@ -61,8 +61,8 @@ public class TurnAngle extends Command {
 	/**
 	 * Save the pose of the robot to the list
 	 */
-	protected void savePose() {
-		poses.add(loop.robot().getPose());
+	protected void updateGraphics() {
+		poses.add(loop.getRobot().getPose());
 	} //end savePose
 
 	/**

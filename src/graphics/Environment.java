@@ -20,8 +20,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
-import main.AutoSim;
 import model.Pose;
+import model.motion.QuinticBezierPath;
 
 public class Environment extends JComponent implements Component {
 	//Attributes
@@ -35,6 +35,7 @@ public class Environment extends JComponent implements Component {
 	
 	//Updated
 	private ArrayList<Pose> poses; //list of robot poses to draw
+	private QuinticBezierPath curve; //points for the bezier path
 	private int poseIndex; //index in pose list of pose to draw
 	
 	//Debug
@@ -106,6 +107,16 @@ public class Environment extends JComponent implements Component {
 		poseIndex = index;
 	} //end setPoseIndex
 	
+	//Curve
+	
+	/**
+	 * Add curve to be used for graphics
+	 * @param qbp - Bezier curve to be followed
+	 */
+	public void setCurve(QuinticBezierPath qbp) {
+		curve = qbp;
+	} //end setCurve
+	
 	//Graphics
 	
 	/**
@@ -154,6 +165,12 @@ public class Environment extends JComponent implements Component {
 		if (poses != null && !poses.isEmpty()) { //if the pose is not null or empty
 			Painter.drawPose(g2, poses.get(poseIndex));
 		} //if		
+		
+		//draw the current path
+		if (curve != null) {
+			int[][] bezPts = curve.getPolyline();
+			g2.drawPolyline(bezPts[0], bezPts[1], QuinticBezierPath.RESOLUTION);
+		} //if
 	} //end paintComponent
 	
 	//User Interaction

@@ -31,7 +31,7 @@ public class JerkProfile {
 		 * decDist > totalDist
 		 * accDist + decDist > totalDist
 		 */
-		this.robot = loop.getRobot();
+		this.robot = loop.getRobotClone();
 		
 		computeConstants();
 	}

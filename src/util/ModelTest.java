@@ -176,8 +176,8 @@ class ModelTest {
 	 * Ensure the robot calculates its yaw correctly
 	 */
 	void yawTest() {
-		r.setHeadingDegrees(10);
-		assertEquals(10, r.getYaw(), 1);
+		r.setHeadingDegrees(425);
+		assertEquals(65, r.getYaw(), 1);
 	} //end yawTest
 	
 	@Test
@@ -187,7 +187,7 @@ class ModelTest {
 	void driveToGoalTest() {
 		DriveToGoal d2g = new DriveToGoal(driveLoop, FieldPoints.AUTO_POS_TWO, 1, 12, 0, false);
 		d2g.run();
-		assertEquals(1, FieldPositioning.calcDistance(FieldPoints.AUTO_POS_TWO, driveLoop.robot().getPoint()), 1);
+		assertEquals(1, FieldPositioning.calcDistance(FieldPoints.AUTO_POS_TWO, driveLoop.getRobot().getPoint()), 1);
 	} //end driveToGoalTest
 	
 	@Test
@@ -218,4 +218,14 @@ class ModelTest {
 		double correctLength = 117.56;
 		assertEquals(correctLength, testPath.getLength(), 1);
 	} //end pathLengthsTest
+	
+	@Test
+	/**
+	 * Check if the path point calculated at a t value is correct
+	 */
+	void pathPointTest() {
+		QuinticBezierPath testPath = new QuinticBezierPath(FieldPoints.curve);
+		Point correctPoint = new Point(5.4, 3.7);
+		System.out.println("Here");
+	} //end pathPointTest
 } //end class

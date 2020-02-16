@@ -21,6 +21,15 @@ public class Point {
 		this.x = x;
 		this.y = y;
 	} //end constructor
+	
+	/**
+	 * Create an (x,y) point
+	 * @param xy - (x,y) coordinates for the point
+	 */
+	public Point(double[] xy) {
+		this.x = xy[0];
+		this.y = xy[1];
+	} //end constructor
 
 	/**
 	 * Get the x value of the point

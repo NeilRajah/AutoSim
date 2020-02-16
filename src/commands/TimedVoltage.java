@@ -69,15 +69,15 @@ public class TimedVoltage extends Command {
 	 * Execute the command by applying voltage to the robot andd increasing the counter
 	 */
 	protected void execute() {
-		loop.robot().update(leftVoltage, rightVoltage);
+		loop.getRobot().update(leftVoltage, rightVoltage);
 		counter += Util.UPDATE_PERIOD;
 	} //end execute
 
 	/**
 	 * Save the pose of the robot to the list
 	 */
-	protected void savePose() {
-		poses.add(loop.robot().getPose());
+	protected void updateGraphics() {
+		poses.add(loop.getRobot().getPose());
 	} //end savePose
 
 	/**

@@ -34,18 +34,12 @@ public class DriveToGoal extends Command {
 	/**
 	 * Drive to a goal point using the P2P control scheme
 	 * 
-	 * @param driveLoop
-	 *            - drivetrain loop to update
-	 * @param goal
-	 *            - goal point to drive to
-	 * @param tolerance
-	 *            - tolerance to be within in inches
-	 * @param topSpeed
-	 *            - top speed of the robot in ft/s
-	 * @param minSpeed
-	 *            - min speed of the robot in ft/s
-	 * @param reverse
-	 *            - whether the robot is driving backwards or not
+	 * @param driveLoop  - drivetrain loop to update
+	 * @param goal - goal point to drive to
+	 * @param tolerance - tolerance to be within in inches
+	 * @param topSpeed - top speed of the robot in ft/s
+	 * @param minSpeed - min speed of the robot in ft/s
+	 * @param reverse - whether the robot is driving backwards or not
 	 */
 	public DriveToGoal(DriveLoop driveLoop, Point goal, double tolerance, double topSpeed, double minSpeed,
 			boolean reverse) {
@@ -86,28 +80,22 @@ public class DriveToGoal extends Command {
 	/**
 	 * Save the pose of the robot to the list
 	 */
-	protected void savePose() {
-		poses.add(loop.robot().getPose());
+	protected void updateGraphics() {
+		poses.add(loop.getRobot().getPose());
 	} // end savePose
 
 	/**
 	 * Return whether or not the robot is within the target point tolerance circle
-	 * 
 	 * @return - true if within, false if not
 	 */
 	protected boolean isFinished() {
-		if (FieldPositioning.isWithinBounds(goalPoint, loop.robot().getPoint(), tolerance)) {
-			return true;
-		} else {
-			return false;
-		} // if
+		return FieldPositioning.isWithinBounds(goalPoint, loop.getRobot().getPoint(), tolerance);
 	} // end isFinished
 
 	/**
 	 * Run at the end of the command
 	 */
-	protected void end() {
-	}
+	protected void end() {}
 
 	/**
 	 * Get the list of poses
@@ -123,19 +111,19 @@ public class DriveToGoal extends Command {
 	 */
 	private void updateSetpoints() {
 		// distance from robot to goal point
-		double dist = FieldPositioning.calcDistance(loop.robot().getPoint(), goalPoint);
+		double dist = FieldPositioning.calcDistance(loop.getRobot().getPoint(), goalPoint);
 
 		// update distance and angle setpoints if more than half a foot away
 		if (dist >= 6) {
 			// distance setpoint
-			setpoint = loop.robot().getAveragePos() + (reverse ? -dist : dist);
+			setpoint = loop.getRobot().getAveragePos() + (reverse ? -dist : dist) + lookahead;
 
 			// angle setpoint
-			goalAngle = Math.toRadians(calcDeltaAngle()) + loop.robot().getHeading();
+			goalAngle = Math.toRadians(calcDeltaAngle()) + loop.getRobot().getHeading();
 		} // if
 
 		// scale for top speed
-		double dA = Math.abs(Math.toDegrees(goalAngle - loop.robot().getHeading()));
+		double dA = Math.abs(Math.toDegrees(goalAngle - loop.getRobot().getHeading()));
 		scale = calcScale(dA);
 	} // end updateSetpoints
 
@@ -166,15 +154,15 @@ public class DriveToGoal extends Command {
 	 * @return - required angle change in degrees
 	 */
 	private double calcDeltaAngle() {
-		double pointYaw = FieldPositioning.calcGoalYaw(loop.robot().getPoint(), goalPoint); // calculate the yaw to
+		double pointYaw = FieldPositioning.calcGoalYaw(loop.getRobot().getPoint(), goalPoint); // calculate the yaw to
 																								// the point
 		pointYaw += (reverse ? -Math.signum(pointYaw) * 180 : 0); // add on 180 in the opposite direction if going in
 																	// reverse
 
-		double deltaAngle = pointYaw - loop.robot().getYaw(); // yaw difference between point yaw and robot yaw
+		double deltaAngle = pointYaw - loop.getRobot().getYaw(); // yaw difference between point yaw and robot yaw
 
 		if (Math.abs(deltaAngle) >= (360 - Math.abs(deltaAngle))) { // if angle change not smallest possible
-			return (Math.signum(loop.robot().getYaw() * 180 - loop.robot().getYaw())
+			return (Math.signum(loop.getRobot().getYaw() * 180 - loop.getRobot().getYaw())
 					- (Math.signum(pointYaw) * 180 - pointYaw));
 
 		} else { // if it is smallest value

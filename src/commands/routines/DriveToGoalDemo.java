@@ -22,7 +22,7 @@ public class DriveToGoalDemo extends CommandGroup {
 	 */
 	public DriveToGoalDemo() {
 		DriveLoop loop = AutoSim.driveLoop; //get the main loop
-		loop.robot().setXY(new Point(30,30));
+		loop.getRobot().setXY(new Point(30,30));
 		
 		//Variables for the commands
 		
@@ -32,7 +32,7 @@ public class DriveToGoalDemo extends CommandGroup {
 		double minY = 15, maxY = Util.FIELD_WIDTH - minY;
 		
 		//topSpeed, minSpeed and reverse
-		double topSpeed = loop.getRobot().getMaxLinSpeed();
+		double topSpeed = loop.getRobotClone().getMaxLinSpeed();
 		double minSpeed = 0;
 		boolean reverse = false;
 		
@@ -44,7 +44,7 @@ public class DriveToGoalDemo extends CommandGroup {
 			
 			//set the speeds and reverse
 			if (i == 0) { //first drive
-				topSpeed = loop.getRobot().getMaxLinSpeed();
+				topSpeed = loop.getRobotClone().getMaxLinSpeed();
 				minSpeed = 6;
 				reverse = false;
 				
@@ -53,7 +53,7 @@ public class DriveToGoalDemo extends CommandGroup {
 				reverse = false;
 				
 			} else { //other points
-				topSpeed = Math.random() * (loop.getRobot().getMaxLinSpeed()/2) + loop.getRobot().getMaxLinSpeed()/2;
+				topSpeed = Math.random() * (loop.getRobotClone().getMaxLinSpeed()/2) + loop.getRobotClone().getMaxLinSpeed()/2;
 				reverse = Math.random() > 0.5;
 				minSpeed = topSpeed/2;								
 			} //if

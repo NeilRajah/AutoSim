@@ -10,6 +10,25 @@ package util;
 import model.Point;
 
 public class FieldPoints {
+	//Curves
+	public static final Point[] curve1 = new Point[] {
+		new Point(7.3, 3.3),
+		new Point(4.7, 11.9),
+		new Point(32.3, 3.5),
+		new Point(16.4, 25.2),
+		new Point(24.2, 37.6),
+		new Point(38.3, 24.8)
+	};
+	
+	public static double[][] curve = new double[][] {
+		{5.4, 3.7},
+		{149.4, 5},
+		{170.6, 74.9},
+		{22, 36.4},
+		{27.6, 113.3},
+		{177.6, 109.5}
+	};
+	
 	//Points
 	public static final Point MID_INITIATION = new Point(162, 522);
 	

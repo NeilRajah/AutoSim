@@ -107,7 +107,7 @@ public class DriveLoop {
 	 * Get a copy of the robot being controlled by the loop
 	 * @return - copy of robot being controlled
 	 */
-	public Robot getRobot() {
+	public Robot getRobotClone() {
 		return robot.clone();
 	} //end getRobot
 	
@@ -115,7 +115,7 @@ public class DriveLoop {
 	 * Get the robot being controlled by the loop
 	 * @return robot - robot being controlled by loop
 	 */
-	public Robot robot() {
+	public Robot getRobot() {
 		return robot;
 	} //end robot
 	

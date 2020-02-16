@@ -274,24 +274,8 @@ public class Robot {
 	 * @param yaw - robot yaw in degrees
 	 */
 	public double getYaw() {
-		yaw = Math.toDegrees(heading); //convert heading to degrees
-
-		// normalize to 0-360 degree range
-		if (yaw > 360) {
-			while (yaw > 360) {
-				yaw -= 360;
-			} //loop
-		} else if (yaw < 0) {
-			while (yaw < 0) {
-				yaw += 360;
-			} //loop
-		} //if
-
-		// set to negative if greater than 180
-		if (yaw > 180) {
-			yaw -= 360;
-		} //if
-
+		yaw = Math.toDegrees(heading) % 360; //convert heading to degrees
+		
 		return yaw;
 	} // end getYaw
 

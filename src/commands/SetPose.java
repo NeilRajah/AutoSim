@@ -31,8 +31,8 @@ public class SetPose extends Command {
 		poses = new ArrayList<Pose>();
 		
 		//set pose of robot
-		loop.getRobot().setXY(p);
-		loop.getRobot().setHeading(Math.toRadians(heading));
+		loop.getRobotClone().setXY(p);
+		loop.getRobotClone().setHeading(Math.toRadians(heading));
 		loop.setState(STATE.WAITING);
 	} //end constructor
 	
@@ -49,8 +49,8 @@ public class SetPose extends Command {
 		poses = new ArrayList<Pose>();
 		
 		//set pose of robot
-		loop.robot().setXY(new Point(x,y));
-		loop.robot().setHeading(Math.toRadians(heading));
+		loop.getRobot().setXY(new Point(x,y));
+		loop.getRobot().setHeading(Math.toRadians(heading));
 		loop.setState(STATE.WAITING);
 	} //end constructor
 
@@ -61,8 +61,8 @@ public class SetPose extends Command {
 	/**
 	 * Save the pose of the robot to the list
 	 */
-	protected void savePose() {
-		poses.add(loop.robot().getPose());
+	protected void updateGraphics() {
+		poses.add(loop.getRobot().getPose());
 	} //end savePose
 
 	/**

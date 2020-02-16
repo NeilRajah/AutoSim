@@ -26,9 +26,9 @@ public abstract class Command implements Runnable {
 	protected abstract void execute();
 	
 	/**
-	 * Save the pose of the robot for animation purposes
+	 * Update values for animation purposes
 	 */
-	protected abstract void savePose();
+	protected abstract void updateGraphics();
 	
 	/**
 	 * Checks whether the command isFinished
@@ -54,7 +54,7 @@ public abstract class Command implements Runnable {
 		while(!this.isFinished() && !this.isTimedOut) {
 			isTimedOut = (System.currentTimeMillis() - initTime) > 5000;
 			this.execute();
-			this.savePose();
+			this.updateGraphics();
 		} //loop
 		
 		//end the command

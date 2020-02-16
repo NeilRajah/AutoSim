@@ -56,8 +56,8 @@ public class Wait extends Command {
 	/*
 	 * Save the current pose to the list
 	 */
-	protected void savePose() {
-		Pose pose = loop.robot().getPose();
+	protected void updateGraphics() {
+		Pose pose = loop.getRobot().getPose();
 		pose.setColor(Color.yellow);
 		poses.add(pose);
 	} //end savePose

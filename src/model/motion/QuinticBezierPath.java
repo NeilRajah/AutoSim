@@ -13,7 +13,8 @@ import util.Util;
 
 public class QuinticBezierPath {
 	//Constants
-	private final int RESOLUTION = 100;
+	public static final int RESOLUTION = 1000;
+	private final double EPSILON = 5E-4;
 	
 	//Attributes
 	//Configured
@@ -29,6 +30,23 @@ public class QuinticBezierPath {
 	public QuinticBezierPath(Point[] controlPts) {
 		//set attributes
 		this.controlPts = controlPts;
+		
+		//calculate constants
+		computeConstants();
+	} //end constructor
+	
+	/**
+	 * Create a quintic bezier path given an array of point coordinates
+	 * @param controlPts - (x,y) control point coordinates in arrays
+	 */
+	public QuinticBezierPath(double[][] controlPts) {
+		//set attributes
+		this.controlPts = new Point[5];
+		
+		//fill array
+		for (int i = 0; i < 5; i++) {
+			this.controlPts[i] = new Point(controlPts[i]);
+		} //loop
 		
 		//calculate constants
 		computeConstants();
@@ -84,4 +102,40 @@ public class QuinticBezierPath {
 		
 		return new Point(sumX, sumY);
 	} //end calcPoint
+	
+	/**
+	 * Calculate the heading at the curve of a given t value
+	 * @param t - t value of the curve
+	 * return - heading at t
+	 */
+	public double calcHeading(double t) {
+		if (t <= EPSILON) {
+			return FieldPositioning.calcAngleRad(calcPoint(EPSILON), calcPoint(0));
+		} else if (t >= 1 - EPSILON) {
+			return FieldPositioning.calcAngleRad(calcPoint(1), calcPoint(1 - EPSILON));
+		} //if
+		return FieldPositioning.calcAngleRad(calcPoint(t + EPSILON), calcPoint(t - EPSILON));
+	} //end getHeading
+	
+	/**
+	 * Get the polyline for animation purposes
+	 * return - x points and y points of the curve
+	 */
+	public int[][] getPolyline() {
+		int[] x = new int[RESOLUTION];
+		int[] y = new int[RESOLUTION];
+		
+		double t = 0;
+		
+		for (int i = 0; i < RESOLUTION; i++) {
+			Point p = calcPoint(t);
+			
+			x[i] = (int) p.getX();
+			y[i] = (int) p.getY();
+			
+			t += 1.0 / RESOLUTION;
+		} //loop
+		
+		return new int[][]{x, y};
+	} //end getPolyline
 } //end class
