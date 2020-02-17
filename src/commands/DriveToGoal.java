@@ -169,4 +169,10 @@ public class DriveToGoal extends Command {
 			return deltaAngle;
 		} // if
 	} // end calcDeltaAngle
+
+	@Override
+	public int[][] getCurve() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 } // end class

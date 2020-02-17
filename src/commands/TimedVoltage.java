@@ -108,4 +108,10 @@ public class TimedVoltage extends Command {
 	public ArrayList<Pose> getPoses() {
 		return poses;
 	} //end getPoses
+
+	@Override
+	public int[][] getCurve() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 } //end class

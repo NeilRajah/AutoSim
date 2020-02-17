@@ -35,7 +35,7 @@ public class Environment extends JComponent implements Component {
 	
 	//Updated
 	private ArrayList<Pose> poses; //list of robot poses to draw
-	private QuinticBezierPath curve; //points for the bezier path
+	private int[][] curve; //points for the bezier path
 	private int poseIndex; //index in pose list of pose to draw
 	
 	//Debug
@@ -113,7 +113,7 @@ public class Environment extends JComponent implements Component {
 	 * Add curve to be used for graphics
 	 * @param qbp - Bezier curve to be followed
 	 */
-	public void setCurve(QuinticBezierPath qbp) {
+	public void setCurve(int[][] qbp) {
 		curve = qbp;
 	} //end setCurve
 	
@@ -168,9 +168,11 @@ public class Environment extends JComponent implements Component {
 		
 		//draw the current path
 		if (curve != null) {
-			int[][] bezPts = curve.getPolyline();
-			g2.drawPolyline(bezPts[0], bezPts[1], QuinticBezierPath.RESOLUTION);
-		} //if
+			System.out.println("here");
+			g2.drawPolyline(curve[0], curve[1], QuinticBezierPath.RESOLUTION);
+		} else {
+//			System.out.println("curve was null");
+		}
 	} //end paintComponent
 	
 	//User Interaction

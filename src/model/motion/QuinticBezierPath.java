@@ -41,10 +41,10 @@ public class QuinticBezierPath {
 	 */
 	public QuinticBezierPath(double[][] controlPts) {
 		//set attributes
-		this.controlPts = new Point[5];
+		this.controlPts = new Point[6];
 		
 		//fill array
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i <= 5; i++) {
 			this.controlPts[i] = new Point(controlPts[i]);
 		} //loop
 		
@@ -94,8 +94,8 @@ public class QuinticBezierPath {
 		double sum = 0, sumX = 0, sumY = 0;
 		
 		//loop through and get contribution from each control point
-		for (int i = 0; i < 5; i++) {
-			sum += Util.FIVENOMIAL_CONSTANTS[i] * Math.pow(1 - t, 5 - i) * Math.pow(t, i);
+		for (int i = 0; i <= 5; i++) {
+			sum = Util.FIVENOMIAL_CONSTANTS[i] * Math.pow(1 - t, 5 - i) * Math.pow(t, i);
 			sumX += controlPts[i].getX() * sum;
 			sumY += controlPts[i].getY() * sum;
 		} //loop
@@ -132,6 +132,8 @@ public class QuinticBezierPath {
 			
 			x[i] = (int) p.getX();
 			y[i] = (int) p.getY();
+			
+			Util.println(x[i], y[i]);
 			
 			t += 1.0 / RESOLUTION;
 		} //loop

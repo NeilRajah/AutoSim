@@ -9,6 +9,7 @@ package commands;
 import java.util.ArrayList;
 
 import model.Pose;
+import model.motion.QuinticBezierPath;
 
 public abstract class Command implements Runnable {
 	//Attributes
@@ -75,4 +76,9 @@ public abstract class Command implements Runnable {
 	 * Get the list of poses 
 	 */
 	public abstract ArrayList<Pose> getPoses(); 
+	
+	/**
+	 * Get the curve
+	 */
+	public abstract int[][] getCurve();
 } //end class

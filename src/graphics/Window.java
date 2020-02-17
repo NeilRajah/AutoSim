@@ -81,6 +81,7 @@ public class Window extends JFrame {
 	public void addCommand(Command c) {
 		c.run();
 		env.addPoses(c.getPoses());
+		env.setCurve(c.getCurve());
 	} //end addCommand
 	
 	/**
