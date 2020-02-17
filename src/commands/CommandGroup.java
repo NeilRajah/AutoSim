@@ -16,6 +16,7 @@ public abstract class CommandGroup {
 	private ArrayList<Command> commands; //all commands to be run
 	private boolean isRunning = false; //whether the command is running
 	private ArrayList<Pose> poses; //poses of the robot
+	private ArrayList<int[][]> curves; //curves the robot follows
 	
 	/**
 	 * Create a command group
@@ -30,6 +31,7 @@ public abstract class CommandGroup {
 	private void initialize() {
 		commands = new ArrayList<Command>();
 		poses = new ArrayList<Pose>();
+		curves = new ArrayList<int[][]>();
 	} //end initialize
 	
 	/**
@@ -50,6 +52,7 @@ public abstract class CommandGroup {
 		for (int i = 0; i < commands.size(); i++) {
 			commands.get(i).run();
 			poses.addAll(commands.get(i).getPoses());
+			curves.addAll(commands.get(i).getCurves());
 		} //loop
 		
 		isRunning = false;
@@ -69,5 +72,13 @@ public abstract class CommandGroup {
 	 */
 	public ArrayList<Pose> getPoses() {
 		return poses;
+	} //end getPoses
+	
+	/**
+	 * Get the curve from the command group 
+	 * @return curve - all curves from each command
+	 */
+	public ArrayList<int[][]> getCurves() {
+		return curves;
 	} //end getPoses
 } //end class

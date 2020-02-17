@@ -35,8 +35,9 @@ public class Environment extends JComponent implements Component {
 	
 	//Updated
 	private ArrayList<Pose> poses; //list of robot poses to draw
-	private int[][] curve; //points for the bezier path
+	private ArrayList<int[][]> curves; //points for the bezier path
 	private int poseIndex; //index in pose list of pose to draw
+	private int curveIndex; //index in curve list of curve to draw
 	
 	//Debug
 	private boolean debug = false; //whether to display the field or not
@@ -66,6 +67,7 @@ public class Environment extends JComponent implements Component {
 		
 		//reset values
 		poseIndex = 0;
+		curveIndex = 0;
 	} //end constructor
 	
 	//Pose
@@ -85,9 +87,8 @@ public class Environment extends JComponent implements Component {
 	public int getNumPoses() {
 		if (poses != null) {
 			return poses.size();
-		} else {
-			return 0;
-		} //if
+		} 
+		return 0;
 	} //end getNumPoses
 	
 	/**
@@ -113,9 +114,18 @@ public class Environment extends JComponent implements Component {
 	 * Add curve to be used for graphics
 	 * @param qbp - Bezier curve to be followed
 	 */
-	public void setCurve(int[][] qbp) {
-		curve = qbp;
+	public void setCurves(ArrayList<int[][]> qbp) {
+		curves = qbp;
 	} //end setCurve
+	
+	/**
+	 * Increment the curve index by one and repaint the component
+	 */
+	public void incrementCurveIndex() {
+		curveIndex++;
+		bar.setTime(poseIndex);
+		repaint();
+	} //end incrementPoseIndex
 	
 	//Graphics
 	
@@ -152,27 +162,24 @@ public class Environment extends JComponent implements Component {
 		//draw the field image as the background
 		if (!debug) {
 			g2.drawImage(field, 0, 0, null);
-			
 		} else {
 			g2.setColor(Color.GRAY);
 			g2.fillRect(0, 0, width, height);
 		} //if
 		
 		//stroke for lines
-		g2.setStroke(new BasicStroke(5.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+		g2.setStroke(new BasicStroke(10.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+		g2.setColor(Color.RED);
+		
+		//draw the current path
+		if (curves != null) {
+			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], QuinticBezierPath.RESOLUTION);
+		} //if
 		
 		//draw the current pose
 		if (poses != null && !poses.isEmpty()) { //if the pose is not null or empty
 			Painter.drawPose(g2, poses.get(poseIndex));
 		} //if		
-		
-		//draw the current path
-		if (curve != null) {
-			System.out.println("here");
-			g2.drawPolyline(curve[0], curve[1], QuinticBezierPath.RESOLUTION);
-		} else {
-//			System.out.println("curve was null");
-		}
 	} //end paintComponent
 	
 	//User Interaction

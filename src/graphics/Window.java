@@ -81,7 +81,7 @@ public class Window extends JFrame {
 	public void addCommand(Command c) {
 		c.run();
 		env.addPoses(c.getPoses());
-		env.setCurve(c.getCurve());
+		env.setCurves(c.getCurves());
 	} //end addCommand
 	
 	/**
@@ -91,6 +91,7 @@ public class Window extends JFrame {
 	public void addCommandGroup(CommandGroup cg) {
 		cg.run();
 		env.addPoses(cg.getPoses());
+		env.setCurves(cg.getCurves());
 	} //end addCommandGroup
 	
 	/**

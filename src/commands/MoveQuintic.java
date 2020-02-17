@@ -19,6 +19,7 @@ public class MoveQuintic extends Command {
 	// General
 	private DriveLoop loop; // drivetrain loop to update
 	private ArrayList<Pose> poses; // list of poses to update for drawing
+	private ArrayList<int[][]> curves; // list of curves to draw
 	
 	//Configured
 	private QuinticBezierPath curve; //quintic bezier curve
@@ -55,6 +56,7 @@ public class MoveQuintic extends Command {
 		
 		//update poses
 		this.poses = new ArrayList<Pose>();
+		this.curves = new ArrayList<int[][]>();
 		
 		//update t value
 		t = 0;
@@ -68,20 +70,20 @@ public class MoveQuintic extends Command {
 	@Override
 	protected void execute() {
 		loop.getRobot().setXY(curve.calcPoint(t));
-		loop.getRobot().setHeading(curve.calcHeading(t) - Math.PI/2);
+		loop.getRobot().setHeading(Math.PI/2 - curve.calcHeading(t));
 		
-		Point p = curve.calcPoint(t);
+//		Point p = curve.calcPoint(t);
 //		Util.tabPrint(t, p.getX(), p.getY(), curve.calcHeading(t));
 //		System.out.println();
 		
-		t += 1.0 / QuinticBezierPath.RESOLUTION;
+		t += 2.0 / QuinticBezierPath.RESOLUTION;
 	} //end execute
 
 	@Override
 	protected void updateGraphics() {
 		poses.add(loop.getRobot().getPose());
 		
-		Pose p = loop.getRobot().getPose();
+//		Pose p = loop.getRobot().getPose();
 //		Util.println(t, p.getPoint().getX(), p.getPoint().getY(), p.getHeading());
 	}
 
@@ -101,8 +103,10 @@ public class MoveQuintic extends Command {
 		return poses;
 	}
 	
-	public int[][] getCurve() {
-		return curve.getPolyline();
+	@Override
+	public ArrayList<int[][]> getCurves() {
+		curves.add(curve.getPolyline());
+		return curves;
 	}
 
 }

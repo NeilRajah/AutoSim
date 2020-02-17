@@ -7,6 +7,7 @@
 
 package model.motion;
 
+import main.AutoSim;
 import model.FieldPositioning;
 import model.Point;
 import util.Util;
@@ -130,10 +131,9 @@ public class QuinticBezierPath {
 		for (int i = 0; i < RESOLUTION; i++) {
 			Point p = calcPoint(t);
 			
-			x[i] = (int) p.getX();
-			y[i] = (int) p.getY();
-			
-			Util.println(x[i], y[i]);
+			//flip x and y because of field config
+			x[i] = (int) p.getY() * AutoSim.ppi; 
+			y[i] = (int) p.getX() * AutoSim.ppi;
 			
 			t += 1.0 / RESOLUTION;
 		} //loop

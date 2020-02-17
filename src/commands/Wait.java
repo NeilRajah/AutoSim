@@ -88,7 +88,7 @@ public class Wait extends Command {
 	} //end getPoses
 
 	@Override
-	public int[][] getCurve() {
+	public ArrayList<int[][]> getCurves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

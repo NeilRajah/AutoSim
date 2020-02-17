@@ -80,5 +80,5 @@ public abstract class Command implements Runnable {
 	/**
 	 * Get the curve
 	 */
-	public abstract int[][] getCurve();
+	public abstract ArrayList<int[][]> getCurves();
 } //end class

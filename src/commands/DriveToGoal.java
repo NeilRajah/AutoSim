@@ -171,7 +171,7 @@ public class DriveToGoal extends Command {
 	} // end calcDeltaAngle
 
 	@Override
-	public int[][] getCurve() {
+	public ArrayList<int[][]> getCurves() {
 		// TODO Auto-generated method stub
 		return null;
 	}
