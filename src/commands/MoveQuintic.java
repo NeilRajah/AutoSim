@@ -21,6 +21,10 @@ public class MoveQuintic extends Command {
 	private ArrayList<Pose> poses; // list of poses to update for drawing
 	private ArrayList<int[][]> curves; // list of curves to draw
 	
+	private double start = 0.0;
+	private double end = 1.0;
+	private double step = 0.001;
+	
 	//Configured
 	private QuinticBezierPath curve; //quintic bezier curve
 	
@@ -41,42 +45,40 @@ public class MoveQuintic extends Command {
 		this.poses = new ArrayList<Pose>();
 		
 		//update t value
-		t = 0;
+		t = start;
 	} //end constructor
 	
 	/**
 	 * Move the robot through a Quintic Bezier Path at even t-intervals
 	 * @param loop - drivetrain loop to update
-	 * @param curvePts - control points for the curve
+	 * @param controlPts - control points for the curve
 	 */
-	public MoveQuintic(DriveLoop loop, double[][] curvePts) {
+	public MoveQuintic(DriveLoop loop, double[][] controlPts) {
 		//set attributes
 		this.loop = loop; //state machine to control the robot
-		this.curve = new QuinticBezierPath(curvePts); //quintic bezier path
+		this.curve = new QuinticBezierPath(controlPts); //quintic bezier path
 		
 		//update poses
 		this.poses = new ArrayList<Pose>();
 		this.curves = new ArrayList<int[][]>();
 		
 		//update t value
-		t = 0;
+		t = start;
 	} //end constructor
 
 	@Override
-	protected void initialize() {
-		
-	}
+	protected void initialize() {}
 
 	@Override
 	protected void execute() {
 		loop.getRobot().setXY(curve.calcPoint(t));
-		loop.getRobot().setHeading(Math.PI/2 - curve.calcHeading(t));
+		loop.getRobot().setYaw(curve.calcHeading(t));
 		
 //		Point p = curve.calcPoint(t);
 //		Util.tabPrint(t, p.getX(), p.getY(), curve.calcHeading(t));
 //		System.out.println();
 		
-		t += 2.0 / QuinticBezierPath.RESOLUTION;
+		t += step;
 	} //end execute
 
 	@Override
@@ -89,7 +91,7 @@ public class MoveQuintic extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return Math.abs(t - 1.0) < 1.0 / QuinticBezierPath.RESOLUTION;
+		return Math.abs(t - end) < step;
 	}
 
 	@Override

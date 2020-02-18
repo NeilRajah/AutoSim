@@ -111,11 +111,11 @@ public class QuinticBezierPath {
 	 */
 	public double calcHeading(double t) {
 		if (t <= EPSILON) {
-			return FieldPositioning.calcAngleRad(calcPoint(EPSILON), calcPoint(0));
+			return FieldPositioning.calcGoalYaw(calcPoint(EPSILON), calcPoint(0));
 		} else if (t >= 1 - EPSILON) {
-			return FieldPositioning.calcAngleRad(calcPoint(1), calcPoint(1 - EPSILON));
+			return FieldPositioning.calcGoalYaw(calcPoint(1 - EPSILON), calcPoint(1));
 		} //if
-		return FieldPositioning.calcAngleRad(calcPoint(t + EPSILON), calcPoint(t - EPSILON));
+		return FieldPositioning.calcGoalYaw(calcPoint(t - EPSILON), calcPoint(t + EPSILON));
 	} //end getHeading
 	
 	/**

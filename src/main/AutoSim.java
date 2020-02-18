@@ -74,6 +74,6 @@ public class AutoSim {
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 //		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 1, false));
 //		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));
-		cg = new CommandList(new MoveQuintic(driveLoop, FieldPoints.curve));
+		cg = new CommandList(new MoveQuintic(driveLoop, FieldPoints.curve2));
 	} //end initialize
 } //end AutoSim

@@ -201,7 +201,7 @@ class ModelTest {
 		assertEquals(correctSlope, Util.kV_EMPIR, 1E-2);
 	} //end ConstantsTest
 	
-//	@Test
+	@Test
 	/**
 	 * Check if the length of the path is correct
 	 */
@@ -215,7 +215,7 @@ class ModelTest {
     		new Point(38.3, 24.8)
     	});
 		System.out.println("PATH LENGTH:" + testPath.getLength());
-		double correctLength = 119.02;
+		double correctLength = 46.5;
 		assertEquals(correctLength, testPath.getLength(), 1);
 	} //end pathLengthsTest
 	
@@ -226,7 +226,56 @@ class ModelTest {
 	void pathPointTest() {
 		QuinticBezierPath testPath = new QuinticBezierPath(FieldPoints.curve);
 		Point correctPoint = new Point(5.4, 3.7);
-		Util.println("ppt:", testPath.calcPoint(0).getX(), testPath.calcPoint(0).getY());
+//		Util.println("ppt:", testPath.calcPoint(0).getX(), testPath.calcPoint(0).getY());
 		assertEquals(0.0, FieldPositioning.calcDistance(correctPoint, testPath.calcPoint(0)), 0.1);
 	} //end pathPointTest
+	
+	@Test
+	/**
+	 * Path heading test (dx = 0, dy > 0)
+	 */
+	void pathHeadingTest1() {
+		Point p1 = new Point(0,0);
+		Point p2 = new Point(0,1);
+		double correctHeading = 0;
+		
+		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E3);
+	} //end pathHeadingTest1
+	
+	@Test
+	/**
+	 * Path heading test (dy = 0, dx > 0)
+	 */
+	void pathHeadingTest2() {
+		Point p1 = new Point(0,0);
+		Point p2 = new Point(1,0);
+		double correctHeading = Math.PI/2;
+		
+		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E3);
+	} //end pathHeadingTest2
+	
+	@Test
+	/**
+	 * Path heading test (dx = 0, dy < 0)
+	 */
+	void pathHeadingTest3() {
+		Point p1 = new Point(0,0);
+		Point p2 = new Point(0,-1);
+		double correctHeading = Math.PI;
+		
+		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E3);
+	} //end pathHeadingTest3
+	
+	@Test
+	/**
+	 * Path heading test (dy = 0, dx < 0)
+	 */
+	void pathHeadingTest4() {
+		Point p1 = new Point(0,0);
+		Point p2 = new Point(-1,0);
+		double correctHeading = -Math.PI/2;
+		
+		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E3);
+	} //end pathHeadingTest4
+	
 } //end class

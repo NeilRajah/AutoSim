@@ -22,23 +22,15 @@ public class FieldPositioning {
 		
 		//if goal point lies on x or y axis (dx or dy equal to zero)
 		if(dy == 0) { //if no change in y
-			if(dx > 0) {
-				goalYaw = 90; //dead right
-			} else if (dx < 0) {
-				goalYaw = -90; //dead left
-			} //if
+			return dx > 0 ? 90 : -90;
 		} else if (dx == 0) { //if no change in x
-			if(dy > 0) {
-				goalYaw = 0; //dead ahead
-			} else if (dy < 0) {
-				goalYaw = 180; //dead behind
-			} //if
+			return dy > 0 ? 0 : 180;
 		} else {
 			if (dy < 0) { //point is behind you
 				if (dx > 0) {
-					goalYaw = 90 - Math.toDegrees(Math.atan(dy/dx)); //behind and right
+					return 90 - Math.toDegrees(Math.atan(dy/dx)); //behind and right
 				} else if (dx < 0) {
-					goalYaw = -90 - Math.toDegrees(Math.atan(dy/dx)); //behind and left
+					return -90 - Math.toDegrees(Math.atan(dy/dx)); //behind and left
 				} //if
 			} else { //anywhere else
 				goalYaw = Math.toDegrees(Math.atan2(dx,dy));
@@ -74,18 +66,32 @@ public class FieldPositioning {
 			if (deltaY > 0) //point above
 				theta = 0;
 			else if (deltaY < 0) //point below
-				theta = 180;
+				theta = Math.PI;
 		} else if (deltaY == 0) {
 			if (deltaX > 0) //point to right
-				theta = 90;
+				theta = Math.PI/2;
 			else if (deltaX < 0)
-				theta = -90; //point to left
+				theta = -Math.PI/2; //point to left
 		} else {
 			theta = Math.atan(deltaY/deltaX); //anywhere else 
 		} //if
 		
 		return theta;
 	} //end calcAngleRad
+	
+//	public static double calcHeadingRad(Point p1, Point p2) {
+//		double theta = 0;
+//		double dx = p2.getX() - p1.getX();
+//		double dy = p2.getY() - p1.getY();
+//		
+//		if (dx == 0) {
+//			return dy > 0 ? 0 : Math.PI;
+//		} else if (dy == 0) {
+//			return dx > 0 ? Math.PI/2 : -Math.PI/2;
+//		} else if (dx > 0 && dy > 0) {
+//			return dy/dx
+//		}
+//	}
 	
 	/**
 	 * Calculate the angle between two points in degrees from the x-axis

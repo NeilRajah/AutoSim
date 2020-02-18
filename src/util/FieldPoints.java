@@ -29,6 +29,15 @@ public class FieldPoints {
 		{149.4, 150.4}
 	};
 	
+	public static double[][] curve2 = new double[][] {
+		{5.4, 3.7},
+		{491.6, 24.7},
+		{255, 152},
+		{63.7, 98},
+		{29, 255},
+		{320.6, 201.4}
+	};
+	
 	//Points
 	public static final Point MID_INITIATION = new Point(162, 522);
 	

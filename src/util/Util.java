@@ -134,6 +134,21 @@ public class Util {
 		return r * (yStdDev / xStdDev);
 	} //end regressedSlope
 	
+	/**
+	 * Flip the x and y values of curve points
+	 * @param curve - curve to flip
+	 * @return - curve with its x and y values flipped
+	 */
+	public static double[][] flipCurve(double[][] curve) {
+		for (int i = 0; i < curve.length; i++) {
+			double buffer = curve[i][0];
+			curve[i][0] = curve[i][1];
+			curve[i][1] = buffer;
+		} //loop
+		
+		return curve;
+	} //end flipCurve
+	
 	//Output
 	
 	/**
