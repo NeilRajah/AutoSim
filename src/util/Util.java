@@ -135,6 +135,19 @@ public class Util {
 	} //end regressedSlope
 	
 	/**
+	 * Linearly interpolate between two points
+	 * @param y - input value to find x value of
+	 * @param x1 - bottom x value
+	 * @param y1 - bottom y value
+	 * @param x2 - top x value
+	 * @param y2 - top y value
+	 * @return - corresponding linearly interpolated x value of y
+	 */
+	public static double interpolate(double y, double x1, double y1, double x2, double y2) {
+		return ((y - y1) * (x2 - x1)) / (y2 - y1) + x1;
+	} //end interpolate
+	
+	/**
 	 * Flip the x and y values of curve points
 	 * @param curve - curve to flip
 	 * @return - curve with its x and y values flipped

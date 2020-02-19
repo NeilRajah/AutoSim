@@ -239,7 +239,7 @@ class ModelTest {
 		Point p2 = new Point(0,1);
 		double correctHeading = 0;
 		
-		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E3);
+		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E-3);
 	} //end pathHeadingTest1
 	
 	@Test
@@ -249,9 +249,9 @@ class ModelTest {
 	void pathHeadingTest2() {
 		Point p1 = new Point(0,0);
 		Point p2 = new Point(1,0);
-		double correctHeading = Math.PI/2;
+		double correctHeading = 90;
 		
-		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E3);
+		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E-3);
 	} //end pathHeadingTest2
 	
 	@Test
@@ -261,9 +261,9 @@ class ModelTest {
 	void pathHeadingTest3() {
 		Point p1 = new Point(0,0);
 		Point p2 = new Point(0,-1);
-		double correctHeading = Math.PI;
+		double correctHeading = 180;
 		
-		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E3);
+		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E-3);
 	} //end pathHeadingTest3
 	
 	@Test
@@ -273,9 +273,17 @@ class ModelTest {
 	void pathHeadingTest4() {
 		Point p1 = new Point(0,0);
 		Point p2 = new Point(-1,0);
-		double correctHeading = -Math.PI/2;
+		double correctHeading = -90;
 		
-		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E3);
+		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E-3);
 	} //end pathHeadingTest4
+	
+	@Test
+	/**
+	 * Linear interpolation test
+	 */
+	void linearInterpolationTest() {
+		assertEquals(1.17608, Util.interpolate(212, 1.1555, 200, 1.1898, 220), 1E-3);
+	} //end linearInterpolationTest
 	
 } //end class

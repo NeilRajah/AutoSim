@@ -18,8 +18,6 @@ public class FieldPositioning {
 		double dx = goal.getX() - current.getX();
 		double dy = goal.getY() - current.getY();
 		
-		double goalYaw = 0;
-		
 		//if goal point lies on x or y axis (dx or dy equal to zero)
 		if(dy == 0) { //if no change in y
 			return dx > 0 ? 90 : -90;
@@ -32,12 +30,9 @@ public class FieldPositioning {
 				} else if (dx < 0) {
 					return -90 - Math.toDegrees(Math.atan(dy/dx)); //behind and left
 				} //if
-			} else { //anywhere else
-				goalYaw = Math.toDegrees(Math.atan2(dx,dy));
 			} //if
 		} //if
-		
-		return goalYaw;
+		return Math.toDegrees(Math.atan2(dx,dy)); //anywhere else
 	} //end calcGoalYaw
 
 	/**
@@ -60,38 +55,14 @@ public class FieldPositioning {
 		//calculate deltas
 		double deltaX = p2.getX() - p1.getX();
 		double deltaY = p2.getY() - p1.getY();
-		double theta = 0;
 		
 		if (deltaX == 0) {
-			if (deltaY > 0) //point above
-				theta = 0;
-			else if (deltaY < 0) //point below
-				theta = Math.PI;
+			return deltaY > 0 ? 0 : Math.PI;
 		} else if (deltaY == 0) {
-			if (deltaX > 0) //point to right
-				theta = Math.PI/2;
-			else if (deltaX < 0)
-				theta = -Math.PI/2; //point to left
-		} else {
-			theta = Math.atan(deltaY/deltaX); //anywhere else 
+			return deltaX > 0 ? Math.PI/2 : -Math.PI/2;
 		} //if
-		
-		return theta;
+		return Math.atan(deltaY/deltaX); //anywhere else 
 	} //end calcAngleRad
-	
-//	public static double calcHeadingRad(Point p1, Point p2) {
-//		double theta = 0;
-//		double dx = p2.getX() - p1.getX();
-//		double dy = p2.getY() - p1.getY();
-//		
-//		if (dx == 0) {
-//			return dy > 0 ? 0 : Math.PI;
-//		} else if (dy == 0) {
-//			return dx > 0 ? Math.PI/2 : -Math.PI/2;
-//		} else if (dx > 0 && dy > 0) {
-//			return dy/dx
-//		}
-//	}
 	
 	/**
 	 * Calculate the angle between two points in degrees from the x-axis
@@ -114,10 +85,6 @@ public class FieldPositioning {
 		double dx = Math.abs(target.getX() - current.getX());
 		double dy = Math.abs(target.getY() - current.getY());
 		
-		if (dx < range && dy < range) {
-			return true;
-		} else {
-			return false;
-		} //if
+		return dx < range && dy < range;
 	} //end isWithinBounds
 } //end class
