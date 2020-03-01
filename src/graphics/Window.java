@@ -6,16 +6,16 @@
  */
 package graphics;
 
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import commands.Command;
 import commands.CommandGroup;
+import graphics.widgets.WidgetHub;
 import main.AutoSim;
-import model.Pose;
 import util.Util;
 
 public class Window extends JFrame {
@@ -23,6 +23,7 @@ public class Window extends JFrame {
 	private JPanel mainPanel; //main panel for display
 	private Environment env; //environment
 	private UIBar bar; //user interface bar
+	private WidgetHub widgetHub; //hub for all the widgets
 	
 	/**
 	 * Create a window
@@ -46,6 +47,12 @@ public class Window extends JFrame {
 		int height = AutoSim.ppi * Util.FIELD_HEIGHT;
 		env = new Environment(width, height);
 		mainPanel.add(env, ComponentUtil.createGBC(0, 0));
+		
+		//add Widget Hub
+		widgetHub = new WidgetHub(width * 1/6, env.height() + height/15);
+		GridBagConstraints widgGridBag = ComponentUtil.createGBC(1, 0);
+		widgGridBag.gridheight = 2;
+		mainPanel.add(widgetHub, widgGridBag);
 		
 		//UI Bar
 		bar = new UIBar(width, height / 15);
@@ -73,6 +80,13 @@ public class Window extends JFrame {
 		this.setLocation(10, 10);
 		this.setVisible(true);
 	} //end launch
+	
+	/**
+	 * Set the debug mode of the Environment
+	 */
+	public void setDebug() {
+		env.setDebug();
+	} //end setDebug
 	
 	/**
 	 * Add a Command to be animated

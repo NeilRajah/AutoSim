@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
@@ -40,7 +41,7 @@ public class Environment extends JComponent implements Component {
 	private int curveIndex; //index in curve list of curve to draw
 	
 	//Debug
-	private boolean debug = false; //whether to display the field or not
+	private boolean debug; //whether to display the field or not
 	
 	/**
 	 * The environment the robot is simulated in
@@ -64,10 +65,13 @@ public class Environment extends JComponent implements Component {
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} //try-catch
+		debug = false;
 		
 		//reset values
 		poseIndex = 0;
 		curveIndex = 0;
+		
+//		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
 	} //end constructor
 	
 	//Pose
@@ -142,7 +146,7 @@ public class Environment extends JComponent implements Component {
 	 * @return height - height of component in pixels
 	 */
 	public int height() {
-		return height;		
+		return height;
 	} //end height
 	
 	/**
@@ -151,6 +155,13 @@ public class Environment extends JComponent implements Component {
 	public void update() {	
 		repaint();
 	} //end update
+	
+	/**
+	 * Set the debug mode of the Environment (do not draw field if debug mode)
+	 */
+	public void setDebug() {
+		debug = true;
+	} //end setDebug
 	
 	/**
 	 * Draw the environment
@@ -163,7 +174,7 @@ public class Environment extends JComponent implements Component {
 		if (!debug) {
 			g2.drawImage(field, 0, 0, null);
 		} else {
-			g2.setColor(Color.GRAY);
+			g2.setColor(Color.LIGHT_GRAY);
 			g2.fillRect(0, 0, width, height);
 		} //if
 		

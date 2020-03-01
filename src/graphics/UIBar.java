@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
 import main.AutoSim;
@@ -46,6 +47,8 @@ public class UIBar extends JComponent implements Component {
 		fontSize = (float) (height / 1.75);
 		cursorLoc = "(x,y): 0 0";
 		time = "Time: 0.000";
+		
+//		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
 		
 		//draw default information
 		repaint();

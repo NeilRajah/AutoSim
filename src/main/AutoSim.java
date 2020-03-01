@@ -44,6 +44,7 @@ public class AutoSim {
 		
 		//create the window and launch it
 		Window w = new Window();
+		w.setDebug();
 		w.launch();
 		
 		//add the command group and run it
