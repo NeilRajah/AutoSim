@@ -24,7 +24,7 @@ public class JComponentFactory {
 	// PANELS//
 
 	/**
-	 * Creates a panel with a specified box layout boolean 
+	 * Creates a panel with a specified box layout
 	 * @param horizontal whether the panel is horizontal or not
 	 */
 	public static JPanel boxPanel(boolean horizontal) {
