@@ -48,6 +48,11 @@ public class Util {
 	//Path Constants
 	public static final int[] FIVENOMIAL_CONSTANTS = {1,5,10,10,5,1};
 	
+	//Widget IDs
+	public static enum WIDGET_ID {
+		SPEED_DISPLAY
+	} //end enum
+	
 	//Calculations
 	
 	/**

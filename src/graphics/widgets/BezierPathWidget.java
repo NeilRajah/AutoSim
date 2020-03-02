@@ -7,14 +7,14 @@
 
 package graphics.widgets;
 
-import java.awt.GridBagLayout;
-
 import javax.swing.JPanel;
+
+import util.Util.WIDGET_ID;
 
 public class BezierPathWidget extends Widget {
 	
-	protected BezierPathWidget(JPanel component) {
-		super(component);
+	protected BezierPathWidget(WIDGET_ID id, JPanel component) {
+		super(id, component);
 		// TODO Auto-generated constructor stub
 	}
 

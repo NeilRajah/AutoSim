@@ -9,14 +9,17 @@ package graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import commands.Command;
 import commands.CommandGroup;
+import graphics.widgets.Widget;
 import graphics.widgets.WidgetHub;
 import main.AutoSim;
 import util.Util;
+import util.Util.WIDGET_ID;
 
 public class Window extends JFrame {
 	//Attributes
@@ -121,6 +124,7 @@ public class Window extends JFrame {
 			for (int i = 1; i < env.getNumPoses(); i++) {
 				env.incrementPoseIndex();
 				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
+				
 			} //loop
 			System.out.println("ran");
 		};
@@ -128,5 +132,24 @@ public class Window extends JFrame {
 		//create and run the thread
 		Thread t = new Thread(loop);
 		t.start();
-	} //end runAnimation	
+	} //end runAnimation
+	
+	/**
+	 * Add a widget to the hub
+	 * @param p - widget to add to the hub
+	 */
+	public void addWidget(WIDGET_ID id, JPanel panel) {
+//		widgetHub.addWidget(new Widget(id, panel));
+	} //end addWidget
+	
+	/**
+	 * Add a widget to the hub
+	 * @param c - widget to add to the hub
+	 */
+	public void addWidget(JComponent component) {
+		JPanel panel = new JPanel();
+		panel.add(component);
+		
+//		widgetHub.addWidget(panel);
+	} //end addWidget
 } //end Window

@@ -14,6 +14,7 @@ import commands.CommandList;
 import commands.MoveQuintic;
 import graphics.Painter;
 import graphics.Window;
+import graphics.widgets.SpeedDisplay;
 import model.DriveLoop;
 import model.Gearbox;
 import model.Motor;
@@ -25,6 +26,8 @@ import util.Util;
 
 public class AutoSim {
 	//Constants
+	private static Window w; //window to add components to
+	
 	//Screen dimensions in pixels for scaling
 	public static final int SCREEN_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width);
 	public static final int SCREEN_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height);
@@ -43,8 +46,9 @@ public class AutoSim {
 		runSimulation(); //run the simulation
 		
 		//create the window and launch it
-		Window w = new Window();
+		w = new Window();
 		w.setDebug();
+		addWidgets(); //add widgets to the widget hub
 		w.launch();
 		
 		//add the command group and run it
@@ -77,4 +81,11 @@ public class AutoSim {
 //		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));
 		cg = new CommandList(new MoveQuintic(driveLoop, FieldPoints.curve2));
 	} //end initialize
+	
+	/**
+	 * Add Widgets to the Widget Hub
+	 */
+	private static void addWidgets() {
+//		w.addWidget(new SpeedDisplay(200, 300, driveLoop.getRobot().getMaxLinSpeed()));
+	} //end addWidgets
 } //end AutoSim
