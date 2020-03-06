@@ -7,14 +7,18 @@
 package commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.Pose;
-import model.motion.QuinticBezierPath;
+import model.Robot;
+import util.Util.ROBOT_KEY;
 
 public abstract class Command implements Runnable {
 	//Attributes
 	private boolean isRunning; //whether the command is running or not
 	private boolean isTimedOut; //whether the command times out or not
+	private ArrayList<HashMap<ROBOT_KEY, Object>> data = new ArrayList<HashMap<ROBOT_KEY, Object>>(); //robot data
+	protected Robot robot; //robot being commanded
 	
 	/**
 	 * Runs once before command starts
@@ -56,6 +60,7 @@ public abstract class Command implements Runnable {
 			isTimedOut = (System.currentTimeMillis() - initTime) > 5000;
 			this.execute();
 			this.updateGraphics();
+			data.add(robot.getData());
 		} //loop
 		
 		//end the command
@@ -81,4 +86,12 @@ public abstract class Command implements Runnable {
 	 * Get the curve
 	 */
 	public abstract ArrayList<int[][]> getCurves();
+	
+	/**
+	 * Get the data points of the robot at each pose
+	 * @return list of HashMaps of data points
+	 */
+	public ArrayList<HashMap<ROBOT_KEY, Object>> getData() {
+		return data;
+	} //end data
 } //end class

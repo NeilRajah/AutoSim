@@ -7,9 +7,10 @@
 package commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.Pose;
-import util.Util;
+import util.Util.ROBOT_KEY;
 
 public abstract class CommandGroup {
 	//Attributes
@@ -17,6 +18,7 @@ public abstract class CommandGroup {
 	private boolean isRunning = false; //whether the command is running
 	private ArrayList<Pose> poses; //poses of the robot
 	private ArrayList<int[][]> curves; //curves the robot follows
+	private ArrayList<HashMap<ROBOT_KEY, Object>> data; //data points of the robot
 	
 	/**
 	 * Create a command group
@@ -32,6 +34,7 @@ public abstract class CommandGroup {
 		commands = new ArrayList<Command>();
 		poses = new ArrayList<Pose>();
 		curves = new ArrayList<int[][]>();
+		data = new ArrayList<HashMap<ROBOT_KEY, Object>>();
 	} //end initialize
 	
 	/**
@@ -53,6 +56,7 @@ public abstract class CommandGroup {
 			commands.get(i).run();
 			poses.addAll(commands.get(i).getPoses());
 			curves.addAll(commands.get(i).getCurves());
+			data.addAll(commands.get(i).getData());
 		} //loop
 		
 		isRunning = false;
@@ -81,4 +85,12 @@ public abstract class CommandGroup {
 	public ArrayList<int[][]> getCurves() {
 		return curves;
 	} //end getPoses
+	
+	/**
+	 * Get the data points from the robot
+	 * @return list of data points from the robot
+	 */
+	public ArrayList<HashMap<ROBOT_KEY, Object>> getData() {
+		return data;
+	} //end getData
 } //end class

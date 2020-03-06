@@ -57,6 +57,7 @@ public class MoveQuintic extends Command {
 		//set attributes
 		this.loop = loop; //state machine to control the robot
 		this.curve = new QuinticBezierPath(controlPts); //quintic bezier path
+		this.robot = loop.getRobot();
 		
 		//update poses
 		this.poses = new ArrayList<Pose>();

@@ -19,6 +19,7 @@ import graphics.widgets.Widget;
 import graphics.widgets.WidgetHub;
 import main.AutoSim;
 import util.Util;
+import util.Util.ROBOT_KEY;
 import util.Util.WIDGET_ID;
 
 public class Window extends JFrame {
@@ -109,6 +110,7 @@ public class Window extends JFrame {
 		cg.run();
 		env.addPoses(cg.getPoses());
 		env.setCurves(cg.getCurves());
+		env.setData(cg.getData());
 	} //end addCommandGroup
 	
 	/**
@@ -124,7 +126,9 @@ public class Window extends JFrame {
 			for (int i = 1; i < env.getNumPoses(); i++) {
 				env.incrementPoseIndex();
 				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
-				
+				if (i == 50) {
+					System.out.println(env.getDataPoint(i).get(ROBOT_KEY.AVG_POS));
+				}
 			} //loop
 			System.out.println("ran");
 		};

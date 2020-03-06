@@ -8,9 +8,11 @@
 package model;
 
 import java.awt.Color;
+import java.util.HashMap;
 
 import main.AutoSim;
 import util.Util;
+import util.Util.ROBOT_KEY;
 
 public class Robot {
 	//Attributes
@@ -420,4 +422,31 @@ public class Robot {
 	public int getLengthPixels() {
 		return (int) ((kLength * AutoSim.ppi) / Util.INCHES_TO_METERS);
 	} //end getLengthPixels
+	
+	/**
+	 * Get the data of the robot
+	 * @return all robot data point in a HashMap
+	 */
+	public HashMap<ROBOT_KEY, Object> getData() {
+		HashMap<ROBOT_KEY, Object> data = new HashMap<ROBOT_KEY, Object>();
+		
+		//add all keys and values
+		data.put(ROBOT_KEY.AVG_POS, averagePos);
+		data.put(ROBOT_KEY.ANG_VEL, angularVel);
+		data.put(ROBOT_KEY.LIN_VEL, linearVel);
+		data.put(ROBOT_KEY.HEADING, heading);
+		data.put(ROBOT_KEY.YAW, yaw);
+		data.put(ROBOT_KEY.POINT, point);
+		data.put(ROBOT_KEY.COLOR, color);
+		data.put(ROBOT_KEY.LEFT_POS, leftGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS);
+		data.put(ROBOT_KEY.RIGHT_POS, rightGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS);
+		data.put(ROBOT_KEY.LEFT_VEL, leftGearbox.getVel());
+		data.put(ROBOT_KEY.RIGHT_VEL, rightGearbox.getVel());
+		data.put(ROBOT_KEY.LEFT_ACC, leftGearbox.getAcc());
+		data.put(ROBOT_KEY.RIGHT_ACC, rightGearbox.getAcc());
+		data.put(ROBOT_KEY.LIN_ACC, (leftGearbox.getAcc() + rightGearbox.getAcc()) / 2);
+		data.put(ROBOT_KEY.ANG_ACC, (kWheelRad / (2 * kPivotArm)) * (rightGearbox.getAcc() - leftGearbox.getAcc()));
+		
+		return data;
+	} //end getData
 } //end Robot

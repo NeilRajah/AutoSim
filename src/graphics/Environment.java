@@ -15,14 +15,15 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 import model.Pose;
 import model.motion.QuinticBezierPath;
+import util.Util.ROBOT_KEY;
 
 public class Environment extends JComponent implements Component {
 	//Attributes
@@ -37,6 +38,7 @@ public class Environment extends JComponent implements Component {
 	//Updated
 	private ArrayList<Pose> poses; //list of robot poses to draw
 	private ArrayList<int[][]> curves; //points for the bezier path
+	private ArrayList<HashMap<ROBOT_KEY, Object>> data; //data from the robot
 	private int poseIndex; //index in pose list of pose to draw
 	private int curveIndex; //index in curve list of curve to draw
 	
@@ -130,6 +132,25 @@ public class Environment extends JComponent implements Component {
 		bar.setTime(poseIndex);
 		repaint();
 	} //end incrementPoseIndex
+	
+	//Data
+	
+	/**
+	 * Set the data for the simulation
+	 * @param data list of robot data points at each timestamp
+	 */
+	public void setData(ArrayList<HashMap<ROBOT_KEY, Object>> data) {
+		this.data = data;
+	} //end setData
+	
+	/**
+	 * Get the data point at an index
+	 * @param index list index to get data point at
+	 * @return data point at index
+	 */
+	public HashMap<ROBOT_KEY, Object> getDataPoint(int index) {
+		return data.get(index);
+	} //end getDataPoint
 	
 	//Graphics
 	
