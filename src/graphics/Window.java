@@ -98,8 +98,9 @@ public class Window extends JFrame {
 	 */
 	public void addCommand(Command c) {
 		c.run();
-		env.addPoses(c.getPoses());
+		env.setPoses(c.getPoses());
 		env.setCurves(c.getCurves());
+		env.setData(c.getData());
 	} //end addCommand
 	
 	/**
@@ -108,7 +109,7 @@ public class Window extends JFrame {
 	 */
 	public void addCommandGroup(CommandGroup cg) {
 		cg.run();
-		env.addPoses(cg.getPoses());
+		env.setPoses(cg.getPoses());
 		env.setCurves(cg.getCurves());
 		env.setData(cg.getData());
 	} //end addCommandGroup
@@ -124,35 +125,41 @@ public class Window extends JFrame {
 			
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {
-				env.incrementPoseIndex();
+				env.incrementPoseIndex(); //draw the next pose
+				widgetHub.update(env.getDataPoint(i)); //update all widgets
 				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
 			} //loop
 			System.out.println("ran");
 		};
-		
-		System.out.println(env.getDataPoint(10));
 		
 		//create and run the thread
 		Thread t = new Thread(loop);
 		t.start();
 	} //end runAnimation
 	
-	/**
-	 * Add a widget to the hub
-	 * @param p - widget to add to the hub
-	 */
-	public void addWidget(WIDGET_ID id, JPanel panel) {
-//		widgetHub.addWidget(new Widget(id, panel));
-	} //end addWidget
+	//Widgets
 	
 	/**
 	 * Add a widget to the hub
-	 * @param c - widget to add to the hub
+	 * @param w - Widget to add to the hub
 	 */
-	public void addWidget(JComponent component) {
-		JPanel panel = new JPanel();
-		panel.add(component);
-		
-//		widgetHub.addWidget(panel);
+	public void addWidget(Widget w) {
+		widgetHub.addWidget(w);
 	} //end addWidget
+	
+	/**
+	 * Get the width of the widget hub
+	 * @return width of widget hub in pixels
+	 */
+	public int getHubWidth() {
+		return widgetHub.width();
+	} //end getHubWidth
+	
+	/**
+	 * Get the height of the widget hub
+	 * @return height of the widget hub in pixels
+	 */
+	public int getHubHeight() {
+		return widgetHub.height();
+	} //end getHubHeight
 } //end Window

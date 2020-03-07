@@ -19,7 +19,7 @@ import javax.swing.JComponent;
 import main.AutoSim;
 import util.Util;
 
-public class UIBar extends JComponent implements Component {
+public class UIBar extends JComponent {
 	//Attributes
 	//Configured
 	private int width; //component width

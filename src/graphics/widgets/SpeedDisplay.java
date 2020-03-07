@@ -13,9 +13,13 @@ import java.awt.Graphics2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+import util.Util.WIDGET_ID;
 
 public class SpeedDisplay extends JComponent {
-	//attributes
+	//Attributes
+	private JComponent display; //JComponent for the widget
 	private double speed; //speed of object
 	private double maxSpeed; //speed cap
 	private Color color; //color of the slider
@@ -27,7 +31,6 @@ public class SpeedDisplay extends JComponent {
 	 * int maxSpeed - max speed of the object in units
 	 */
 	public SpeedDisplay(int width, int height, double maxSpeed) {
-		super();
 		this.setPreferredSize(new Dimension(width, height));
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
@@ -40,7 +43,7 @@ public class SpeedDisplay extends JComponent {
 	 * Set the speed of the object and redraw the component
 	 * double newSpeed - new speed of the object
 	 */
-	public void setSpeed(double newSpeed) {
+	public void update(double newSpeed) {
 		speed = Math.abs(newSpeed);
 		repaint();
 	} //end setSpeed
@@ -70,4 +73,14 @@ public class SpeedDisplay extends JComponent {
 		g2.setColor(Color.GRAY);
 		g2.fillRect(0, 0, this.getWidth(), drawHeight);
 	} //end paintComponent
+
+	/**
+	 * Get the widget containing the display
+	 * @return a Widget with this component
+	 */
+	public Widget getWidget() {
+		JPanel panel = new JPanel();
+		panel.add(this);
+		return new Widget(WIDGET_ID.SPEED_DISPLAY, panel);
+	} //end getWidget
 } //end class

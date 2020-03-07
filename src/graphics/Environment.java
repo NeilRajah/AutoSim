@@ -21,11 +21,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
+import main.AutoSim;
 import model.Pose;
 import model.motion.QuinticBezierPath;
 import util.Util.ROBOT_KEY;
 
-public class Environment extends JComponent implements Component {
+public class Environment extends JComponent {
 	//Attributes
 	//Configured
 	private int width; //width of the environment
@@ -82,7 +83,7 @@ public class Environment extends JComponent implements Component {
 	 * Add poses to be later drawn
 	 * @param poses - list of poses to be drawn
 	 */
-	public void addPoses(ArrayList<Pose> poses) {
+	public void setPoses(ArrayList<Pose> poses) {
 		this.poses = poses;
 	} //end addPoses
 	
@@ -197,6 +198,9 @@ public class Environment extends JComponent implements Component {
 		} else {
 			g2.setColor(Color.LIGHT_GRAY);
 			g2.fillRect(0, 0, width, height);
+			
+			g2.setColor(Color.black);
+			Painter.drawGrid(g2, width, height, 12 * AutoSim.ppi);
 		} //if
 		
 		//stroke for lines

@@ -32,8 +32,8 @@ public class Painter {
 	
 	/**
 	 * Draw a robot pose to the screen
-	 * @param g2 - object for drawing
-	 * @param p - pose to draw
+	 * @param g2 object for drawing
+	 * @param p pose to draw
 	 */
 	public static void drawPose(Graphics2D g2, Pose p) {
 		//translate to center of robot, robot to its heading
@@ -50,4 +50,23 @@ public class Painter {
 		g2.translate(-p.getPoint().getY()*AutoSim.ppi, -p.getPoint().getX()*AutoSim.ppi);
 		g2.rotate(-p.getHeading());
 	} //end drawPose
+	
+	/**
+	 * Draw the grid to the environment
+	 * @param g2 object for drawing
+	 * @param width width of the environment
+	 * @param height height of the environment
+	 * @param step increments for the grid lines
+	 */
+	public static void drawGrid(Graphics2D g2, int width, int height, int step) {
+		//draw vertical lines
+		for (int x = step; x < width; x += step) {
+			g2.drawLine(x, 0, x, height);
+		} //loop
+		
+		//draw horizontal lines
+		for (int y = step; y < height; y += step) {
+			g2.drawLine(0, y, width, y);
+		} //loop
+	} //end drawGrid
 } //end Painter 

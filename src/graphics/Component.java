@@ -6,8 +6,9 @@
  */
 package graphics;
 
-public interface Component {
-	int width(); //return the width of the component
-	int height(); //return the height of the component
-	void update(); //update the component
+import javax.swing.JComponent;
+
+public abstract class Component extends JComponent {
+
+	public abstract void update(double[] values);
 } //end Component

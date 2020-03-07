@@ -10,40 +10,37 @@ package graphics.widgets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import util.JComponentFactory;
 import util.Util.WIDGET_ID;
 
-public abstract class Widget {
+public class Widget {
 	//Attributes
-	private double height; //height of widget in pixels
-	private double width; //width of widget in pixels
 	private boolean toggled; //whether widget is collapsed or not
-	private String title; //title of the widget
 	private WIDGET_ID id; //ID tag of the widget
-	private JPanel component; //graphical component in widget
-	private JPanel widgPanel; //panel for entire widget
+	private JPanel panel; //graphical component in widget
 	
 	/**
 	 * Create widget with a component
-	 * @param component graphical component for widget
+	 * @param panel graphical component for widget
 	 */
-	protected Widget(WIDGET_ID id, JPanel component) {
+	public Widget(WIDGET_ID id, JPanel panel) {
 		//set attributes
-		this.component = component;
+		this.panel = panel;
 		this.id = id;
 		
 		//layout the view of the widget
 		layoutWidg();
 	} //end constructor
 	
-	protected abstract void initialize();
+	public void update(double[] values) {
+		
+	}
 	
 	/**
 	 * Get the height of the widget 
 	 * @return height in pixels
 	 */
 	public double getHeight() {
-		return height;
+		return panel.getHeight();
 	} //end getHeight
 	
 	/**
@@ -51,7 +48,7 @@ public abstract class Widget {
 	 * @return width in pixels
 	 */
 	public double getWidth() {
-		return width;
+		return panel.getWidth();
 	} //end getWidth
 	
 	/**
@@ -67,7 +64,7 @@ public abstract class Widget {
 	 * @return
 	 */
 	public JPanel getComponent() {
-		return component;
+		return panel;
 	} //end getComponent
 	
 	/**
@@ -83,27 +80,14 @@ public abstract class Widget {
 	 */
 	public void toggle() {
 		toggled = !toggled;
-		update();
 	} //end toggle
-	
-	/**
-	 * Update the widget
-	 */
-	private void update() {
-		//if toggled
-		//	display JPanel
-		//else
-		//	do not
-		
-		component.setVisible(toggled);
-	} //end update
 	
 	/**
 	 * Layout the widget, including its component panel
 	 */
 	private void layoutWidg() {
 		//set up widgPanel
-		widgPanel = JComponentFactory.boxPanel(false);
+//		widgPanel = JComponentFactory.boxPanel(false);
 		
 		//add header (text bar with collapsible button)
 		JLabel label = new JLabel("Widget");

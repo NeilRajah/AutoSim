@@ -11,16 +11,16 @@ import java.awt.Toolkit;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.MoveQuintic;
+import commands.DriveToGoal;
 import graphics.Painter;
 import graphics.Window;
+import graphics.widgets.SpeedDisplay;
 import model.DriveLoop;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
-import util.FieldPoints;
 import util.Util;
 
 public class AutoSim {
@@ -76,16 +76,17 @@ public class AutoSim {
 		//create the command group
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
-//		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 1, false));
+		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 1, false));
 //		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));
-		cg = new CommandList(new MoveQuintic(driveLoop, FieldPoints.curve2));
+//		cg = new CommandList(new MoveQuintic(driveLoop, FieldPoints.curve2));
 	} //end initialize
 	
 	/**
 	 * Add Widgets to the Widget Hub
 	 */
 	private static void addWidgets() {
-		
-//		w.addWidget(new SpeedDisplay(200, 300, driveLoop.getRobot().getMaxLinSpeed()));
+		//Linear speed display
+		w.addWidget(new SpeedDisplay(w.getHubWidth(), 400, 
+					driveLoop.getRobot().getMaxLinSpeed()).getWidget());
 	} //end addWidgets
 } //end AutoSim
