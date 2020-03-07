@@ -42,6 +42,9 @@ public class TurnAngle extends Command {
 		
 		//initialize the list of poses
 		poses = new ArrayList<Pose>();
+		
+		//set robot
+		this.robot = loop.getRobot();
 	} //end constructor
 
 	/**

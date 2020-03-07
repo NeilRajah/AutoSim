@@ -9,6 +9,8 @@ package commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
+
 import model.Pose;
 import util.Util.ROBOT_KEY;
 
@@ -53,10 +55,20 @@ public abstract class CommandGroup {
 		
 		//run each command and add its poses to the total list
 		for (int i = 0; i < commands.size(); i++) {
-			commands.get(i).run();
+			commands.get(i).run(); //run the command
+			
+			//add poses and data 
 			poses.addAll(commands.get(i).getPoses());
-			curves.addAll(commands.get(i).getCurves());
 			data.addAll(commands.get(i).getData());
+			
+			//add curves if they exist
+			if (curves != null && curves.isEmpty()) {
+				curves.addAll(commands.get(i).getCurves());
+			} else {
+				System.out.println("could not add curve");
+				System.out.println("curve null: " + curves == null);
+				System.out.println("curve empty: " + curves.isEmpty());
+			} //if
 		} //loop
 		
 		isRunning = false;

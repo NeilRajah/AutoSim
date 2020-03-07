@@ -14,7 +14,6 @@ import commands.CommandList;
 import commands.MoveQuintic;
 import graphics.Painter;
 import graphics.Window;
-import graphics.widgets.SpeedDisplay;
 import model.DriveLoop;
 import model.Gearbox;
 import model.Motor;
@@ -86,6 +85,7 @@ public class AutoSim {
 	 * Add Widgets to the Widget Hub
 	 */
 	private static void addWidgets() {
+		
 //		w.addWidget(new SpeedDisplay(200, 300, driveLoop.getRobot().getMaxLinSpeed()));
 	} //end addWidgets
 } //end AutoSim

@@ -40,6 +40,9 @@ public class DriveDistance extends Command {
 		
 		//initialize poses list
 		poses = new ArrayList<Pose>();
+		
+		//set robot
+		this.robot = loop.getRobot();
 	} //end constructor
 
 	/**
@@ -57,13 +60,6 @@ public class DriveDistance extends Command {
 	} //end onLoop
 
 	/**
-	 * Save the pose of the robot to the list
-	 */
-	protected void updateGraphics() {
-		poses.add(loop.getRobot().getPose());
-	} //end savePose
-
-	/**
 	 * Return whether the robot is moving slowly within the target or not
 	 * @return - true if it is, false if it is not
 	 */
@@ -79,18 +75,4 @@ public class DriveDistance extends Command {
 	 * Run at the end of the command
 	 */
 	protected void end() {} 
-
-	/**
-	 * Get the list of poses
-	 * @return poses - list of poses for animation
-	 */
-	public ArrayList<Pose> getPoses() {
-		return poses;
-	} //end getPoses
-
-	@Override
-	public ArrayList<int[][]> getCurves() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 } //end class

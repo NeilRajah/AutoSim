@@ -13,8 +13,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import commands.Command;
 import commands.DriveDistance;
 import commands.DriveToGoal;
+import commands.TimedVoltage;
 import commands.routines.ConstantsTest;
 import model.DriveLoop;
 import model.FieldPositioning;
@@ -24,6 +26,7 @@ import model.PIDController;
 import model.Point;
 import model.Robot;
 import model.motion.QuinticBezierPath;
+import util.Util.ROBOT_KEY;
 
 class ModelTest {
 	//Attributes
@@ -214,7 +217,7 @@ class ModelTest {
     		new Point(24.2, 37.6),
     		new Point(38.3, 24.8)
     	});
-		System.out.println("PATH LENGTH:" + testPath.getLength());
+//		System.out.println("PATH LENGTH:" + testPath.getLength());
 		double correctLength = 46.5;
 		assertEquals(correctLength, testPath.getLength(), 1);
 	} //end pathLengthsTest
@@ -286,4 +289,16 @@ class ModelTest {
 		assertEquals(1.17608, Util.interpolate(212, 1.1555, 200, 1.1898, 220), 1E-3);
 	} //end linearInterpolationTest
 	
+	@Test
+	/**
+	 * Test getting data HashMap from the robot
+	 */
+	void robotDataTest() {
+		Command c = new TimedVoltage(driveLoop, 6.0, 2);
+		c.run();
+		
+		double dataPoint = (double) driveLoop.getRobot().getData().get(ROBOT_KEY.AVG_POS);
+//		Util.println("robotDataTest:", dataPoint);
+		assertEquals(135, dataPoint, 1);
+	} //end robotDataTest
 } //end class

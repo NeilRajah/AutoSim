@@ -204,7 +204,7 @@ public class Environment extends JComponent implements Component {
 		g2.setColor(Color.RED);
 		
 		//draw the current path
-		if (curves != null) {
+		if (curves != null && !curves.isEmpty()) {
 			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], QuinticBezierPath.RESOLUTION);
 		} //if
 		

@@ -43,6 +43,9 @@ public class TimedVoltage extends Command {
 		
 		//initialize poses list
 		poses = new ArrayList<Pose>();
+		
+		//set robot
+		this.robot = loop.getRobot();
 	} //end constructor
 	
 	/**
@@ -61,6 +64,9 @@ public class TimedVoltage extends Command {
 		
 		//initialize poses list
 		poses = new ArrayList<Pose>();
+		
+		//set the robot
+		this.robot = loop.getRobot();
 	} //end constructor
 
 	protected void initialize() {}

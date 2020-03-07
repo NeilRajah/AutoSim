@@ -18,6 +18,8 @@ public abstract class Command implements Runnable {
 	private boolean isRunning; //whether the command is running or not
 	private boolean isTimedOut; //whether the command times out or not
 	private ArrayList<HashMap<ROBOT_KEY, Object>> data = new ArrayList<HashMap<ROBOT_KEY, Object>>(); //robot data
+	private ArrayList<Pose> poses = new ArrayList<Pose>(); //list of robot poses
+	protected ArrayList<int[][]> curves = new ArrayList<int[][]>(); //list of curves
 	protected Robot robot; //robot being commanded
 	
 	/**
@@ -29,11 +31,6 @@ public abstract class Command implements Runnable {
 	 * Runs while isFinished is false
 	 */
 	protected abstract void execute();
-	
-	/**
-	 * Update values for animation purposes
-	 */
-	protected abstract void updateGraphics();
 	
 	/**
 	 * Checks whether the command isFinished
@@ -59,7 +56,7 @@ public abstract class Command implements Runnable {
 		while(!this.isFinished() && !this.isTimedOut) {
 			isTimedOut = (System.currentTimeMillis() - initTime) > 5000;
 			this.execute();
-			this.updateGraphics();
+			poses.add(robot.getPose());
 			data.add(robot.getData());
 		} //loop
 		
@@ -79,13 +76,19 @@ public abstract class Command implements Runnable {
 	
 	/**
 	 * Get the list of poses 
+	 * @return list of poses from robot
 	 */
-	public abstract ArrayList<Pose> getPoses(); 
+	public ArrayList<Pose> getPoses() {
+		return poses;
+	} //end getPoses
 	
 	/**
 	 * Get the curve
+	 * @return - list of curves added from command
 	 */
-	public abstract ArrayList<int[][]> getCurves();
+	public ArrayList<int[][]> getCurves() {
+		return curves;
+	} //end getCurves
 	
 	/**
 	 * Get the data points of the robot at each pose

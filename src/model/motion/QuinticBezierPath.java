@@ -132,12 +132,27 @@ public class QuinticBezierPath {
 			Point p = calcPoint(t);
 			
 			//flip x and y because of field config
-			x[i] = (int) p.getY() * AutoSim.ppi; 
-			y[i] = (int) p.getX() * AutoSim.ppi;
+			x[i] = (int) (p.getY() * (double) AutoSim.ppi); 
+			y[i] = (int) (p.getX() * (double) AutoSim.ppi);
 			
 			t += 1.0 / RESOLUTION;
 		} //loop
 		
 		return new int[][]{x, y};
 	} //end getPolyline
+	
+	/**
+	 * Create an array of Points from a 2D array of points
+	 * @param controlPts - 2D array of points containing (x,y) of control points
+	 * @return control points as Point objects
+	 */
+	public static Point[] pointsFromDoubles(double[][] controlPts) {
+		//turn double[][] to point array 
+		Point[] curvePts = new Point[6];
+		for (int i = 0; i <= 5; i++) {
+			curvePts[i] = new Point(controlPts[i]);
+		} //loop
+		
+		return curvePts;
+	} //end pointsFromDoubles
 } //end class

@@ -57,6 +57,9 @@ public class DriveToGoal extends Command {
 		// calculate the lookahead distance
 		this.lookahead = (Util.MAX_VOLTAGE * minSpeed) / (topSpeed * Util.kP_DRIVE) + Util.LOOKAHEAD_DIST;
 		this.lookahead *= reverse ? -1 : 1;
+		
+		//set robot
+		this.robot = loop.getRobot();
 	} // end constructor
 
 	/**
@@ -78,13 +81,6 @@ public class DriveToGoal extends Command {
 	} // end execute
 
 	/**
-	 * Save the pose of the robot to the list
-	 */
-	protected void updateGraphics() {
-		poses.add(loop.getRobot().getPose());
-	} // end savePose
-
-	/**
 	 * Return whether or not the robot is within the target point tolerance circle
 	 * @return - true if within, false if not
 	 */
@@ -96,15 +92,8 @@ public class DriveToGoal extends Command {
 	 * Run at the end of the command
 	 */
 	protected void end() {}
-
-	/**
-	 * Get the list of poses
-	 * 
-	 * @return poses - list of poses for animation
-	 */
-	public ArrayList<Pose> getPoses() {
-		return poses;
-	} // end getPoses
+	
+	//Helper Methods
 
 	/**
 	 * Update the state machine setpoints based on the robot's current position
@@ -169,10 +158,4 @@ public class DriveToGoal extends Command {
 			return deltaAngle;
 		} // if
 	} // end calcDeltaAngle
-
-	@Override
-	public ArrayList<int[][]> getCurves() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 } // end class

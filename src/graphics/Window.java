@@ -126,12 +126,11 @@ public class Window extends JFrame {
 			for (int i = 1; i < env.getNumPoses(); i++) {
 				env.incrementPoseIndex();
 				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
-				if (i == 50) {
-					System.out.println(env.getDataPoint(i).get(ROBOT_KEY.AVG_POS));
-				}
 			} //loop
 			System.out.println("ran");
 		};
+		
+		System.out.println(env.getDataPoint(10));
 		
 		//create and run the thread
 		Thread t = new Thread(loop);

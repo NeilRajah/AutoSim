@@ -35,7 +35,11 @@ public class Wait extends Command {
 		this.loop = driveLoop;
 		this.waitTime = waitTime;
 		
+		//create poses list
 		poses = new ArrayList<Pose>();
+		
+		//set robot
+		this.robot = loop.getRobot();
 	} //end constructor
 
 	/**
