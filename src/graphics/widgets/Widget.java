@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 import util.Util.WIDGET_ID;
 
-public class Widget {
+public abstract class Widget {
 	//Attributes
 	private boolean toggled; //whether widget is collapsed or not
 	private WIDGET_ID id; //ID tag of the widget
@@ -31,9 +31,7 @@ public class Widget {
 		layoutWidg();
 	} //end constructor
 	
-	public void update(double[] values) {
-		
-	}
+	public abstract void update(double[] values);
 	
 	/**
 	 * Get the height of the widget 

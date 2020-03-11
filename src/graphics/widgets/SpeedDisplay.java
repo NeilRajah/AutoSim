@@ -73,14 +73,4 @@ public class SpeedDisplay extends JComponent {
 		g2.setColor(Color.GRAY);
 		g2.fillRect(0, 0, this.getWidth(), drawHeight);
 	} //end paintComponent
-
-	/**
-	 * Get the widget containing the display
-	 * @return a Widget with this component
-	 */
-	public Widget getWidget() {
-		JPanel panel = new JPanel();
-		panel.add(this);
-		return new Widget(WIDGET_ID.SPEED_DISPLAY, panel);
-	} //end getWidget
 } //end class

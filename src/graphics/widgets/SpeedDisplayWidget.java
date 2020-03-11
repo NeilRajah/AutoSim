@@ -10,6 +10,7 @@ public class SpeedDisplayWidget extends Widget {
 	
 	public SpeedDisplayWidget(WIDGET_ID id, SpeedDisplay sd) {
 		super(id, panelFromComponent(sd));
+		this.sd = sd;
 	}
 
 	private static JPanel panelFromComponent(JComponent component) {

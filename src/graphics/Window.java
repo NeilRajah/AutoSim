@@ -126,6 +126,7 @@ public class Window extends JFrame {
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {
 				env.incrementPoseIndex(); //draw the next pose
+				
 				widgetHub.update(env.getDataPoint(i)); //update all widgets
 				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
 			} //loop

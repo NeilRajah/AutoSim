@@ -89,8 +89,10 @@ public class WidgetHub extends JComponent {
 		widgets.forEach((id, widget) -> {
 			switch (id) {
 				case SPEED_DISPLAY:
-					SpeedDisplayWidget sd = (SpeedDisplayWidget) widget;
-					sd.update(new double[] {(double) data.get(ROBOT_KEY.LIN_VEL)});
+
+//					System.out.println(new double[] {(double) data.get(ROBOT_KEY.LIN_VEL)});
+					
+					widget.update(new double[] {(double) data.get(ROBOT_KEY.LIN_VEL)});
 					break;
 			}
 		});

@@ -15,6 +15,7 @@ import commands.DriveToGoal;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
+import graphics.widgets.SpeedDisplayWidget;
 import model.DriveLoop;
 import model.Gearbox;
 import model.Motor;
@@ -22,6 +23,7 @@ import model.PIDController;
 import model.Point;
 import model.Robot;
 import util.Util;
+import util.Util.WIDGET_ID;
 
 public class AutoSim {
 	//Constants
@@ -86,7 +88,8 @@ public class AutoSim {
 	 */
 	private static void addWidgets() {
 		//Linear speed display
-		w.addWidget(new SpeedDisplay(w.getHubWidth(), 400, 
-					driveLoop.getRobot().getMaxLinSpeed()).getWidget());
+		w.addWidget(new SpeedDisplayWidget(WIDGET_ID.SPEED_DISPLAY, 
+					new SpeedDisplay(w.getHubWidth(), 400, 
+					driveLoop.getRobot().getMaxLinSpeed())));
 	} //end addWidgets
 } //end AutoSim
