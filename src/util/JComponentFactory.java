@@ -14,6 +14,7 @@ import java.awt.GridLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -68,6 +69,17 @@ public class JComponentFactory {
 
 		return panel;
 	} // end gridPanel
+	
+	/**
+	 * Create a JPanel holding a JComponent
+	 * @param component JComponent to be put in JPanel
+	 * @return vanilla JPanel containing component
+	 */
+	public static JPanel panelFromComponent(JComponent component) {
+		JPanel panel = new JPanel();
+		panel.add(component);
+		return panel;
+	} //end panelFromComponent
 
 	// WIDGETS//
 	/**

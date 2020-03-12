@@ -7,17 +7,13 @@
 
 package commands;
 
-import java.util.ArrayList;
-
 import model.DriveLoop;
-import model.Pose;
 import util.Util;
 
 public class DriveDistance extends Command {
 	//Attributes
 	//General
 	private DriveLoop loop; //drivetrain loop to update
-	private ArrayList<Pose> poses; //list of poses to update for drawing
 	
 	//Specific
 	private double distance; //distance to drive in inches
@@ -37,9 +33,6 @@ public class DriveDistance extends Command {
 		this.distance = distance;
 		this.tolerance = tolerance; 
 		this.topSpeed = topSpeed;
-		
-		//initialize poses list
-		poses = new ArrayList<Pose>();
 		
 		//set robot
 		this.robot = loop.getRobot();
@@ -64,11 +57,8 @@ public class DriveDistance extends Command {
 	 * @return - true if it is, false if it is not
 	 */
 	protected boolean isFinished() {
-		if (loop.isDrivePIDAtTarget() && loop.isRobotSlowerThanPercent(Util.kP_DRIVE * tolerance)) {
-			return true;
-		} else {
-			return false;
-		} //if
+		return loop.isDrivePIDAtTarget() && 
+				loop.isRobotSlowerThanPercent(Util.kP_DRIVE * tolerance);
 	} //end isFinished
 
 	/**

@@ -10,22 +10,21 @@ package graphics.widgets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import util.Util.WIDGET_ID;
+import util.Util.ROBOT_KEY;
 
 public abstract class Widget {
 	//Attributes
 	private boolean toggled; //whether widget is collapsed or not
-	private WIDGET_ID id; //ID tag of the widget
+	protected ROBOT_KEY[] keyArray; //values to get from the HashMap when updated
 	private JPanel panel; //graphical component in widget
 	
 	/**
 	 * Create widget with a component
 	 * @param panel graphical component for widget
 	 */
-	public Widget(WIDGET_ID id, JPanel panel) {
+	public Widget(JPanel panel) {
 		//set attributes
 		this.panel = panel;
-		this.id = id;
 		
 		//layout the view of the widget
 		layoutWidg();
@@ -50,11 +49,11 @@ public abstract class Widget {
 	} //end getWidth
 	
 	/**
-	 * Get the ID of the Widget
-	 * @return ID of the widget
+	 * Get the key values in array form
+	 * @return array of IDs used when updating the widget
 	 */
-	public WIDGET_ID getID() {
-		return id;
+	public ROBOT_KEY[] getKeyArray() {
+		return keyArray;
 	} //end getID
 	
 	/**

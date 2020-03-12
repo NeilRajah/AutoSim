@@ -22,7 +22,7 @@ public class DriveToGoalDemo extends CommandGroup {
 	 */
 	public DriveToGoalDemo() {
 		DriveLoop loop = AutoSim.driveLoop; //get the main loop
-		loop.getRobot().setXY(new Point(30,30));
+		loop.getRobot().setXY(new Point(30,30)); //starting point
 		
 		//Variables for the commands
 		

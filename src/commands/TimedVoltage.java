@@ -16,7 +16,6 @@ public class TimedVoltage extends Command {
 	//Attributes
 	//General
 	private DriveLoop loop; //drivetrain loop to update
-	private ArrayList<Pose> poses; //list of poses to update for drawing
 	
 	//Configured
 	private double leftVoltage; //voltage applied to left gearbox
@@ -41,9 +40,6 @@ public class TimedVoltage extends Command {
 		this.time = time;
 		counter = 0.0;
 		
-		//initialize poses list
-		poses = new ArrayList<Pose>();
-		
 		//set robot
 		this.robot = loop.getRobot();
 	} //end constructor
@@ -55,18 +51,7 @@ public class TimedVoltage extends Command {
 	 * @param time - seconds to apply voltage
 	 */
 	public TimedVoltage(DriveLoop loop, double voltage, double time) {
-		//set attributes
-		this.loop = loop;
-		this.leftVoltage = voltage;
-		this.rightVoltage = voltage;
-		this.time = time;
-		counter = 0.0;
-		
-		//initialize poses list
-		poses = new ArrayList<Pose>();
-		
-		//set the robot
-		this.robot = loop.getRobot();
+		this(loop, voltage, voltage, time);
 	} //end constructor
 
 	protected void initialize() {}
@@ -78,13 +63,6 @@ public class TimedVoltage extends Command {
 		loop.getRobot().update(leftVoltage, rightVoltage);
 		counter += Util.UPDATE_PERIOD;
 	} //end execute
-
-	/**
-	 * Save the pose of the robot to the list
-	 */
-	protected void updateGraphics() {
-		poses.add(loop.getRobot().getPose());
-	} //end savePose
 
 	/**
 	 * Return whether or not the time has passed
@@ -106,18 +84,4 @@ public class TimedVoltage extends Command {
 //		Util.println("Voltage Ratio:", (leftVoltage + rightVoltage) / (2 * Util.MAX_VOLTAGE));
 //		Util.println("kV:", Util.MAX_VOLTAGE / loop.getRobot().getMaxLinSpeed());
 	} //end isFinished
-
-	/**
-	 * Get the list of poses
-	 * @return poses - list of poses for animation
-	 */
-	public ArrayList<Pose> getPoses() {
-		return poses;
-	} //end getPoses
-
-	@Override
-	public ArrayList<int[][]> getCurves() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 } //end class

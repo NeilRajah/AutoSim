@@ -61,13 +61,9 @@ public abstract class CommandGroup {
 			poses.addAll(commands.get(i).getPoses());
 			data.addAll(commands.get(i).getData());
 			
-			//add curves if they exist
-			if (curves != null && curves.isEmpty()) {
+			//add curves if list exists and is not empty
+			if (curves != null && !curves.isEmpty()) {
 				curves.addAll(commands.get(i).getCurves());
-			} else {
-				System.out.println("could not add curve");
-				System.out.println("curve null: " + curves == null);
-				System.out.println("curve empty: " + curves.isEmpty());
 			} //if
 		} //loop
 		

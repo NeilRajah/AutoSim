@@ -55,14 +55,14 @@ public class Util {
 	
 	//Robot HashMap Keys
 	public static enum ROBOT_KEY {
-		AVG_POS,
-		LIN_VEL,
-		ANG_VEL,
-		HEADING,
-		YAW,
-		POINT,
-		COLOR,
-		LEFT_POS,
+		AVG_POS, 	
+		LIN_VEL, 	
+		ANG_VEL, 	
+		HEADING, 	
+		YAW,	 	
+		POINT,		
+		COLOR,		
+		LEFT_POS,	
 		RIGHT_POS,
 		LEFT_VEL,
 		RIGHT_VEL,

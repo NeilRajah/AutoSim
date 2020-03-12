@@ -9,12 +9,14 @@ package graphics.widgets;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import util.Util.ROBOT_KEY;
 import util.Util.WIDGET_ID;
@@ -23,16 +25,17 @@ public class WidgetHub extends JComponent {
 	//Attributes
 	private int height; //height of the hub
 	private int width; //width of the hub
-	private HashMap<WIDGET_ID, Widget> widgets; //widgets and their IDs
+	private ArrayList<Widget> widgets; //widgets and their IDs
 	
 	public WidgetHub(int width, int height) {
-		super();
+		//create the JComponent
+		super(); 
 		
 		//set attributes
 		this.width = width;
 		this.height = height;
 		this.setPreferredSize(new Dimension(width, height));
-		widgets = new HashMap<WIDGET_ID, Widget>();
+		this.widgets = new ArrayList<Widget>();
 		
 		//layout the view
 		layoutView();
@@ -62,8 +65,13 @@ public class WidgetHub extends JComponent {
 	 * @param w Widget to add to the hub
 	 */
 	public void addWidget(Widget w) {
+		//add the component
+		JPanel component = w.getComponent();
+		component.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(w.getComponent());
-		widgets.put(w.getID(), w);
+		
+		//add the widget to the list
+		widgets.add(w);
 	} //end addWidget
 	
 	/**
@@ -84,18 +92,24 @@ public class WidgetHub extends JComponent {
 	
 	/**
 	 * Update the widget
+	 * @param data all data points from the robot
 	 */
 	public void update(HashMap<ROBOT_KEY, Object> data) {	
-		widgets.forEach((id, widget) -> {
-			switch (id) {
-				case SPEED_DISPLAY:
-
-//					System.out.println(new double[] {(double) data.get(ROBOT_KEY.LIN_VEL)});
-					
-					widget.update(new double[] {(double) data.get(ROBOT_KEY.LIN_VEL)});
-					break;
-			}
-		});
+		//loop through each widget and update it
+		for (int i = 0; i < widgets.size(); i++) {
+			ROBOT_KEY[] keys = widgets.get(i).getKeyArray(); //array of keys
+			
+			//fill the values using the widget's keys
+			double[] values = new double[keys.length];
+			
+			for (int k = 0; k < keys.length; k++) {
+				values[k] = (double) data.get(keys[k]); 
+			} //loop
+			
+			//send those values to the widget
+			widgets.get(i).update(values);
+		} //loop
+		
 	} //end update
 
 	/**

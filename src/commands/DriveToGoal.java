@@ -6,19 +6,15 @@
  */
 package commands;
 
-import java.util.ArrayList;
-
 import model.DriveLoop;
 import model.FieldPositioning;
 import model.Point;
-import model.Pose;
 import util.Util;
 
 public class DriveToGoal extends Command {
 	// Attributes
 	// General
 	private DriveLoop loop; // drivetrain loop to update
-	private ArrayList<Pose> poses; // list of poses to update for drawing
 
 	// Specific
 	private Point goalPoint; // goal point to drive to
@@ -50,9 +46,6 @@ public class DriveToGoal extends Command {
 		this.topSpeed = topSpeed;
 		this.minSpeed = minSpeed;
 		this.reverse = reverse;
-
-		// initialize the list of poses
-		this.poses = new ArrayList<Pose>();
 
 		// calculate the lookahead distance
 		this.lookahead = (Util.MAX_VOLTAGE * minSpeed) / (topSpeed * Util.kP_DRIVE) + Util.LOOKAHEAD_DIST;

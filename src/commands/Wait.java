@@ -6,11 +6,7 @@
  */
 package commands;
 
-import java.awt.Color;
-import java.util.ArrayList;
-
 import model.DriveLoop;
-import model.Pose;
 import model.DriveLoop.STATE;
 import util.Util;
 
@@ -18,7 +14,6 @@ public class Wait extends Command {
 	//Attributes
 	//General
 	private DriveLoop loop; //drivetrain loop to update
-	private ArrayList<Pose> poses; //list of poses to update for drawing
 		
 	//Specific
 	private double waitTime; //time to wait in seconds
@@ -34,9 +29,6 @@ public class Wait extends Command {
 		//set attributes
 		this.loop = driveLoop;
 		this.waitTime = waitTime;
-		
-		//create poses list
-		poses = new ArrayList<Pose>();
 		
 		//set robot
 		this.robot = loop.getRobot();
@@ -56,44 +48,17 @@ public class Wait extends Command {
 	protected void execute() {
 		counter++;
 	} //end execute
-
-	/*
-	 * Save the current pose to the list
-	 */
-	protected void updateGraphics() {
-		Pose pose = loop.getRobot().getPose();
-		pose.setColor(Color.yellow);
-		poses.add(pose);
-	} //end savePose
  
-	/*
+	/**
 	 * Return whether the time in seconds has elapsed
 	 * @return - true if time has elapsed, false if not
 	 */
 	protected boolean isFinished() {
-		if (counter > updates) {
-			return true;
-		} else {
-			return false;
-		} //if
+		return counter > updates;
 	} //end isFinished
 
 	/**
 	 * Run at the end of the command
 	 */
 	protected void end() {}
-
-	/**
-	 * Get the list of poses
-	 * @return poses - list of poses for animation
-	 */
-	public ArrayList<Pose> getPoses() {
-		return poses;
-	} //end getPoses
-
-	@Override
-	public ArrayList<int[][]> getCurves() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 } //end class

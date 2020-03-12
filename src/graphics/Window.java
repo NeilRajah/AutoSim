@@ -122,6 +122,7 @@ public class Window extends JFrame {
 		Runnable loop = () -> {
 			//1 second delay from open to simulation launch
 			Util.pause(1000);
+			System.out.println("Starting loop");
 			
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {

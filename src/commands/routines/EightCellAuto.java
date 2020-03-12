@@ -24,20 +24,20 @@ public class EightCellAuto extends CommandGroup {
 		DriveLoop loop = AutoSim.driveLoop;
 		
 		//shoot balls
-		this.add(new Wait(loop, 4));
+//		this.add(new Wait(loop, 4));
 		
 		//pick close cells up
-		this.add(new DriveToGoal(loop, FieldPoints.AUTO_POS_ONE, 1, 12, 6, true));
-		this.add(new DriveToGoal(loop, FieldPoints.AUTO_POS_TWO, 1, 6, 3, false));
-		this.add(new DriveToGoal(loop, FieldPoints.AUTO_POS_THREE, 1, 6, 3, false));
+		add(new DriveToGoal(loop, FieldPoints.AUTO_POS_ONE, 1, 12, 6, true));
+		add(new DriveToGoal(loop, FieldPoints.AUTO_POS_TWO, 1, 6, 3, false));
+		add(new DriveToGoal(loop, FieldPoints.AUTO_POS_THREE, 1, 6, 3, false));
 		
 		//reverse and pick other cells up
-		this.add(new DriveDistance(loop, -24, 1, 6));
-		this.add(new DriveToGoal(loop, FieldPoints.AUTO_POS_FOUR, 1, 6, 3, false));
-		this.add(new DriveToGoal(loop, FieldPoints.AUTO_POS_FIVE, 1, 6, 3, false));
+		add(new DriveDistance(loop, -24, 1, 6));
+		add(new DriveToGoal(loop, FieldPoints.AUTO_POS_FOUR, 1, 6, 3, false));
+		add(new DriveToGoal(loop, FieldPoints.AUTO_POS_FIVE, 1, 6, 3, false));
 		
 		//drive to shot position and shoot
-		this.add(new DriveToGoal(loop, FieldPoints.AUTO_SHOT, 1, 12, 6, true));
-		this.add(new Wait(loop, 4));
+		add(new DriveToGoal(loop, FieldPoints.AUTO_SHOT, 1, 12, 6, true));
+//		this.add(new Wait(loop, 4));
 	} //end constructor
 } //end class
