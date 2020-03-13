@@ -11,7 +11,14 @@ import java.awt.Color;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
+import commands.CommandList;
+import commands.DriveDistance;
+import commands.DriveToGoal;
+import commands.MoveQuintic;
+import commands.TimedVoltage;
+import commands.Wait;
 import commands.routines.DriveToGoalDemo;
+import commands.routines.EightCellAuto;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -22,6 +29,7 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import util.FieldPoints;
 import util.Util;
 import util.Util.ROBOT_KEY;
 
@@ -44,23 +52,27 @@ public class AutoSim {
 	 * Create a Window and launch the program
 	 */
 	public static void main(String[] args) {
-		runSimulation(); //run the simulation
+		initialize(); //run the simulation
 		
 		//create the window and launch it
 		w = new Window();
 		w.setDebug();
 		addWidgets(); //add widgets to the widget hub
 		w.launch();
+		Util.println("Window launched");
 		
 		//add the command group and run it
 		w.addCommandGroup(cg);
+		Util.println("Added Command Group");
+		
 		w.runAnimation();
+		Util.println("Animation ran");
 	} //end main
 	
 	/**
 	 * Initialize the program by creating the robot and the command group
 	 */
-	private static void runSimulation() {
+	private static void initialize() {
 		//create robot
 		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2); //14ft/s 2 NEO gearbox each side
 		Robot r = new Robot(6, 153, 30, 30, gb); //153lb 6" wheel dia 30"x30" chassis
@@ -76,12 +88,15 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-//		cg = new EightCellAuto();
-		cg = new DriveToGoalDemo();
+		cg = new EightCellAuto();
+//		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
-//		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 1, false));
+//		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 0, false));
 //		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));
 //		cg = new CommandList(new MoveQuintic(driveLoop, FieldPoints.curve2));
+//		cg = new CommandList(new Wait(driveLoop, 0.25));
+		
+		Util.println("Initialized");
 	} //end initialize
 	
 	/**

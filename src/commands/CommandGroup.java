@@ -9,10 +9,9 @@ package commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
-
 import model.Pose;
 import util.Util.ROBOT_KEY;
+import util.Util;
 
 public abstract class CommandGroup {
 	//Attributes
@@ -56,6 +55,8 @@ public abstract class CommandGroup {
 		//run each command and add its poses to the total list
 		for (int i = 0; i < commands.size(); i++) {
 			commands.get(i).run(); //run the command
+			
+			Util.println("Running command", commands.get(i).getName() +" "+ i);
 			
 			//add poses and data 
 			poses.addAll(commands.get(i).getPoses());

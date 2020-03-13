@@ -42,8 +42,9 @@ public class MoveQuintic extends Command {
 		//update t value
 		t = start;
 		
-		//set robot
+		//set robot and name
 		this.robot = loop.getRobot();
+		this.name = "MoveQuintic";
 		
 		//set curve
 		ArrayList<int[][]> curvePolyline = new ArrayList<int[][]>();

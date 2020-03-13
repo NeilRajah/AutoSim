@@ -122,7 +122,8 @@ public class Window extends JFrame {
 		Runnable loop = () -> {
 			//1 second delay from open to simulation launch
 			Util.pause(1000);
-			System.out.println("Starting loop");
+			Util.println("Starting loop");
+			Util.println("Number of poses:", env.getNumPoses());
 			
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {
@@ -131,12 +132,13 @@ public class Window extends JFrame {
 				widgetHub.update(env.getDataPoint(i)); //update all widgets
 				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
 			} //loop
-			System.out.println("ran");
+			Util.println("ran");
 		};
 		
 		//create and run the thread
 		Thread t = new Thread(loop);
 		t.start();
+		Util.println("Thread Started");
 	} //end runAnimation
 	
 	//Widgets

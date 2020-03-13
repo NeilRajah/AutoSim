@@ -190,10 +190,32 @@ public class Util {
 	//Output
 	
 	/**
+	 * Get the information of the caller method
+	 */
+	private static void printCallerInfo() {
+		StackTraceElement stack = Thread.currentThread().getStackTrace()[3];
+		String methodName = stack.getMethodName();
+		String className = stack.getClassName();
+		
+		System.out.print("[" + className + "." + methodName + "()] ");
+	} //end println
+	
+	/**
+	 * Print a single string to the console 
+	 * @param s message to be printed
+	 */
+	public static void println(String s) {
+		printCallerInfo();
+		System.out.println(s);
+	} //end println
+	
+	/**
 	 * Print a variable amount of strings to the console
 	 * @param ... s - variable number of strings to print
 	 */
 	public static void println(String ... s) {
+		printCallerInfo();
+		
 		for(String str : s) {
 			System.out.print(str + " "); //print each with a space in between
 		} //loop
@@ -205,6 +227,8 @@ public class Util {
 	 * @param ... d - variable number of doubles to print
 	 */
 	public static void println(double ... d) {
+		printCallerInfo();
+		
 		for(double dbl : d) {
 			System.out.printf("%.4f ", dbl); //four decimal places
 		} //loop
@@ -217,7 +241,9 @@ public class Util {
 	 * @param ... d - variable number of doubles to print
 	 */
 	public static void println(String msg, double ... d) {
+		printCallerInfo();
 		System.out.print(msg + " ");
+		
 		for (double dbl : d) {
 			System.out.printf("%.4f ", dbl); //four decimal places
 		} //loop

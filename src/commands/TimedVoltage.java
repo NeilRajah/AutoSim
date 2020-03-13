@@ -40,8 +40,9 @@ public class TimedVoltage extends Command {
 		this.time = time;
 		counter = 0.0;
 		
-		//set robot
+		//set robot and name
 		this.robot = loop.getRobot();
+		this.name = "TimedVoltage";
 	} //end constructor
 	
 	/**

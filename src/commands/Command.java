@@ -21,6 +21,7 @@ public abstract class Command implements Runnable {
 	private ArrayList<Pose> poses = new ArrayList<Pose>(); //list of robot poses
 	protected ArrayList<int[][]> curves = new ArrayList<int[][]>(); //list of curves
 	protected Robot robot; //robot being commanded
+	protected String name; //name of the command for debugging
 	
 	/**
 	 * Runs once before command starts
@@ -97,4 +98,12 @@ public abstract class Command implements Runnable {
 	public ArrayList<HashMap<ROBOT_KEY, Object>> getData() {
 		return data;
 	} //end data
+	
+	/**
+	 * Get the name of the command
+	 * @return String name of the command
+	 */
+	public String getName() {
+		return name;
+	} //end getName
 } //end class

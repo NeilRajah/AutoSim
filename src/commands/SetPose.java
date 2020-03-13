@@ -35,8 +35,9 @@ public class SetPose extends Command {
 		loop.getRobotClone().setHeading(Math.toRadians(heading));
 		loop.setState(STATE.WAITING);
 		
-		//set robot
+		//set robot and name
 		this.robot = loop.getRobot();
+		this.name = "SetPose";
 	} //end constructor
 	
 	/**

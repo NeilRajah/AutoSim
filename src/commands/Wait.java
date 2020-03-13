@@ -30,8 +30,9 @@ public class Wait extends Command {
 		this.loop = driveLoop;
 		this.waitTime = waitTime;
 		
-		//set robot
+		//set robot and name
 		this.robot = loop.getRobot();
+		this.name = "Wait";
 	} //end constructor
 
 	/**

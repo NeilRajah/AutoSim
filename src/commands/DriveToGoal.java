@@ -51,8 +51,9 @@ public class DriveToGoal extends Command {
 		this.lookahead = (Util.MAX_VOLTAGE * minSpeed) / (topSpeed * Util.kP_DRIVE) + Util.LOOKAHEAD_DIST;
 		this.lookahead *= reverse ? -1 : 1;
 		
-		//set robot
+		//set robot and name
 		this.robot = loop.getRobot();
+		this.name = "DriveToGoal";
 	} // end constructor
 
 	/**
