@@ -51,9 +51,10 @@ public class DriveToGoal extends Command {
 		this.lookahead = (Util.MAX_VOLTAGE * minSpeed) / (topSpeed * Util.kP_DRIVE) + Util.LOOKAHEAD_DIST;
 		this.lookahead *= reverse ? -1 : 1;
 		
-		//set robot and name
+		//set robot, name and maximum # of iterations
 		this.robot = loop.getRobot();
 		this.name = "DriveToGoal";
+		this.maxIterations = 600;
 	} // end constructor
 	
 	public DriveToGoal(DriveLoop driveLoop, double x, double y, double tolerance, double topSpeed,

@@ -15,7 +15,6 @@ import commands.SetPose;
 import commands.Wait;
 import main.AutoSim;
 import model.DriveLoop;
-import model.Point;
 import util.Util;;
 
 public class DriveToGoalTest extends CommandGroup {
@@ -51,7 +50,9 @@ public class DriveToGoalTest extends CommandGroup {
 		tests.add(new DriveToGoal(loop, startX, startY + dist, 1, 12, 2, false));
 		
 		//Forward Straight behind
-		tests.add(new DriveToGoal(loop, startX, startY - dist, 1, 12, 2, false));
+		DriveToGoal test2 = new DriveToGoal(loop, startX, startY - dist, 1, 12, 2, false);
+		test2.setTimeout(2.00);
+		tests.add(test2);
 		
 		//Forward Left
 		tests.add(new DriveToGoal(loop, startX - dist, startY, 1, 12, 2, false));
@@ -100,14 +101,17 @@ public class DriveToGoalTest extends CommandGroup {
 			this.add(test);
 			resetRobot();
 		} //loop		
+		
+//		this.add(test2);
+//		this.add(new Wait(loop, 1.0));
 	} //end constructor
 	
 	/**
 	 * Reset the robot to a starting configuration before each test
 	 */
 	private void resetRobot() {
-		this.add(new Wait(loop, 1.0));
+		this.add(new Wait(loop, 0.5));
 		this.add(new SetPose(loop, startX, startY));
-		this.add(new Wait(loop, 1.0));
+		this.add(new Wait(loop, 0.5));
 	} //end resetRobot
 } //end class

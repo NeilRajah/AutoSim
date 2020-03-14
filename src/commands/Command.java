@@ -57,7 +57,6 @@ public abstract class Command implements Runnable {
 		data = new ArrayList<HashMap<ROBOT_KEY, Object>>(); //list of data points
 		poses = new ArrayList<Pose>(); //robot poses
 		curves = new ArrayList<int[][]>(); //bezier curves
-		maxIterations = (int) (1.0 / Util.UPDATE_PERIOD) * 10; //10 seconds simulation
 	} //end initCommandd
 	
 	/**
@@ -71,7 +70,7 @@ public abstract class Command implements Runnable {
 		this.initialize();
 		int iterations = 0;
 		
-		//execute the command until it is finished
+		//execute the command until it is finished or timed out
 		while(!this.isFinished() && !this.isTimedOut) {
 			this.execute(); //run the command
 			
@@ -83,7 +82,7 @@ public abstract class Command implements Runnable {
 			iterations++;
 			
 			//the command is timed out if there are too many iterations
-			isTimedOut = iterations > maxIterations;
+			isTimedOut = iterations >= maxIterations;
 		} //loop
 		
 		//end the command

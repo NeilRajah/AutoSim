@@ -33,6 +33,7 @@ public class Wait extends Command {
 		//set robot and name
 		this.robot = loop.getRobot();
 		this.name = "Wait";
+		this.maxIterations = 10000;
 	} //end constructor
 
 	/**
@@ -66,5 +67,7 @@ public class Wait extends Command {
 	/**
 	 * Run if the command times out
 	 */
-	protected void timedOut() {} 
+	protected void timedOut() {
+		Util.println("timed out");
+	} 
 } //end class
