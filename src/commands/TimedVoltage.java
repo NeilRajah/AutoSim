@@ -85,4 +85,9 @@ public class TimedVoltage extends Command {
 //		Util.println("Voltage Ratio:", (leftVoltage + rightVoltage) / (2 * Util.MAX_VOLTAGE));
 //		Util.println("kV:", Util.MAX_VOLTAGE / loop.getRobot().getMaxLinSpeed());
 	} //end isFinished
+	
+	/**
+	 * Run if the command times out
+	 */
+	protected void timedOut() {} 
 } //end class

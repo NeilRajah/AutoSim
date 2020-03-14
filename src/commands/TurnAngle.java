@@ -16,7 +16,6 @@ public class TurnAngle extends Command {
 	//Attributes
 	//General
 	private DriveLoop loop; //drivetrain loop to update
-	private ArrayList<Pose> poses; //list of poses to update for drawing
 	
 	//Specific
 	private double angle; //angle to turn to in degrees
@@ -40,9 +39,6 @@ public class TurnAngle extends Command {
 		this.topSpeed = topSpeed;
 		this.relative = relative;
 		
-		//initialize the list of poses
-		poses = new ArrayList<Pose>();
-		
 		//set robot and name
 		this.robot = loop.getRobot();
 		this.name = "TurnAngle";
@@ -63,41 +59,21 @@ public class TurnAngle extends Command {
 	} //end execute
 
 	/**
-	 * Save the pose of the robot to the list
-	 */
-	protected void updateGraphics() {
-		poses.add(loop.getRobot().getPose());
-	} //end savePose
-
-	/**
 	 * Return whether the robot is moving slowly within the target or not
 	 * @return - true if it is, false if it is not
 	 */
 	protected boolean isFinished() {
-		if (loop.isTurnPIDAtTarget() && loop.isRobotSlowerThanPercent(0.05)) {
-			return true;
-		}  else {
-			return false;
-		} //if
+		return loop.isTurnPIDAtTarget() && loop.isRobotSlowerThanPercent(0.05);
 	} //end isFinished
 
 	/**
 	 * Run at the end of the command
 	 */
 	protected void end() {}
-
+	
 	/**
-	 * Get the list of poses
-	 * @return poses - list of poses for animation
+	 * Run if the command times out
 	 */
-	public ArrayList<Pose> getPoses() {
-		return poses;
-	} //end getPoses
-
-	@Override
-	public ArrayList<int[][]> getCurves() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	protected void timedOut() {} 
 } //end class
 

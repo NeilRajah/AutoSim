@@ -121,7 +121,6 @@ public class Util {
 		
 		double xAvg = xSum / x.length;
 		double yAvg = ySum / y.length;
-		Util.println(xAvg, yAvg);
 		
 		//create deviation arrays 
 		double[] xDevs = new double[x.length];
@@ -130,7 +129,6 @@ public class Util {
 		for (int i = 0; i < x.length; i++) {
 			xDevs[i] = x[i] - xAvg;
 			yDevs[i] = y[i] - yAvg;
-			//calculations for r and sx,sy here?
 		} //loop
 		
 		//compute Pearson's Coefficient

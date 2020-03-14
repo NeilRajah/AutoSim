@@ -11,14 +11,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
-import commands.CommandList;
-import commands.DriveDistance;
-import commands.DriveToGoal;
-import commands.MoveQuintic;
-import commands.TimedVoltage;
-import commands.Wait;
-import commands.routines.DriveToGoalDemo;
-import commands.routines.EightCellAuto;
+import commands.routines.DriveToGoalTest;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -29,7 +22,6 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
-import util.FieldPoints;
 import util.Util;
 import util.Util.ROBOT_KEY;
 
@@ -88,8 +80,9 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-		cg = new EightCellAuto();
+//		cg = new EightCellAuto();
 //		cg = new DriveToGoalDemo();
+		cg = new DriveToGoalTest();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 //		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 0, false));
 //		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));

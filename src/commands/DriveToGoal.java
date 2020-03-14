@@ -55,6 +55,11 @@ public class DriveToGoal extends Command {
 		this.robot = loop.getRobot();
 		this.name = "DriveToGoal";
 	} // end constructor
+	
+	public DriveToGoal(DriveLoop driveLoop, double x, double y, double tolerance, double topSpeed,
+			double minSpeed, boolean reverse) {
+		this(driveLoop, new Point(x, y), tolerance, topSpeed, minSpeed, reverse);
+	} //end constructor
 
 	/**
 	 * Initialize the command by updating the setpoints and setting the state
@@ -86,6 +91,15 @@ public class DriveToGoal extends Command {
 	 * Run at the end of the command
 	 */
 	protected void end() {}
+	
+	/**
+	 * Run when the command is timed out
+	 */
+	protected void timedOut() {
+		Util.println(String.format("Timed out | errorX: %f, errorY: %f, errorH: %f", 
+					goalPoint.getX() - loop.getRobot().getX(), goalPoint.getY() - loop.getRobot().getY(),
+					goalAngle - loop.getRobot().getHeading()));
+	} //end timedOut
 	
 	//Helper Methods
 

@@ -21,7 +21,7 @@ public class MoveQuintic extends Command {
 	
 	private double start = 0.0;
 	private double end = 1.0;
-	private double step = 0.0025;
+	private double step = 0.001;
 	
 	//Configured
 	private QuinticBezierPath curve; //quintic bezier curve
@@ -76,11 +76,20 @@ public class MoveQuintic extends Command {
 		t += step;
 	} //end execute
 
-	@Override
+	/**
+	 * Finish the command when the t value is equal to the end value within tolerance
+	 */
 	protected boolean isFinished() {
 		return Math.abs(t - end) < step;
 	} //end isFinished
 
-	@Override
+	/**
+	 * Run at the end of the command
+	 */
 	protected void end() {}
+	
+	/**
+	 * Run if the command times out
+	 */
+	protected void timedOut() {} 
 } //end class

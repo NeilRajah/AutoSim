@@ -65,5 +65,10 @@ public class DriveDistance extends Command {
 	/**
 	 * Run at the end of the command
 	 */
-	protected void end() {} 
+	protected void end() {}
+
+	/**
+	 * Run if the command times out
+	 */
+	protected void timedOut() {} 
 } //end class

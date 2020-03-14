@@ -11,15 +11,17 @@ import java.util.HashMap;
 
 import model.Pose;
 import model.Robot;
+import util.Util;
 import util.Util.ROBOT_KEY;
 
 public abstract class Command implements Runnable {
 	//Attributes
 	private boolean isRunning; //whether the command is running or not
 	private boolean isTimedOut; //whether the command times out or not
-	private ArrayList<HashMap<ROBOT_KEY, Object>> data = new ArrayList<HashMap<ROBOT_KEY, Object>>(); //robot data
-	private ArrayList<Pose> poses = new ArrayList<Pose>(); //list of robot poses
-	protected ArrayList<int[][]> curves = new ArrayList<int[][]>(); //list of curves
+	private ArrayList<HashMap<ROBOT_KEY, Object>> data; //robot data
+	private ArrayList<Pose> poses; //list of robot poses
+	protected int maxIterations; //maximum number of iterations command can have
+	protected ArrayList<int[][]> curves; //list of curves
 	protected Robot robot; //robot being commanded
 	protected String name; //name of the command for debugging
 	
@@ -44,21 +46,44 @@ public abstract class Command implements Runnable {
 	protected abstract void end();
 	
 	/**
+	 * Run when the command is timed out
+	 */
+	protected abstract void timedOut();
+	
+	/**
+	 * Initialize all behind-the-scenes values for the Command
+	 */
+	private void initCommand() {
+		data = new ArrayList<HashMap<ROBOT_KEY, Object>>(); //list of data points
+		poses = new ArrayList<Pose>(); //robot poses
+		curves = new ArrayList<int[][]>(); //bezier curves
+		maxIterations = (int) (1.0 / Util.UPDATE_PERIOD) * 10; //10 seconds simulation
+	} //end initCommandd
+	
+	/**
 	 * Runs a command until finished
 	 */
 	public void run() {
 		//initialize the command
+		this.initCommand();
 		isRunning = true;
 		isTimedOut = false;
 		this.initialize();
-		double initTime = System.currentTimeMillis();
+		int iterations = 0;
 		
 		//execute the command until it is finished
 		while(!this.isFinished() && !this.isTimedOut) {
-			isTimedOut = (System.currentTimeMillis() - initTime) > 5000;
-			this.execute();
+			this.execute(); //run the command
+			
+			//add the robot information to the respective collections
 			poses.add(robot.getPose());
 			data.add(robot.getData());
+			
+			//loop the number of iterations
+			iterations++;
+			
+			//the command is timed out if there are too many iterations
+			isTimedOut = iterations > maxIterations;
 		} //loop
 		
 		//end the command
@@ -106,4 +131,12 @@ public abstract class Command implements Runnable {
 	public String getName() {
 		return name;
 	} //end getName
+	
+	/**
+	 * Set the timeout in seconds
+	 * @param timeout Command timeout in seconds
+	 */
+	public void setTimeout(double timeout) {
+		maxIterations = (int) (timeout * (1.0 / Util.UPDATE_PERIOD));
+	} //end setTimeout
 } //end class

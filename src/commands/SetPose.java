@@ -6,18 +6,15 @@
  */
 package commands;
 
-import java.util.ArrayList;
-
 import model.DriveLoop;
-import model.Point;
-import model.Pose;
 import model.DriveLoop.STATE;
+import model.Point;
 
 public class SetPose extends Command {
 	//Attributes
-	//General
 	private DriveLoop loop; //drivetrain loop to update
-	private ArrayList<Pose> poses; //list of poses to update for drawing
+	private Point p; //point for robot to be at
+	private double heading; //heading for robot to be at
 	
 	/**
 	 * Set the pose of the robot 
@@ -28,16 +25,12 @@ public class SetPose extends Command {
 	public SetPose(DriveLoop driveLoop, Point p, double heading) {
 		//set attributes
 		this.loop = driveLoop;
-		poses = new ArrayList<Pose>();
+		this.p = p;
+		this.heading = heading;
 		
-		//set pose of robot
-		loop.getRobotClone().setXY(p);
-		loop.getRobotClone().setHeading(Math.toRadians(heading));
-		loop.setState(STATE.WAITING);
-		
-		//set robot and name
-		this.robot = loop.getRobot();
+		//set name and robot waited status
 		this.name = "SetPose";
+		this.robot = loop.getRobot();
 	} //end constructor
 	
 	/**
@@ -48,26 +41,30 @@ public class SetPose extends Command {
 	 * @param heading - heading to set robot to in degrees
 	 */
 	public SetPose(DriveLoop driveLoop, double x, double y, double heading) {
-		//set attributes
-		this.loop = driveLoop;
-		poses = new ArrayList<Pose>();
-		
-		//set pose of robot
-		loop.getRobot().setXY(new Point(x,y));
-		loop.getRobot().setHeading(Math.toRadians(heading));
-		loop.setState(STATE.WAITING);
+		this(driveLoop, new Point(x, y), heading);
 	} //end constructor
-
-	protected void initialize() {}
 	
-	protected void execute() {}
+	/**
+	 * Set the pose of the robot with zero heading
+	 * @param driveLoop drivetrain loop to update
+	 * @param x x value to set robot to
+	 * @param y y value to set robot to
+	 */
+	public SetPose(DriveLoop driveLoop, double x, double y) {
+		this(driveLoop, new Point(x, y), 0);
+	} //end setPose
 
 	/**
-	 * Save the pose of the robot to the list
+	 * Set the pose of the robot
 	 */
-	protected void updateGraphics() {
-		poses.add(loop.getRobot().getPose());
-	} //end savePose
+	protected void initialize() {
+		loop.getRobot().setXY(p);
+		loop.getRobot().setHeading(Math.toRadians(heading));
+		loop.setState(STATE.WAITING);
+	} //end initialize
+	
+	
+	protected void execute() {}
 
 	/**
 	 * Return true upon initialization
@@ -82,16 +79,7 @@ public class SetPose extends Command {
 	protected void end() {} 
 
 	/**
-	 * Get the list of poses
-	 * @return poses - list of poses for animation
+	 * Run if the command times out
 	 */
-	public ArrayList<Pose> getPoses() {
-		return poses;
-	} //end getPoses
-
-	@Override
-	public ArrayList<int[][]> getCurves() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	protected void timedOut() {} 
 } //end class

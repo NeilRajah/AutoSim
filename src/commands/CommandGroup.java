@@ -54,9 +54,13 @@ public abstract class CommandGroup {
 		
 		//run each command and add its poses to the total list
 		for (int i = 0; i < commands.size(); i++) {
+			//if command name is "DriveToGoal"
+			//	draw the goal point
+			//
+			
 			commands.get(i).run(); //run the command
 			
-			Util.println("Running command", commands.get(i).getName() +" "+ i);
+			Util.println("Running command: " + i + " " + commands.get(i).getName());
 			
 			//add poses and data 
 			poses.addAll(commands.get(i).getPoses());
