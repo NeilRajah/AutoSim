@@ -78,15 +78,12 @@ public abstract class CommandGroup {
 			
 			//sum the tests passed and failed
 			if (testing) {
-				
 				if (commands.get(i).testing) {
 					//increment the pass counter
 					passed += commands.get(i).getPassed();
 					
 					//add the data if the command failed
-					if (commands.get(i).getPassed() == Util.FAILED || 
-						commands.get(i).getName().equals("Wait") ||
-						commands.get(i).getName().equals("SetPose")) {
+					if (commands.get(i).getPassed() == Util.FAILED) {
 						poses.addAll(commands.get(i).getPoses());
 						data.addAll(commands.get(i).getData());
 					} //if

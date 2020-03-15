@@ -12,7 +12,7 @@ public class FieldPositioning {
 	 * Calculate the goal yaw setpoint based on the current and goal positions
 	 * @param current - the (x,y) position of the robot currently
 	 * @param goal - the desired (x,y) position of the robot
-	 * @return the yaw setpoint for the robot to face the goal point
+	 * @return the yaw setpoint for the robot to face the goal point in degrees
 	 */
 	public static double calcGoalYaw(Point current, Point goal) {
 		double dx = goal.getX() - current.getX();

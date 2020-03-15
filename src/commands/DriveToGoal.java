@@ -46,10 +46,6 @@ public class DriveToGoal extends Command {
 		this.topSpeed = topSpeed;
 		this.minSpeed = minSpeed;
 		this.reverse = reverse;
-
-		// calculate the lookahead distance
-		this.lookahead = (Util.MAX_VOLTAGE * minSpeed) / (topSpeed * Util.kP_DRIVE) + Util.LOOKAHEAD_DIST;
-		this.lookahead *= reverse ? -1 : 1;
 		
 		//set robot
 		this.robot = loop.getRobot();
@@ -163,11 +159,11 @@ public class DriveToGoal extends Command {
 			setpoint = loop.getRobot().getAveragePos() + (reverse ? -dist : dist) + lookahead;
 
 			// angle setpoint
-			goalAngle = Math.toRadians(calcDeltaAngle()) + loop.getRobot().getHeading();
+			goalAngle = Math.toRadians(calcDeltaAngle()) + robot.getHeading();
 		} // if
 
 		// scale for top speed
-		double dA = Math.abs(Math.toDegrees(goalAngle - loop.getRobot().getHeading()));
+		double dA = Math.abs(Math.toDegrees(goalAngle - robot.getHeading()));
 		scale = calcScale(dA);
 	} // end updateSetpoints
 
@@ -192,23 +188,25 @@ public class DriveToGoal extends Command {
 	/**
 	 * Calculate the angle change required to face point based on the angle from the
 	 * robot to the point
-	 * 
 	 * @return - required angle change in degrees
 	 */
 	private double calcDeltaAngle() {
-		double pointYaw = FieldPositioning.calcGoalYaw(loop.getRobot().getPoint(), goalPoint); // calculate the yaw to
+		double pointYaw = FieldPositioning.calcGoalYaw(robot.getPoint(), goalPoint); // calculate the yaw to
 																								// the point
-		pointYaw += (reverse ? -Math.signum(pointYaw) * 180 : 0); // add on 180 in the opposite direction if going in
-																	// reverse
+		pointYaw += (reverse ? -Math.signum(pointYaw) * 180 : 0); // add 180 in opposite direction if reversing
 
 		double deltaAngle = pointYaw - loop.getRobot().getYaw(); // yaw difference between point yaw and robot yaw
 
-		if (Math.abs(deltaAngle) >= (360 - Math.abs(deltaAngle))) { // if angle change not smallest possible
-			return (Math.signum(loop.getRobot().getYaw() * 180 - loop.getRobot().getYaw())
-					- (Math.signum(pointYaw) * 180 - pointYaw));
-
-		} else { // if it is smallest value
-			return deltaAngle;
-		} // if
+//		Util.println(pointYaw, robot.getYaw(), deltaAngle);
+		
+//		if (Math.abs(deltaAngle) >= (360 - Math.abs(deltaAngle))) { // if angle change not smallest possible
+//			return (Math.signum(loop.getRobot().getYaw() * 180 - loop.getRobot().getYaw())
+//					- (Math.signum(pointYaw) * 180 - pointYaw));
+//
+//		} else { // if it is smallest value
+//			return deltaAngle;
+//		} // if
+		
+		return deltaAngle;
 	} // end calcDeltaAngle
 } // end class
