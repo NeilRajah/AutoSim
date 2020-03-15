@@ -9,6 +9,7 @@ package commands.routines;
 
 import java.util.ArrayList;
 
+import commands.Command;
 import commands.CommandGroup;
 import commands.DriveToGoal;
 import commands.SetPose;
@@ -33,6 +34,8 @@ public class DriveToGoalTest extends CommandGroup {
 		startX = Util.FIELD_HEIGHT / 2;
 		startY = Util.FIELD_WIDTH / 2;
 		double dist = 75;
+		
+		int[] testIndices = new int[]{-1};
 		
 		//set the robot to its starting pose (heading = 0)
 		resetRobot();
@@ -89,8 +92,9 @@ public class DriveToGoalTest extends CommandGroup {
 		tests.add(new DriveToGoal(loop, startX - dist, startY + dist, 1, 12, 2, true));
 		
 		//add all tests to the command group
-		for (DriveToGoal test : tests) {
+		for (int i = 0; i < tests.size(); i++) {
 			//add testing parameters
+			Command test = tests.get(i);
 			test.setTimeout(2.0);
 			test.enableTesting();
 			

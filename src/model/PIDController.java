@@ -116,18 +116,18 @@ public class PIDController {
 	
 	/**
 	 * Calculate a regulated PID output based on setpoint, current value and tolerance
-	 * @param setpoint - setpoint to reach
-	 * @param current - current value
-	 * @param epsilon - range the controller can be in to be considered "at goal"
-	 * @param topSpeed - top of speed limit
-	 * @param minSpeed - bottom of speed limit
+	 * @param setpoint setpoint to reach
+	 * @param current current value
+	 * @param epsilon range the controller can be in to be considered "at goal"
+	 * @param topSpeed magnitude of top of speed limit
+	 * @param minSpeed magnitude of bottom of speed limit
 	 * @return - regulated PID output in volts
 	 */
 	public double calcRegulatedPID(double setpoint, double current, double epsilon, double topSpeed, double minSpeed) {
 		double output = calcPID(setpoint, current, epsilon);
 		double topLimit = 12 * (Math.abs(topSpeed) / this.topSpeed);
-		double botLimit = -12 * (Math.abs(topSpeed) / this.topSpeed);
+		double botLimit = 12 * (Math.abs(minSpeed) / this.topSpeed);
 		
-		return Math.signum(topSpeed) * Util.clampNum(output, botLimit, topLimit);
+		return Util.regulatedClamp(output, botLimit, topLimit);
 	} //end calcRegulatedPID
 } //end class

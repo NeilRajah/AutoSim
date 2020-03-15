@@ -33,7 +33,7 @@ public class DriveToGoalDemo extends CommandGroup {
 		
 		//topSpeed, minSpeed and reverse
 		double topSpeed = loop.getRobotClone().getMaxLinSpeed();
-		double minSpeed = 0;
+		double minSpeed = 6;
 		boolean reverse = false;
 		
 		//add 10 points to drive to
@@ -62,7 +62,7 @@ public class DriveToGoalDemo extends CommandGroup {
 			add(new DriveToGoal(loop, new Point(x,y), 1, topSpeed, minSpeed, reverse));
 			
 			//wait for a split second before running next command
-			add(new Wait(loop, 0.2));
+//			add(new Wait(loop, 0.2));
 		} //loop
 	} //end constructor
 } //end class

@@ -11,7 +11,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
-import commands.routines.DriveToGoalTest;
+import commands.routines.EightCellAuto;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -48,7 +48,7 @@ public class AutoSim {
 		
 		//create the window and launch it
 		w = new Window();
-		w.setDebug();
+//		w.setDebug();
 		addWidgets(); //add widgets to the widget hub
 		w.launch();
 		
@@ -76,9 +76,9 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-//		cg = new EightCellAuto();
+		cg = new EightCellAuto();
 //		cg = new DriveToGoalDemo();
-		cg = new DriveToGoalTest();
+//		cg = new DriveToGoalTest();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 //		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 0, false));
 //		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));

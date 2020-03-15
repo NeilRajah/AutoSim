@@ -27,6 +27,7 @@ public abstract class Command implements Runnable {
 	protected String name; //name of the command for debugging
 	protected boolean testing; //whether the command is being tested or not
 	protected int passed; //whether the test has passed
+	protected int printCounter; //used when testing to not fill the console
 	
 	/**
 	 * Runs once before command starts
@@ -54,11 +55,9 @@ public abstract class Command implements Runnable {
 	protected abstract void timedOut();
 	
 	/**
-	 * Test function that prints whether the command has passed or failed
+	 * Test function that prints whether the command has passed or failed (meant to be overwritten)
 	 */
-	protected void test() {
-		Util.println("running from interface");
-	} //end test
+	protected void test() {}
 	
 	/**
 	 * Initialize all behind-the-scenes values for the Command
@@ -68,6 +67,7 @@ public abstract class Command implements Runnable {
 		poses = new ArrayList<Pose>(); //robot poses
 		curves = new ArrayList<int[][]>(); //bezier curves
 		passed = Util.INITIALIZED; //default not passed value
+		printCounter = 0;
 		
 		//set the max iterations if it has not been set
 		if (maxIterations == 0) { //zero is default int value

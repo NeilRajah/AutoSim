@@ -217,7 +217,6 @@ class ModelTest {
     		new Point(24.2, 37.6),
     		new Point(38.3, 24.8)
     	});
-//		System.out.println("PATH LENGTH:" + testPath.getLength());
 		double correctLength = 46.5;
 		assertEquals(correctLength, testPath.getLength(), 1);
 	} //end pathLengthsTest
@@ -229,7 +228,6 @@ class ModelTest {
 	void pathPointTest() {
 		QuinticBezierPath testPath = new QuinticBezierPath(FieldPoints.curve);
 		Point correctPoint = new Point(5.4, 3.7);
-//		Util.println("ppt:", testPath.calcPoint(0).getX(), testPath.calcPoint(0).getY());
 		assertEquals(0.0, FieldPositioning.calcDistance(correctPoint, testPath.calcPoint(0)), 0.1);
 	} //end pathPointTest
 	
@@ -298,7 +296,30 @@ class ModelTest {
 		c.run();
 		
 		double dataPoint = (double) driveLoop.getRobot().getData().get(ROBOT_KEY.AVG_POS);
-//		Util.println("robotDataTest:", dataPoint);
 		assertEquals(135, dataPoint, 1);
 	} //end robotDataTest
+	
+	@Test
+	/**
+	 * Test the upper limits of regulated clamping
+	 */
+	void regulatedClampUpperLimitTest() {
+		assertEquals(-1, Util.regulatedClamp(-1.2, 0.2, 1), 0E-3);
+	} //end regulatedClampingTest
+	
+	@Test
+	/**
+	 * Test the lower limits of regulated clamping
+	 */
+	void regulatedClampingLowerLimitTest() {
+		assertEquals(-0.2, Util.regulatedClamp(-0.1, 0.2, 1), 0E-3);
+	} //end regulatedClampingTest
+	
+	@Test
+	/**
+	 * Test the default case of regulated clamping
+	 */
+	void regulatedClampingTest() {
+		assertEquals(-0.6, Util.regulatedClamp(-0.6, 0.2, 1), 0E-3);
+	} //end regulatedClampingTest
 } //end class

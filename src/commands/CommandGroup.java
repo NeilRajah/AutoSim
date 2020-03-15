@@ -66,9 +66,6 @@ public abstract class CommandGroup {
 			
 			commands.get(i).run(); //run the command
 			
-			//output which command is being simulated
-			Util.println("Simulated command " + i + ": " + commands.get(i).getName());
-			
 			//add poses and data 
 			
 			//add curves if list exists and is not empty
@@ -86,12 +83,16 @@ public abstract class CommandGroup {
 					if (commands.get(i).getPassed() == Util.FAILED) {
 						poses.addAll(commands.get(i).getPoses());
 						data.addAll(commands.get(i).getData());
+						
+						//output the command that ran
+						Util.println("Simulated command " + (i+1) + ": " + commands.get(i).getName());
 					} //if
 				} //if
 				
-			} else {
+			} else { //not testing
 				poses.addAll(commands.get(i).getPoses());
 				data.addAll(commands.get(i).getData());
+				Util.println("Simulated command " + i + ": " + commands.get(i).getName());
 			} //if
 		} //loop
 		
@@ -118,7 +119,8 @@ public abstract class CommandGroup {
 			for (int i = 0; i < failIndices.size() - 1; i++) {
 				System.out.print(failIndices.get(i) + ", ");
 			} //loop
-			System.out.println(failIndices.get(failIndices.size() - 1) + "]\n");
+			System.out.print(failIndices.isEmpty() ? 0 : failIndices.get(failIndices.size() - 1));
+			System.out.println("]");
 		} //testing
 		
 		isRunning = false;

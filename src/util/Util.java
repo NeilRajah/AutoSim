@@ -82,6 +82,9 @@ public class Util {
 	//Output Constants
 	private static final int DEFAULT_STACK_INDEX = 3;
 	
+	//Animation Constants
+	public static final int ANIMATION_PERIOD = (int) (1000 * UPDATE_PERIOD);
+	
 	//Calculations
 	
 	/**
@@ -96,10 +99,61 @@ public class Util {
 			return high;
 		} else if (num < low) { //below limit
 			return low;
-		} else { //between limit
-			return num;
 		} //if
+		
+		return num;
 	} //end clampNum
+	
+	/**
+	 * Clamp a number between a minimum and maximum magnitude
+	 * @param num number to be clamped
+	 * @param low minimum magnitude limit
+	 * @param high maximum magnitude limit
+	 * @return number clamped between the two magnitudes
+	 */
+	public static double regulatedClamp(double num, double low, double high) {
+		low = Math.abs(low);
+		high = Math.abs(high);
+		
+		if (Math.abs(num) > high) {
+			return Math.copySign(high, num);
+		} else if (isBetween(num, -low, low)) {
+			return Math.copySign(low, num);
+		} //if
+		
+		return num;
+	} //end regulatedClamp
+	
+	/**
+	 * Check if a number is between two other numbers
+	 * @param num number to test
+	 * @param low low value number has to be greater than
+	 * @param high high value number has to be lower than
+	 * @return whether num is between low and high
+	 */
+	public static boolean isBetween(double num, double low, double high) {
+		return low <= num && num <= high;
+	} //end isBetween
+	
+	/**
+	 * Check if an integer is an element in an integer array
+	 * @param num integer to check array with
+	 * @param nums array to check
+	 * @return if nums contains num
+	 */
+	public static boolean numInArray(int num, int[] nums) {
+		boolean inNums = false;
+		
+		//loop through array, checking if each element is equal to num or not
+		for (int i = 0; i < nums.length; i++) {
+			if (num == nums[i]) {
+				inNums = true;
+				break;
+			} //if
+		} //loop
+		
+		return inNums;
+	} //end numInArray
 	
 	/**
 	 * Calculate a slope of best fit for equally sized double arrays

@@ -134,7 +134,7 @@ public class Window extends JFrame {
 				widgetHub.update(env.getDataPoint(i)); //update all widgets
 				bar.setCommandName((String) env.getDataPoint(i).get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
 				
-				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
+				Util.pause(Util.ANIMATION_PERIOD);
 			} //loop
 			
 			Util.println("ran");
