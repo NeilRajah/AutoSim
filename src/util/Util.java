@@ -7,7 +7,7 @@
 package util;
 
 public class Util {
-	//Constants
+	//Robot Constants
 	public static final double INCHES_TO_METERS = 0.0254;
 	public static final double LBS_TO_KG = 0.453592;
 	public static final double UPDATE_PERIOD = 0.005; //5ms
@@ -70,8 +70,17 @@ public class Util {
 		RIGHT_ACC,
 		LIN_ACC,
 		ANG_ACC,
-		STATE
+		STATE,
+		CURRENT_COMMAND
 	} //end enum
+	
+	//Testing Constants
+	public static final int PASSED = 1;
+	public static final int FAILED = 0;
+	public static final int INITIALIZED = -1;
+	
+	//Output Constants
+	private static final int DEFAULT_STACK_INDEX = 3;
 	
 	//Calculations
 	
@@ -170,28 +179,14 @@ public class Util {
 		return ((y - y1) * (x2 - x1)) / (y2 - y1) + x1;
 	} //end interpolate
 	
-	/**
-	 * Flip the x and y values of curve points
-	 * @param curve - curve to flip
-	 * @return - curve with its x and y values flipped
-	 */
-	public static double[][] flipCurve(double[][] curve) {
-		for (int i = 0; i < curve.length; i++) {
-			double buffer = curve[i][0];
-			curve[i][0] = curve[i][1];
-			curve[i][1] = buffer;
-		} //loop
-		
-		return curve;
-	} //end flipCurve
-	
 	//Output
 	
 	/**
 	 * Get the information of the caller method
+	 * @param stackIndex index of element in stack
 	 */
-	private static void printCallerInfo() {
-		StackTraceElement stack = Thread.currentThread().getStackTrace()[3];
+	private static void printCallerInfo(int stackIndex) {
+		StackTraceElement stack = Thread.currentThread().getStackTrace()[stackIndex];
 		String methodName = stack.getMethodName();
 		String className = stack.getClassName();
 		
@@ -203,7 +198,7 @@ public class Util {
 	 * @param s message to be printed
 	 */
 	public static void println(String s) {
-		printCallerInfo();
+		printCallerInfo(DEFAULT_STACK_INDEX);
 		System.out.println(s);
 	} //end println
 	
@@ -212,7 +207,7 @@ public class Util {
 	 * @param ... s - variable number of strings to print
 	 */
 	public static void println(String ... s) {
-		printCallerInfo();
+		printCallerInfo(DEFAULT_STACK_INDEX);
 		
 		for(String str : s) {
 			System.out.print(str + " "); //print each with a space in between
@@ -221,29 +216,56 @@ public class Util {
 	} //end println
 	
 	/**
-	 * Print a variable amount of double to the console
+	 * Print a variable amount of doubles to the console
 	 * @param ... d - variable number of doubles to print
 	 */
 	public static void println(double ... d) {
-		printCallerInfo();
+		printCallerInfo(DEFAULT_STACK_INDEX);
 		
-		for(double dbl : d) {
+		for (double dbl : d) {
 			System.out.printf("%.4f ", dbl); //four decimal places
 		} //loop
 		System.out.println();
 	} //end println
 	
 	/**
-	 * Print a variable amount of double to the console with a message in front
+	 * Print a variable amount of doubles to the console with a message in front
 	 * @param msg - message to print before numbers
 	 * @param ... d - variable number of doubles to print
 	 */
 	public static void println(String msg, double ... d) {
-		printCallerInfo();
+		printCallerInfo(DEFAULT_STACK_INDEX);
 		System.out.print(msg + " ");
 		
 		for (double dbl : d) {
 			System.out.printf("%.4f ", dbl); //four decimal places
+		} //loop
+	} //end println
+	
+	/**
+	 * Print a variable amount of ints to the console
+	 * @param ... ints - variable number of ints to print
+	 */
+	public static void println(int ... ints) {
+		printCallerInfo(DEFAULT_STACK_INDEX);
+		
+		for (int i: ints) {
+			System.out.print(i + " "); //four decimal places
+		} //loop
+		System.out.println();
+	} //end println
+	
+	/**
+	 * Print a variable amount of ints to the console with a message in front
+	 * @param msg message to print before numbers
+	 * @param ... ints variable number of doubles to print
+	 */
+	public static void println(String msg, int ... ints) {
+		printCallerInfo(DEFAULT_STACK_INDEX);
+		System.out.print(msg + " ");
+
+		for (int i: ints) {
+			System.out.print(i + " "); //four decimal places
 		} //loop
 		System.out.println();
 	} //end println
@@ -264,7 +286,7 @@ public class Util {
 		for (double num : nums) {
 			System.out.printf("%.3f\t", num); //format to 3 digits
 		} //loop
-	} //end tabPritn
+	} //end tabPrint
 	
 	/**
 	 * Pauses the thread for a specified amount of time

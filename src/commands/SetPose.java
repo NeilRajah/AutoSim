@@ -29,7 +29,6 @@ public class SetPose extends Command {
 		this.heading = heading;
 		
 		//set name and robot waited status
-		this.name = "SetPose";
 		this.robot = loop.getRobot();
 	} //end constructor
 	

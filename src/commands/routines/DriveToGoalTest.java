@@ -19,9 +19,9 @@ import util.Util;;
 
 public class DriveToGoalTest extends CommandGroup {
 	//Attributes
-	private DriveLoop loop;
-	private double startX;
-	private double startY;
+	private DriveLoop loop; //loop to control
+	private double startX; //starting x position
+	private double startY; //starting y position
 	
 	/**
 	 * All test cases
@@ -31,17 +31,11 @@ public class DriveToGoalTest extends CommandGroup {
 		
 		//set the starting (x,y) position of the robot
 		startX = Util.FIELD_HEIGHT / 2;
-//		startX = 50;
 		startY = Util.FIELD_WIDTH / 2;
 		double dist = 75;
 		
 		//set the robot to its starting pose (heading = 0)
-//		loop.getRobot().setXY(new Point(0, 0));
 		resetRobot();
-//		this.add(new SetPose(loop, 50, 50));
-//		this.add(new Wait(loop, 0.25));
-//		this.add(new SetPose(loop, 250, 50));
-//		this.add(new Wait(loop, 0.25));
 		
 		//List of all tests
 		ArrayList<DriveToGoal> tests = new ArrayList<DriveToGoal>();
@@ -50,26 +44,24 @@ public class DriveToGoalTest extends CommandGroup {
 		tests.add(new DriveToGoal(loop, startX, startY + dist, 1, 12, 2, false));
 		
 		//Forward Straight behind
-		DriveToGoal test2 = new DriveToGoal(loop, startX, startY - dist, 1, 12, 2, false);
-		test2.setTimeout(2.00);
-		tests.add(test2);
+		tests.add(new DriveToGoal(loop, startX, startY - dist, 1, 12, 2, false));
 		
 		//Forward Left
 		tests.add(new DriveToGoal(loop, startX - dist, startY, 1, 12, 2, false));
 		
-		//Forward Right
+		//Forward Right 
 		tests.add(new DriveToGoal(loop, startX + dist, startY, 1, 12, 2, false));
 		
-		//Forward Straight ahead
+		//Reverse Straight ahead %
 		tests.add(new DriveToGoal(loop, startX, startY + dist, 1, 12, 2, true));
 		
-		//Forward Straight behind
+		//Reverse Straight behind %
 		tests.add(new DriveToGoal(loop, startX, startY - dist, 1, 12, 2, true));
 		
-		//Forward Left
+		//Reverse Left %
 		tests.add(new DriveToGoal(loop, startX - dist, startY, 1, 12, 2, true));
 		
-		//Forward Right
+		//Reverse Right
 		tests.add(new DriveToGoal(loop, startX + dist, startY, 1, 12, 2, true));
 		
 		//Forward + + 
@@ -98,12 +90,16 @@ public class DriveToGoalTest extends CommandGroup {
 		
 		//add all tests to the command group
 		for (DriveToGoal test : tests) {
+			//add testing parameters
+			test.setTimeout(2.0);
+			test.enableTesting();
+			
+			//add to command
 			this.add(test);
+			
+			//move robot back to starting configuration
 			resetRobot();
-		} //loop		
-		
-//		this.add(test2);
-//		this.add(new Wait(loop, 1.0));
+		} //loop
 	} //end constructor
 	
 	/**

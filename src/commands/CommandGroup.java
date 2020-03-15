@@ -21,6 +21,9 @@ public abstract class CommandGroup {
 	private ArrayList<int[][]> curves; //curves the robot follows
 	private ArrayList<HashMap<ROBOT_KEY, Object>> data; //data points of the robot
 	
+	protected boolean testing; //whether the CommandGroup is for testing
+	private int passed; //number of tests passed
+	
 	/**
 	 * Create a command group
 	 */
@@ -29,13 +32,16 @@ public abstract class CommandGroup {
 	} //end constructor
 	
 	/**
-	 * Initialize the command group by creating the command and pose lists
+	 * Initialize the command group by setting the attributes
 	 */
 	private void initialize() {
 		commands = new ArrayList<Command>();
 		poses = new ArrayList<Pose>();
 		curves = new ArrayList<int[][]>();
 		data = new ArrayList<HashMap<ROBOT_KEY, Object>>();
+		
+		testing = this.getClass().getSimpleName().contains("Test");
+		passed = 0;
 	} //end initialize
 	
 	/**
@@ -60,17 +66,63 @@ public abstract class CommandGroup {
 			
 			commands.get(i).run(); //run the command
 			
-			Util.println("Running command: " + i + " " + commands.get(i).getName());
+			//output which command is being simulated
+			Util.println("Simulated command " + i + ": " + commands.get(i).getName());
 			
 			//add poses and data 
-			poses.addAll(commands.get(i).getPoses());
-			data.addAll(commands.get(i).getData());
 			
 			//add curves if list exists and is not empty
 			if (curves != null && !curves.isEmpty()) {
 				curves.addAll(commands.get(i).getCurves());
 			} //if
+			
+			//sum the tests passed and failed
+			if (testing) {
+				
+				if (commands.get(i).testing) {
+					//increment the pass counter
+					passed += commands.get(i).getPassed();
+					
+					//add the data if the command failed
+					if (commands.get(i).getPassed() == Util.FAILED || 
+						commands.get(i).getName().equals("Wait") ||
+						commands.get(i).getName().equals("SetPose")) {
+						poses.addAll(commands.get(i).getPoses());
+						data.addAll(commands.get(i).getData());
+					} //if
+				} //if
+				
+			} else {
+				poses.addAll(commands.get(i).getPoses());
+				data.addAll(commands.get(i).getData());
+			} //if
 		} //loop
+		
+		//output test information
+		if (testing) {
+			//get the number of commands being tested
+			int numTests = 0;
+			ArrayList<Integer> failIndices = new ArrayList<Integer>();
+			
+			for (int i = 0; i < commands.size(); i++) {
+				numTests += commands.get(i).testing ? 1 : 0; //add if the command is testing
+				
+				if (commands.get(i).getPassed() == Util.FAILED) {
+					failIndices.add((i - 2) / 4 + 1); //every fourth command starting
+				} //if
+			} //loop
+			
+			//output test information to the screen
+			System.out.println();
+			Util.println("");
+			System.out.println("NUMBER OF TESTS: " + numTests);
+			System.out.println("TESTS PASSED: " + passed);
+			System.out.print("TESTS FAILED: " + (numTests - passed) + " [");	
+			for (int i = 0; i < failIndices.size() - 1; i++) {
+				System.out.print(failIndices.get(i) + ", ");
+			} //loop
+			System.out.println(failIndices.get(failIndices.size() - 1) + "]\n");
+		} //testing
 		
 		isRunning = false;
 	} //end start

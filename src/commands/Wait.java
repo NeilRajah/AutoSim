@@ -32,8 +32,6 @@ public class Wait extends Command {
 		
 		//set robot and name
 		this.robot = loop.getRobot();
-		this.name = "Wait";
-		this.maxIterations = 10000;
 	} //end constructor
 
 	/**

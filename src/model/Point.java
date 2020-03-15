@@ -64,6 +64,14 @@ public class Point {
 	} //end setY
 	
 	/**
+	 * Get the x and y values in (x,y) format
+	 * @return string representation of the point
+	 */
+	public String getString() {
+		return String.format("(%.3f,%.3f)", x, y);
+	} //end getString
+	
+	/**
 	 * Translate the point a given magnitude at a given angle
 	 * @param magnitude - distance to translate the point
 	 * @param angle - angle to translate the point at

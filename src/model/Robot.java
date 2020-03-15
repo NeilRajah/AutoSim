@@ -35,6 +35,7 @@ public class Robot {
 	
 	//Graphics
 	private Color color; //color of the robot
+	private String commandName; //name of the command
 	
 	//Computed constants
 	private double kWheelRad; //wheel radius in meters
@@ -118,6 +119,7 @@ public class Robot {
 		angularVel = 0;
 		linearVel = 0;
 		color = Color.YELLOW;
+		commandName = "";
 	} //end reset
 	
 	/**
@@ -424,6 +426,14 @@ public class Robot {
 	} //end getLengthPixels
 	
 	/**
+	 * Set the name of the Command the robot is running
+	 * @param name name of Command robot is currently running
+	 */
+	public void setCommandName(String name) {
+		this.commandName = name;
+	} //end setCommandName
+	
+	/**
 	 * Get the data of the robot
 	 * @return all robot data point in a HashMap
 	 */
@@ -446,6 +456,7 @@ public class Robot {
 		data.put(ROBOT_KEY.RIGHT_ACC, rightGearbox.getAcc());
 		data.put(ROBOT_KEY.LIN_ACC, (leftGearbox.getAcc() + rightGearbox.getAcc()) / 2);
 		data.put(ROBOT_KEY.ANG_ACC, (kWheelRad / (2 * kPivotArm)) * (rightGearbox.getAcc() - leftGearbox.getAcc()));
+		data.put(ROBOT_KEY.CURRENT_COMMAND, commandName);
 		
 		return data;
 	} //end getData

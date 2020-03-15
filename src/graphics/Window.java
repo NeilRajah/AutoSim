@@ -83,6 +83,8 @@ public class Window extends JFrame {
 		this.setResizable(false); 
 		this.setLocation(10, 10);
 		this.setVisible(true);
+		
+		Util.println("Window launched");
 	} //end launch
 	
 	/**
@@ -124,14 +126,17 @@ public class Window extends JFrame {
 			Util.pause(1000);
 			Util.println("Starting loop");
 			Util.println("Number of poses:", env.getNumPoses());
+			Util.println("Total time:", env.getNumPoses() * Util.UPDATE_PERIOD);
 			
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {
 				env.incrementPoseIndex(); //draw the next pose
-				
 				widgetHub.update(env.getDataPoint(i)); //update all widgets
+				bar.setCommandName((String) env.getDataPoint(i).get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
+				
 				Util.pause((int) (Util.UPDATE_PERIOD * 1000));
 			} //loop
+			
 			Util.println("ran");
 		};
 		

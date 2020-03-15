@@ -26,9 +26,13 @@ public class UIBar extends JComponent {
 	private int height; //component height
 	
 	//Updated
+	private float fontSize; //font size
 	private String cursorLoc; //x,y location of cursor in inches
 	private String time; //time from start in seconds
-	private float fontSize; //font size
+	private String currentCmd; //name of current command
+	
+	//Constants
+	private final int TEXT_HEIGHT; //height of text
 	
 	/**
 	 * Create a bar for user interaction
@@ -46,7 +50,9 @@ public class UIBar extends JComponent {
 		//update constants
 		fontSize = (float) (height / 1.75);
 		cursorLoc = "(x,y): 0 0";
-		time = "Time: 0.000";
+		time = "0.0000s";
+		currentCmd = "";
+		TEXT_HEIGHT = height / 10;
 		
 //		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
 		
@@ -104,6 +110,15 @@ public class UIBar extends JComponent {
 	} //end setCursorLocation
 	
 	/**
+	 * Set the name of the command to output to the screen
+	 * @param name name of the current command running
+	 */
+	public void setCommandName(String name) {
+		this.currentCmd = name;
+		repaint();
+	} //end setCommandName
+	
+	/**
 	 * Draw the information to the bar
 	 * @param g - used for drawing
 	 */
@@ -122,8 +137,9 @@ public class UIBar extends JComponent {
 		
 		//draw text
 		g2.setColor(Color.black);
-		Painter.drawFlippedString(g2, cursorLoc, 0, height/10);
-		Painter.drawFlippedString(g2, time, 1000, height/10);
+		Painter.drawFlippedString(g2, cursorLoc, 0, TEXT_HEIGHT); //cursor location
+		Painter.drawFlippedString(g2, time, 1000, TEXT_HEIGHT); //simulation time
+		Painter.drawFlippedString(g2, currentCmd, 1500, TEXT_HEIGHT);
 	} //end paintComponent
 	
 	/**

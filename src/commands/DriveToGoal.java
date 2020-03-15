@@ -30,12 +30,12 @@ public class DriveToGoal extends Command {
 	/**
 	 * Drive to a goal point using the P2P control scheme
 	 * 
-	 * @param driveLoop  - drivetrain loop to update
-	 * @param goal - goal point to drive to
-	 * @param tolerance - tolerance to be within in inches
-	 * @param topSpeed - top speed of the robot in ft/s
-	 * @param minSpeed - min speed of the robot in ft/s
-	 * @param reverse - whether the robot is driving backwards or not
+	 * @param driveLoop drivetrain loop to update
+	 * @param goal goal point to drive to
+	 * @param tolerance tolerance to be within in inches
+	 * @param topSpeed top speed of the robot in ft/s
+	 * @param minSpeed min speed of the robot in ft/s
+	 * @param reverse whether the robot is driving backwards or not
 	 */
 	public DriveToGoal(DriveLoop driveLoop, Point goal, double tolerance, double topSpeed, double minSpeed,
 			boolean reverse) {
@@ -51,12 +51,21 @@ public class DriveToGoal extends Command {
 		this.lookahead = (Util.MAX_VOLTAGE * minSpeed) / (topSpeed * Util.kP_DRIVE) + Util.LOOKAHEAD_DIST;
 		this.lookahead *= reverse ? -1 : 1;
 		
-		//set robot, name and maximum # of iterations
+		//set robot
 		this.robot = loop.getRobot();
-		this.name = "DriveToGoal";
-		this.maxIterations = 600;
 	} // end constructor
 	
+	/**
+	 * Drive to a goal point given the x, y values of the point, tolerance to be within, maximum and minimum 
+	 * 	speeds, and whether the robot should drive in reverse
+	 * @param driveLoop drivetrain loop to update
+	 * @param x x value of the point
+	 * @param y y value of the point
+	 * @param tolerance tolerance to be within in inches
+	 * @param topSpeed top speed of the robot in ft/s
+	 * @param minSpeed min speed of the robot in ft/s
+	 * @param reverse whether the robot is driving backwards or not
+	 */
 	public DriveToGoal(DriveLoop driveLoop, double x, double y, double tolerance, double topSpeed,
 			double minSpeed, boolean reverse) {
 		this(driveLoop, new Point(x, y), tolerance, topSpeed, minSpeed, reverse);
@@ -102,6 +111,43 @@ public class DriveToGoal extends Command {
 					goalAngle - loop.getRobot().getHeading()));
 	} //end timedOut
 	
+	/**
+	 * Test function for Command
+	 */
+	protected void test() {
+		boolean inBounds = FieldPositioning.isWithinBounds(goalPoint, this.robot.getPoint(), tolerance);
+		boolean slowedDown = this.robot.getLinearVel() <= minSpeed;
+		
+		//Pass if the robot is within bounds and at/below minimum speed
+		if (inBounds && slowedDown) {
+			this.passed = 1;
+			
+		//fail if not
+		} else {
+			this.passed = 0;
+			
+			System.out.println();
+			Util.println("\nTEST FAILED:", this.name);
+			
+			//point and distance
+			if (!inBounds) {
+				System.out.println("Expected Point value: " + goalPoint.getString());
+				System.out.println("  Actual: " + this.robot.getPoint().getString());
+				System.out.println(String.format("  Distance from goal: %.3f", 
+									FieldPositioning.calcDistance(this.robot.getPoint(), goalPoint)));
+			} //if
+			
+			//Speed
+			if (!slowedDown) {
+				System.out.println("Expected Speed: " + minSpeed);
+				System.out.println(String.format("  Actual Speed: %.3f", this.robot.getLinearVel()));
+			} //if
+			
+			//reverse
+			System.out.println("Reversing: " + Boolean.toString(reverse));
+		} //if
+	} //end test
+	
 	//Helper Methods
 
 	/**
@@ -127,10 +173,8 @@ public class DriveToGoal extends Command {
 
 	/**
 	 * Calculate the scalar value for the linear output based on the heading error
-	 * 
-	 * @param dA
-	 *            - magnitude of angle change in degrees
-	 * @return output - value to scale linear top speed by
+	 * @param dA magnitude of angle change in degrees
+	 * @return output value to scale linear top speed by
 	 */
 	private double calcScale(double dA) {
 		if (dA > 90) { // if difference is greater than 90

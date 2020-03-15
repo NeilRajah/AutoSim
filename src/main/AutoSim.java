@@ -51,14 +51,10 @@ public class AutoSim {
 		w.setDebug();
 		addWidgets(); //add widgets to the widget hub
 		w.launch();
-		Util.println("Window launched");
 		
 		//add the command group and run it
-		w.addCommandGroup(cg);
-		Util.println("Added Command Group");
-		
+		w.addCommandGroup(cg);		
 		w.runAnimation();
-		Util.println("Animation ran");
 	} //end main
 	
 	/**

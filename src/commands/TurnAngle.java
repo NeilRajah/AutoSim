@@ -41,7 +41,6 @@ public class TurnAngle extends Command {
 		
 		//set robot and name
 		this.robot = loop.getRobot();
-		this.name = "TurnAngle";
 	} //end constructor
 
 	/**

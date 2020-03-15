@@ -36,7 +36,6 @@ public class DriveDistance extends Command {
 		
 		//set robot and name
 		this.robot = loop.getRobot();
-		this.name = "DriveDistance";
 	} //end constructor
 
 	/**
