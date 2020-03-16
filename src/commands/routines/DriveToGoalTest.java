@@ -98,7 +98,7 @@ public class DriveToGoalTest extends CommandGroup {
 			test.setTimeout(2.0);
 			test.enableTesting();
 			
-			//add to command
+			//add to group
 			this.add(test);
 			
 			//move robot back to starting configuration

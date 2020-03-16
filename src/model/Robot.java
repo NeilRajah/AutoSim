@@ -36,6 +36,7 @@ public class Robot {
 	//Graphics
 	private Color color; //color of the robot
 	private String commandName; //name of the command
+	private Point goalPoint; //used for graphics
 	
 	//Computed constants
 	private double kWheelRad; //wheel radius in meters
@@ -210,7 +211,7 @@ public class Robot {
 	
 	/**
 	 * Get the coordinates of the robot
-	 * @return - (x,y) values of the robot as a point
+	 * @return - (x,y) values of the robot as a Point
 	 */
 	public Point getPoint() {
 		return new Point(point.getX(), point.getY());
@@ -434,6 +435,14 @@ public class Robot {
 	} //end setCommandName
 	
 	/**
+	 * Set the goal point to be drawn
+	 * @param goal goal point Robot is attempting to reach
+	 */
+	public void setGoalPoint(Point goal) {
+		this.goalPoint = goal;
+	} //end setGoalPoint
+	
+	/**
 	 * Get the data of the robot
 	 * @return all robot data point in a HashMap
 	 */
@@ -457,6 +466,7 @@ public class Robot {
 		data.put(ROBOT_KEY.LIN_ACC, (leftGearbox.getAcc() + rightGearbox.getAcc()) / 2);
 		data.put(ROBOT_KEY.ANG_ACC, (kWheelRad / (2 * kPivotArm)) * (rightGearbox.getAcc() - leftGearbox.getAcc()));
 		data.put(ROBOT_KEY.CURRENT_COMMAND, commandName);
+		data.put(ROBOT_KEY.GOAL_POINT, goalPoint);
 		
 		return data;
 	} //end getData

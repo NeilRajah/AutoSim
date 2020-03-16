@@ -28,8 +28,8 @@ public class DriveToGoalDemo extends CommandGroup {
 		
 		//X and Y values for ranges
 		//height and width flipped because x and y are flipped
-		double minX = 15, maxX = Util.FIELD_HEIGHT - minX;
-		double minY = 15, maxY = Util.FIELD_WIDTH - minY;
+		double minX = 15, maxX = Util.FIELD_HEIGHT/2 - minX;
+		double minY = 15, maxY = Util.FIELD_WIDTH/2 - minY;
 		
 		//topSpeed, minSpeed and reverse
 		double topSpeed = loop.getRobotClone().getMaxLinSpeed();
@@ -54,12 +54,12 @@ public class DriveToGoalDemo extends CommandGroup {
 				
 			} else { //other points
 				topSpeed = Math.random() * (loop.getRobotClone().getMaxLinSpeed()/2) + loop.getRobotClone().getMaxLinSpeed()/2;
-				reverse = Math.random() > 0.5;
+//				reverse = Math.random() > 0.5;
 				minSpeed = topSpeed/2;								
 			} //if
 			
 			//add the command to the group
-			add(new DriveToGoal(loop, new Point(x,y), 1, topSpeed, minSpeed, reverse));
+			add(new DriveToGoal(loop, new Point(x,y), 1.5, topSpeed, minSpeed, reverse));
 			
 			//wait for a split second before running next command
 //			add(new Wait(loop, 0.2));

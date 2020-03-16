@@ -74,6 +74,7 @@ public class DriveToGoal extends Command {
 	protected void initialize() {
 		updateSetpoints();
 		loop.setDriveToGoalState(setpoint, goalAngle, tolerance, topSpeed * scale, minSpeed, reverse);
+		robot.setGoalPoint(goalPoint);
 	} // end initialize
 
 	/**
@@ -156,7 +157,7 @@ public class DriveToGoal extends Command {
 		double dist = FieldPositioning.calcDistance(loop.getRobot().getPoint(), goalPoint);
 
 		// update distance and angle setpoints if more than half a foot away
-		if (dist >= 6) {
+		if (dist >= tolerance) {
 			// distance setpoint
 			setpoint = robot.getAveragePos() + (reverse ? -dist : dist) + lookahead;
 
@@ -193,25 +194,23 @@ public class DriveToGoal extends Command {
 	 * @return - required angle change in degrees
 	 */
 	private double calcDeltaAngle() {
-		
 		double pointYaw = FieldPositioning.calcGoalYaw(robot.getPoint(), goalPoint); // calculate the yaw to
-																								// the point
+//		pointYaw = Util.clampNum(pointYaw, , 180);
+		
 		pointYaw -= reverse ? Math.copySign(180, pointYaw) : 0; // add 180 in opposite direction if reversing
 
 		double deltaAngle = pointYaw - robot.getYaw(); // yaw difference between point yaw and robot yaw
-
-		if (printCounter % 10 == 0)
-			Util.println(printCounter, robot.getYaw(), pointYaw, reverse ? Math.copySign(180, pointYaw) : 0, deltaAngle);
-		printCounter ++;
 		
-		if (Math.abs(deltaAngle) >= (360 - Math.abs(deltaAngle))) { // if angle change not smallest possible
-			return (Math.copySign(180, robot.getYaw()) - robot.getYaw())
-					- (Math.copySign(180, pointYaw) - pointYaw);
-		} else { // if it is smallest value
-			return deltaAngle;
-		} // if
+//		if (printCounter % 5 == 0)
+//		Util.println(goalPoint.getX() - robot.getX(), goalPoint.getY() - robot.getY(),
+//						pointYaw, robot.getYaw(), deltaAngle);
+//		printCounter++;
 		
+		//if angle change is in wrong direction
+		if (Math.abs(deltaAngle) >= 180) {
+			deltaAngle += 360;
+		} //if
 		
-//		return deltaAngle;
+		return deltaAngle;
 	} // end calcDeltaAngle
 } // end class

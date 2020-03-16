@@ -11,7 +11,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
-import commands.routines.EightCellAuto;
+import commands.routines.DriveToGoalCurve;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -22,6 +22,7 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import util.FieldPoints;
 import util.Util;
 import util.Util.ROBOT_KEY;
 
@@ -48,7 +49,7 @@ public class AutoSim {
 		
 		//create the window and launch it
 		w = new Window();
-//		w.setDebug();
+		w.setDebug();
 		addWidgets(); //add widgets to the widget hub
 		w.launch();
 		
@@ -76,8 +77,9 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-		cg = new EightCellAuto();
+//		cg = new EightCellAuto();
 //		cg = new DriveToGoalDemo();
+		cg = new DriveToGoalCurve(driveLoop, FieldPoints.curve2);
 //		cg = new DriveToGoalTest();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 //		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 0, false));
@@ -96,7 +98,7 @@ public class AutoSim {
 		SpeedDisplayWidget linSpd = new SpeedDisplayWidget(new SpeedDisplay(w.getHubWidth(), 
 				w.getHubHeight() * 1/8, driveLoop.getRobot().getMaxLinSpeed()), ROBOT_KEY.LIN_VEL);
 		linSpd.setColor(Color.GREEN);
-		w.addWidget(linSpd);
+		w.addWidget(linSpd);		
 		
 		//Angular speed display
 		SpeedDisplayWidget angSpd = new SpeedDisplayWidget(new SpeedDisplay(w.getHubWidth(), 

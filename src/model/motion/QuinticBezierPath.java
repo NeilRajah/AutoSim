@@ -107,7 +107,7 @@ public class QuinticBezierPath {
 	/**
 	 * Calculate the heading at the curve of a given t value
 	 * @param t - t value of the curve
-	 * return - heading at t
+	 * @return - heading at t in degrees
 	 */
 	public double calcHeading(double t) {
 		if (t <= EPSILON) {
@@ -117,6 +117,15 @@ public class QuinticBezierPath {
 		} //if
 		return FieldPositioning.calcGoalYaw(calcPoint(t - EPSILON), calcPoint(t + EPSILON));
 	} //end getHeading
+	
+	public double calcCurvature(double t) {
+		t = t <= EPSILON ? EPSILON : t >= (1 - EPSILON) ? 1 - EPSILON : t;
+		Point p1 = calcPoint(t - EPSILON);
+		Point p2 = calcPoint(t + EPSILON);
+		
+		return Math.toRadians(calcHeading(t)) / 
+				(FieldPositioning.calcDistance(p1, p2));
+	}
 	
 	/**
 	 * Get the polyline for animation purposes

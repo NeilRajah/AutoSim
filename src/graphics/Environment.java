@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 import main.AutoSim;
+import model.Point;
 import model.Pose;
 import model.motion.QuinticBezierPath;
 import util.Util.ROBOT_KEY;
@@ -94,7 +96,7 @@ public class Environment extends JComponent {
 	public int getNumPoses() {
 		if (poses != null) {
 			return poses.size();
-		} 
+		} //if
 		return 0;
 	} //end getNumPoses
 	
@@ -119,7 +121,7 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Add curve to be used for graphics
-	 * @param qbp - Bezier curve to be followed
+	 * @param qbp Bezier curve to be followed
 	 */
 	public void setCurves(ArrayList<int[][]> qbp) {
 		curves = qbp;
@@ -204,18 +206,33 @@ public class Environment extends JComponent {
 		} //if
 		
 		//stroke for lines
-		g2.setStroke(new BasicStroke(10.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+		g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(10.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		g2.setColor(Color.RED);
 		
 		//draw the current path
 		if (curves != null && !curves.isEmpty()) {
 			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], QuinticBezierPath.RESOLUTION);
 		} //if
-		
+
 		//draw the current pose
+		AffineTransform oldTransform = g2.getTransform();
 		if (poses != null && !poses.isEmpty()) { //if the pose is not null or empty
 			Painter.drawPose(g2, poses.get(poseIndex));
 		} //if		
+		g2.setTransform(oldTransform);
+		
+		//draw the goal point
+		try {
+			g2.setColor(Color.GRAY);
+			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);
+			Point robot = poses.get(poseIndex).getPoint();
+			int pointRad = 8;
+			Painter.drawPoint(g2, goal, pointRad);
+			Painter.drawPoint(g2, robot, pointRad);
+			
+			Painter.drawLine(g2, goal, robot);
+		} catch (Exception e) {}
 	} //end paintComponent
 	
 	//User Interaction

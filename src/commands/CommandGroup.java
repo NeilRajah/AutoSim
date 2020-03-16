@@ -59,14 +59,8 @@ public abstract class CommandGroup {
 		isRunning = true;
 		
 		//run each command and add its poses to the total list
-		for (int i = 0; i < commands.size(); i++) {
-			//if command name is "DriveToGoal"
-			//	draw the goal point
-			//
-			
+		for (int i = 0; i < commands.size(); i++) {			
 			commands.get(i).run(); //run the command
-			
-			//add poses and data 
 			
 			//add curves if list exists and is not empty
 			if (curves != null && !curves.isEmpty()) {
@@ -149,6 +143,14 @@ public abstract class CommandGroup {
 	public ArrayList<int[][]> getCurves() {
 		return curves;
 	} //end getPoses
+	
+	/**
+	 * Add a curve to be drawn
+	 * @param curve array of curve points
+	 */
+	public void addCurve(int[][] curve) {
+		curves.add(curve);
+	} //end addCurve
 	
 	/**
 	 * Get the data points from the robot

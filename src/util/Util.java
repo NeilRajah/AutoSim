@@ -71,7 +71,8 @@ public class Util {
 		LIN_ACC,
 		ANG_ACC,
 		STATE,
-		CURRENT_COMMAND
+		CURRENT_COMMAND,
+		GOAL_POINT
 	} //end enum
 	
 	//Testing Constants

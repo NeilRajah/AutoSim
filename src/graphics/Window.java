@@ -8,8 +8,8 @@ package graphics;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.HashMap;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -20,7 +20,6 @@ import graphics.widgets.WidgetHub;
 import main.AutoSim;
 import util.Util;
 import util.Util.ROBOT_KEY;
-import util.Util.WIDGET_ID;
 
 public class Window extends JFrame {
 	//Attributes
@@ -130,9 +129,11 @@ public class Window extends JFrame {
 			
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {
+				HashMap<ROBOT_KEY, Object> data = env.getDataPoint(i);
+				
 				env.incrementPoseIndex(); //draw the next pose
-				widgetHub.update(env.getDataPoint(i)); //update all widgets
-				bar.setCommandName((String) env.getDataPoint(i).get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
+				widgetHub.update(data); //update all widgets
+				bar.setCommandName((String) data.get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
 				
 				Util.pause(Util.ANIMATION_PERIOD);
 			} //loop
