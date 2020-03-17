@@ -29,7 +29,7 @@ public class SpeedDisplay extends JComponent {
 	public SpeedDisplay(int width, int height, double maxSpeed) {
 		this.setPreferredSize(new Dimension(width, height));
 //		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+//		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		
 		this.maxSpeed = maxSpeed;
 		

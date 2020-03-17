@@ -6,6 +6,7 @@ import util.JComponentFactory;
 import util.Util.ROBOT_KEY;
 
 public class SpeedDisplayWidget extends Widget {
+	//Attributes
 	private SpeedDisplay sd;
 	
 	/**

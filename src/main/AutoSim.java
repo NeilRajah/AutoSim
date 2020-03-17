@@ -11,9 +11,11 @@ import java.awt.Color;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
-import commands.routines.DriveToGoalCurve;
+import commands.routines.DriveToGoalDemo;
 import graphics.Painter;
 import graphics.Window;
+import graphics.widgets.BezierPathCreator;
+import graphics.widgets.BezierPathCreatorWidget;
 import graphics.widgets.SpeedDisplay;
 import graphics.widgets.SpeedDisplayWidget;
 import model.DriveLoop;
@@ -22,7 +24,6 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
-import util.FieldPoints;
 import util.Util;
 import util.Util.ROBOT_KEY;
 
@@ -78,8 +79,7 @@ public class AutoSim {
 		
 		//create the command group
 //		cg = new EightCellAuto();
-//		cg = new DriveToGoalDemo();
-		cg = new DriveToGoalCurve(driveLoop, FieldPoints.curve2);
+		cg = new DriveToGoalDemo();
 //		cg = new DriveToGoalTest();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 //		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 0, false));
@@ -105,5 +105,8 @@ public class AutoSim {
 				w.getHubHeight() * 1/8, driveLoop.getRobot().getMaxAngSpeed()), ROBOT_KEY.ANG_VEL);
 		angSpd.setColor(Color.ORANGE);
 		w.addWidget(angSpd);
+		
+		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
+		w.addWidget(bezWidg);
 	} //end addWidgets
 } //end AutoSim

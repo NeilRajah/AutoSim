@@ -23,6 +23,7 @@ public class QuinticBezierPath {
 	
 	//Calculated
 	private double length; //total length of the curve
+	private int[][] polyline; //polyline used for graphics
 	
 	/**
 	 * Create a quintic bezier path given an array of control points
@@ -68,6 +69,7 @@ public class QuinticBezierPath {
 	 */
 	private void computeConstants() {
 		computeLength();
+		computePolyline();
 	} //end computeConstants
 
 	/**
@@ -128,10 +130,9 @@ public class QuinticBezierPath {
 	}
 	
 	/**
-	 * Get the polyline for animation purposes
-	 * return - x points and y points of the curve
+	 * Computes the set of (x,y) points for drawing the curve later
 	 */
-	public int[][] getPolyline() {
+	private void computePolyline() {
 		int[] x = new int[RESOLUTION];
 		int[] y = new int[RESOLUTION];
 		
@@ -147,7 +148,15 @@ public class QuinticBezierPath {
 			t += 1.0 / RESOLUTION;
 		} //loop
 		
-		return new int[][]{x, y};
+		polyline = new int[][]{x, y};
+	} //end computePolyline
+	
+	/**
+	 * Get the polyline for animation purposes
+	 * return - x points and y points of the curve
+	 */
+	public int[][] getPolyline() {
+		return polyline;
 	} //end getPolyline
 	
 	/**
