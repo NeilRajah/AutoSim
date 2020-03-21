@@ -187,10 +187,6 @@ public class Environment extends JComponent {
 	 */
 	public void setDebug() {
 		debug = true;
-		
-		//change size to square
-		this.width = height;
-		this.setPreferredSize(new Dimension(width, height));
 	} //end setDebug
 	
 	/**

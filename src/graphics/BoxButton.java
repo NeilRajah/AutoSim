@@ -15,9 +15,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
 import main.AutoSim;
+import util.JComponentUtil;
 import util.Util;
 
 public class BoxButton extends JComponent {
@@ -49,12 +51,15 @@ public class BoxButton extends JComponent {
 		fontSize = Util.FONT_SIZE;	
 		
 		//regular Oxygen font
-		f = Util.getFileFont(Painter.OXYGEN_FONT);
+		f = Util.getFileFont(Painter.SF_UI_FONT);
 		
 		//set the corner radius and colors
 		cornerRad = AutoSim.PPI * 10;		
 		backgroundColor = Color.BLACK;
 		textColor = Color.WHITE;
+		
+		//add padding around component
+		this.setBorder(JComponentUtil.paddedBorder(AutoSim.PPI * 2));
 	} //end constructor
 	
 	/*

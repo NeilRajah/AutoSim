@@ -28,7 +28,7 @@ public class DriveToGoalDemo extends CommandGroup {
 		
 		//X and Y values for ranges
 		//height and width flipped because x and y are flipped
-		double minX = 15, maxX = Util.FIELD_HEIGHT/2 - minX;
+		double minX = 15, maxX = Util.FIELD_HEIGHT - minX;
 		double minY = 15, maxY = Util.FIELD_WIDTH/2 - minY;
 		
 		//topSpeed, minSpeed and reverse
@@ -36,8 +36,8 @@ public class DriveToGoalDemo extends CommandGroup {
 		double minSpeed = 6;
 		boolean reverse = false;
 		
-		//add 10 points to drive to
-		for (int i = 0; i < 10; i++) {
+		//add points to drive to
+		for (int i = 0; i < 100; i++) {
 			//create random x and y values to be within
 			double x = Math.random() * (maxX - minX) + minX;
 			double y = Math.random() * (maxY - minY) + minY;

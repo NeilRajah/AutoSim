@@ -42,15 +42,19 @@ public class BezierPathCreator extends JPanel {
 		layoutView();
 		
 //		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, AutoSim.PPI * 2));
-		this.setBorder(BorderFactory.createLineBorder(Color.RED, 10));
+//		this.setBorder(BorderFactory.createLineBorder(Color.RED, 10));
 
 	}
 	
 	private void layoutView() {
+		GridBagLayout gb = new GridBagLayout();
+		this.setLayout(gb);
+		
+		layoutTopRow();
 		layoutControlPointArea();
 	}
 	
-	private void topRow() {
+	private void layoutTopRow() {
 		//instead of returning, can pass in JPanel the top row is to be added to
 	}
 	
@@ -66,7 +70,7 @@ public class BezierPathCreator extends JPanel {
 		
 		//top row
 		JLabel title = new JLabel("Bezier Curve Creator", SwingConstants.CENTER);
-		title.setFont(title.getFont().deriveFont((float) (AutoSim.PPI * 8)));
+		title.setFont(Painter.createFont(Painter.SF_UI_FONT, AutoSim.PPI * 10));
 		title.setPreferredSize(new Dimension(width, height/10));
 		
 		GridBagConstraints topRowConstraint = JComponentUtil.createGBC(0, 0);
@@ -79,36 +83,19 @@ public class BezierPathCreator extends JPanel {
 		for (int i = 0; i < 12; i++) {
 			//add to HashMap
 			String key = (i % 2 == 0 ? "x" : "y") + Integer.toString(i % 6 / 2); //x0, y0, x1, ...
-			JTextField textBox = JComponentUtil.textField(this.width / 6, this.height / 10);
-			textBoxes.put(key, textBox);
+			JTextField textBox = JComponentUtil.textField(key, this.width / 6, this.height / 10, AutoSim.PPI * 8);
+			textBoxes.put(key, textBox); //add to map
 			
 			//for every two text areas, add one button
 			if (i % 2 == 0) {
 				y++;
-//				JPanel button = new JPanel();
 				BoxButton btn = new BoxButton(this.width / 5, this.height / 10, "P" + (y - 1), true, true); //P0, P1, ...
-//				JTextField btn = JComponentUtil.textField(200, 200);
-//				button.add(btn);
-//				btn.setBorder(BorderFactory.createLineBorder(Color.black));
-//				btn.setPreferredSize(btn.getSize());
 				gb.setConstraints(btn, JComponentUtil.createGBC(0, y, 0.25, 1));
-				btn.setBorder(BorderFactory.createEmptyBorder(AutoSim.PPI, AutoSim.PPI, AutoSim.PPI, AutoSim.PPI));
 				controlPointArea.add(btn);
-				
-				//button not changing size, needs to be smaller
 			} //if
 			
 			//constrain to grid (x = 1, 2, 1, 2, 1 ...)
 			gb.setConstraints(textBox, JComponentUtil.createGBC(i % 2 + 1, y, 0.375, 1));
-			
-			//center the text
-			textBox.setText(key);
-			textBox.setHorizontalAlignment(SwingConstants.CENTER); //center text
-			textBox.setFont(Painter.createFont(Painter.OXYGEN_FONT, AutoSim.PPI * 10));
-			
-			textBox.setBorder(BorderFactory.createLineBorder(Color.black, (int) (AutoSim.PPI * 0.2)));
-			//extra paddding
-//			textBox.setBorder(BorderFactory.createEmptyBorder(AutoSim.PPI, AutoSim.PPI, AutoSim.PPI, AutoSim.PPI));
 			
 			//		add controllers		//
 			

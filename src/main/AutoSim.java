@@ -113,8 +113,8 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-		//cg = new DriveToGoalDemo();
-		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
+		cg = new DriveToGoalDemo();
+//		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize
 	
 	/**

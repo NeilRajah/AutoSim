@@ -68,6 +68,7 @@ public class Window extends JFrame {
 		width = AutoSim.PPI * Util.FIELD_WIDTH; 
 		height = AutoSim.PPI * Util.FIELD_HEIGHT;
 		
+		//change window shape depending on whether it is in debug or not
 		if (debug) {
 			env = new Environment(height, height); //square
 			env.setDebug();
@@ -148,7 +149,6 @@ public class Window extends JFrame {
 	 */
 	public void addCommandGroup(CommandGroup cg) {
 		cg.run();
-		System.out.println(!(cg != null)); //is cg null
 		env.setPoses(cg.getPoses());
 		env.setCurves(cg.getCurves());
 		env.setData(cg.getData());

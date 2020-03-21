@@ -8,12 +8,10 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.File;
+import java.awt.RenderingHints;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
 import main.AutoSim;
@@ -123,7 +121,9 @@ public class UIBar extends JComponent {
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g; //g2 for better drawing
 		
-		g2.setFont(Painter.createFont(Painter.SF_UI_FONT, AutoSim.PPI * 15)); //set the font
+		//set font and make text smoother
+		g2.setFont(Painter.createFont(Painter.SF_UI_FONT, AutoSim.PPI * 10));
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		
 		//move origin to bottom left
 		g2.scale(1.0, -1.0);
@@ -136,7 +136,7 @@ public class UIBar extends JComponent {
 		//draw text
 		g2.setColor(Color.black);
 		Painter.drawFlippedString(g2, cursorLoc, 0, TEXT_HEIGHT); //cursor location
-		Painter.drawFlippedString(g2, time, (int) width, TEXT_HEIGHT); //simulation time
-		Painter.drawFlippedString(g2, currentCmd, (int) width, TEXT_HEIGHT); //name of command being run
+		Painter.drawFlippedString(g2, time, (int) (width * 0.8), TEXT_HEIGHT); //simulation time
+		Painter.drawFlippedString(g2, currentCmd, (int) (width * 0.4), TEXT_HEIGHT); //name of command being run
 	} //end paintComponent
 } //end class

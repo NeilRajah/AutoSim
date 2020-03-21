@@ -8,6 +8,7 @@
 package util;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
@@ -24,7 +25,11 @@ import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+
+import graphics.Painter;
+import main.AutoSim;
 
 public class JComponentUtil {
 	// PANELS//
@@ -145,11 +150,14 @@ public class JComponentUtil {
 	/**
 	 * Create a text field
 	 */
-	public static JTextField textField(int width, int height) {
-		JTextField text = new JTextField();
-		text.setPreferredSize(new Dimension(width, height));
+	public static JTextField textField(String text, int width, int height, int fontSize) {
+		JTextField textField = new JTextField(text);
+		textField.setPreferredSize(new Dimension(width, height));
+		textField.setFont(Painter.createFont(Painter.SF_UI_FONT, AutoSim.PPI * 10));
+		textField.setHorizontalAlignment(SwingConstants.CENTER); //center text
+		textField.setBorder(BorderFactory.createLineBorder(Color.black, (int) (AutoSim.PPI * 0.2)));
 
-		return text;
+		return textField;
 	} // end textArea
 
 	/**
