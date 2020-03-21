@@ -415,7 +415,7 @@ public class Robot {
 	 * @return - width of robot in pixels
 	 */
 	public int getWidthPixels() {
-		return (int) ((kWidth * AutoSim.ppi) / Util.INCHES_TO_METERS);
+		return (int) ((kWidth * AutoSim.PPI) / Util.INCHES_TO_METERS);
 	} //end getWidthPixels
 	
 	/**
@@ -423,7 +423,7 @@ public class Robot {
 	 * @return - width of robot in pixels
 	 */
 	public int getLengthPixels() {
-		return (int) ((kLength * AutoSim.ppi) / Util.INCHES_TO_METERS);
+		return (int) ((kLength * AutoSim.PPI) / Util.INCHES_TO_METERS);
 	} //end getLengthPixels
 	
 	/**

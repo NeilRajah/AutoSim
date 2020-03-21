@@ -18,6 +18,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import main.AutoSim;
 import util.Util.ROBOT_KEY;
 import util.Util.WIDGET_ID;
 
@@ -53,12 +54,12 @@ public class WidgetHub extends JPanel {
 		//add title bar
 		JLabel title = new JLabel("Widget Hub");
 		title.setForeground(Color.RED);
-		title.setFont(title.getFont().deriveFont(40.0f));
+		title.setFont(title.getFont().deriveFont((float) (AutoSim.PPI * 8)));
 //		title.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		title.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(title);
 		
-		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
+//		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
 	} //end layoutView
 	
 	/**

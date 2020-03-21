@@ -102,8 +102,8 @@ public class UIBar extends JComponent {
 	 */
 	public void setCursorLocation(int x, int y) {
 		//x and y values in inches
-		double xVal = (double) y / AutoSim.ppi;
-		double yVal = (double) x / AutoSim.ppi;
+		double xVal = (double) y / AutoSim.PPI;
+		double yVal = (double) x / AutoSim.PPI;
 		
 		cursorLoc = String.format("(x,y): %.1f %.1f", xVal, yVal);
 		repaint();

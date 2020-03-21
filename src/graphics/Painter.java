@@ -17,7 +17,7 @@ public class Painter {
 	//Values
 	public static int robotLength = 0; //length of robot in pixels
 	public static int robotWidth = 0; //width of robot in pixels
-	public static final int CORNER_RAD = AutoSim.ppi * 6; //corner radius
+	public static final int CORNER_RAD = AutoSim.PPI * 6; //corner radius
 	
 	/**
 	 * Draw a string to the screen
@@ -40,7 +40,7 @@ public class Painter {
 	public static void drawPose(Graphics2D g2, Pose p) {
 		
 		//translate to center of robot, robot to its heading
-		g2.translate(p.getPoint().getY()*AutoSim.ppi, p.getPoint().getX()*AutoSim.ppi);
+		g2.translate(p.getPoint().getY()*AutoSim.PPI, p.getPoint().getX()*AutoSim.PPI);
 		g2.rotate(p.getHeading());
 		
 		//draw body of robot
@@ -76,18 +76,18 @@ public class Painter {
 	} //end drawGrid
 	
 	public static void drawPoint(Graphics2D g2, Point p, int rad) {
-		rad *= AutoSim.ppi;
-		int x = (int) (p.getX() * AutoSim.ppi);
-		int y = (int) (p.getY() * AutoSim.ppi);
+		rad *= AutoSim.PPI;
+		int x = (int) (p.getX() * AutoSim.PPI);
+		int y = (int) (p.getY() * AutoSim.PPI);
 		
 		g2.fillOval((int) (y - rad/2.0), (int) (x - rad/2.0), rad, rad);
 	} //end drawPoint
 	
 	public static void drawLine(Graphics2D g2, Point start, Point end) {
-		int x1 = (int) (start.getX() * AutoSim.ppi);
-		int y1 = (int) (start.getY() * AutoSim.ppi);
-		int x2 = (int) (end.getX() * AutoSim.ppi);
-		int y2 = (int) (end.getY() * AutoSim.ppi);
+		int x1 = (int) (start.getX() * AutoSim.PPI);
+		int y1 = (int) (start.getY() * AutoSim.PPI);
+		int x2 = (int) (end.getX() * AutoSim.PPI);
+		int y2 = (int) (end.getY() * AutoSim.PPI);
 		
 		g2.drawLine(y1, x1, y2, x2);
 	} //end drawLine

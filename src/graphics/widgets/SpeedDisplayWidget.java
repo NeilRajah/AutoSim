@@ -2,7 +2,7 @@ package graphics.widgets;
 
 import java.awt.Color;
 
-import util.JComponentFactory;
+import util.JComponentUtil;
 import util.Util.ROBOT_KEY;
 
 public class SpeedDisplayWidget extends Widget {
@@ -16,7 +16,7 @@ public class SpeedDisplayWidget extends Widget {
 	 */
 	public SpeedDisplayWidget(SpeedDisplay sd, ROBOT_KEY key) {
 		//create widget
-		super(JComponentFactory.panelFromComponent(sd));
+		super(JComponentUtil.panelFromComponent(sd));
 		
 		//set attributes
 		this.sd = sd;

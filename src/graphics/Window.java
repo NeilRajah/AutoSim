@@ -8,6 +8,8 @@ package graphics;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.util.HashMap;
 
 import javax.swing.JFrame;
@@ -18,6 +20,7 @@ import commands.CommandGroup;
 import graphics.widgets.Widget;
 import graphics.widgets.WidgetHub;
 import main.AutoSim;
+import util.JComponentUtil;
 import util.Util;
 import util.Util.ROBOT_KEY;
 
@@ -27,6 +30,8 @@ public class Window extends JFrame {
 	private Environment env; //environment
 	private UIBar bar; //user interface bar
 	private WidgetHub widgetHub; //hub for all the widgets
+	private int height; //height of window in pixels
+	private int width; //width of window in pixels
 	
 	/**
 	 * Create a window
@@ -46,20 +51,20 @@ public class Window extends JFrame {
 		mainPanel.setLayout(new GridBagLayout());
 		
 		//environment where robot acts in
-		int width = AutoSim.ppi * Util.FIELD_WIDTH; //convert from inches to pixels
-		int height = AutoSim.ppi * Util.FIELD_HEIGHT;
+		width = AutoSim.PPI * Util.FIELD_WIDTH; //convert from inches to pixels
+		height = AutoSim.PPI * Util.FIELD_HEIGHT;
 		env = new Environment(width, height);
-		mainPanel.add(env, ComponentUtil.createGBC(0, 0));
+		mainPanel.add(env, JComponentUtil.createGBC(0, 0));
 		
 		//add Widget Hub
-		widgetHub = new WidgetHub(width * 1/6, env.height() + height/15);
-		GridBagConstraints widgGridBag = ComponentUtil.createGBC(1, 0);
+		widgetHub = new WidgetHub(width * 1/5, env.height() + height/15);
+		GridBagConstraints widgGridBag = JComponentUtil.createGBC(1, 0);
 		widgGridBag.gridheight = 2;
 		mainPanel.add(widgetHub, widgGridBag);
 		
 		//UI Bar
 		bar = new UIBar(width, height / 15);
-		mainPanel.add(bar, ComponentUtil.createGBC(0, 1));
+		mainPanel.add(bar, JComponentUtil.createGBC(0, 1));
 		
 		//add UI bar to environment
 		env.addUIBar(bar);
@@ -80,7 +85,11 @@ public class Window extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setResizable(false); 
-		this.setLocation(10, 10);
+		if (AutoSim.TOP_SCREEN) {
+			this.setLocation(AutoSim.SCREEN_WIDTH/2, -AutoSim.SCREEN_HEIGHT + 100);
+		} else {
+			this.setLocation(10, 10);
+		}
 		this.setVisible(true);
 		
 		Util.println("Window launched");

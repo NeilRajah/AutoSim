@@ -6,6 +6,11 @@
  */
 package util;
 
+import java.awt.Font;
+import java.io.File;
+
+import main.AutoSim;
+
 public class Util {
 	//Robot Constants
 	public static final double INCHES_TO_METERS = 0.0254;
@@ -85,6 +90,10 @@ public class Util {
 	
 	//Animation Constants
 	public static final int ANIMATION_PERIOD = (int) (1000 * UPDATE_PERIOD);
+	
+	//Graphics Constants
+	public static final float FONT_SIZE = AutoSim.PPI * 5f;
+	public static final String OXYGEN_LOCATION = "";
 	
 	//Calculations
 	
@@ -354,4 +363,24 @@ public class Util {
 			t.printStackTrace();
 		} //try-catch
 	} //end pause
+	
+	/*
+	 * Get a font from a file
+	 * String location - location of the file
+	 * return font - font retrieved from file OR default font
+	 */
+	public static Font getFileFont(String location) {
+		Font f;
+		
+		//try to create and set the font if the file is present
+		try {
+			f = Font.createFont(Font.TRUETYPE_FONT, new File(location));
+			f = f.deriveFont(FONT_SIZE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			f = new Font(Font.SANS_SERIF, Font.PLAIN, (int) FONT_SIZE);
+		} //try-catch
+		
+		return f;
+	} //end getFileFont
 } //end Util

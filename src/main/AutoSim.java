@@ -30,15 +30,15 @@ import util.Util.ROBOT_KEY;
 public class AutoSim {
 	//Constants
 	private static Window w; //window to add components to
+	public static final boolean TOP_SCREEN = true; //if displaying to second monitor
 	
 	//Screen dimensions in pixels for scaling
-	public static final int SCREEN_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width);
-	public static final int SCREEN_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height);
+	public static int SCREEN_WIDTH; 
+	public static int SCREEN_HEIGHT;
 	
 	//Pixels Per Inch (ppi), used for scaling to different screen resolutions
-	public static final int ppi = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
+	public static int PPI;
 	
-	//Command
 	public static DriveLoop driveLoop;
 	private static CommandGroup cg;
 	
@@ -46,6 +46,17 @@ public class AutoSim {
 	 * Create a Window and launch the program
 	 */
 	public static void main(String[] args) {
+		//set the scaling constants
+		if (TOP_SCREEN) {
+			SCREEN_WIDTH = 1920;
+			SCREEN_HEIGHT = 1080;
+		} else {
+			SCREEN_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width);
+			SCREEN_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height);
+			//always chooses primary monitor's resolution
+		} //if
+		PPI = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
+		
 		initialize(); //run the simulation
 		
 		//create the window and launch it

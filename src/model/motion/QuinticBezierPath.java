@@ -142,8 +142,8 @@ public class QuinticBezierPath {
 			Point p = calcPoint(t);
 			
 			//flip x and y because of field config
-			x[i] = (int) (p.getY() * (double) AutoSim.ppi); 
-			y[i] = (int) (p.getX() * (double) AutoSim.ppi);
+			x[i] = (int) (p.getY() * (double) AutoSim.PPI); 
+			y[i] = (int) (p.getX() * (double) AutoSim.PPI);
 			
 			t += 1.0 / RESOLUTION;
 		} //loop

@@ -202,7 +202,7 @@ public class Environment extends JComponent {
 			g2.fillRect(0, 0, width, height);
 			
 			g2.setColor(Color.black);
-			Painter.drawGrid(g2, width, height, 12 * AutoSim.ppi);
+			Painter.drawGrid(g2, width, height, 12 * AutoSim.PPI);
 		} //if
 		
 		//stroke for lines

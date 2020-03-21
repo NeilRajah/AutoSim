@@ -1,5 +1,5 @@
 /**
- * JComponentFactory
+ * JComponentUtil
  * Author: Neil Balaskandarajah
  * Created on: 28/02/2020
  * Use pre-configured Swing components with ease
@@ -9,6 +9,7 @@ package util;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
@@ -20,8 +21,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
-public class JComponentFactory {
+public class JComponentUtil {
 	// PANELS//
 
 	/**
@@ -120,9 +122,19 @@ public class JComponentFactory {
 	/**
 	 * Create a text area
 	 */
-	public static JTextArea textArea() {
+	public static JTextArea textArea(int width, int height) {
 		JTextArea text = new JTextArea();
-		text.setPreferredSize(new Dimension(900, 50));
+		text.setPreferredSize(new Dimension(width, height));
+
+		return text;
+	} // end textArea
+	
+	/**
+	 * Create a text pane
+	 */
+	public static JTextPane textPane(int width, int height) {
+		JTextPane text = new JTextPane();
+		text.setPreferredSize(new Dimension(width, height));
 
 		return text;
 	} // end textArea
@@ -133,7 +145,7 @@ public class JComponentFactory {
 	 */
 	public static JButton button(String label) {
 		JButton button = new JButton(label);
-		button.setPreferredSize(new Dimension(80, 50));
+//		button.setPreferredSize(new Dimension(width, height));
 
 		return button;
 	} // end button
@@ -151,4 +163,33 @@ public class JComponentFactory {
 
 		return frame;
 	} // end frame
+	
+	/**
+	 * Create a GridBagConstraints object based on parameters for the layout
+	 * @param gridx - x position to contrain to
+	 * @param gridy - y position to constrain to
+	 * @param weightx - x weight to contrain to
+	 * @param weighty - y weight to constrain to
+	 * @return gbc - GridBagConstraints with parameters
+	 */
+	public static GridBagConstraints createGBC(int gridx, int gridy, double weightx, double weighty) {
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = gridx;
+		gbc.gridy = gridy;
+		gbc.weightx = weightx;
+		gbc.weighty = weighty;
+		gbc.fill = GridBagConstraints.BOTH; //default to filling entire cell
+		
+		return gbc;
+	} //end createGBC
+	
+	/**
+	 * Create a GridBagConstraints object based on parameters for the layout
+	 * @param gridx - x position to contrain to
+	 * @param gridy - y position to constrain to
+	 * @return gbc - GridBagConstraints with parameters
+	 */
+	public static GridBagConstraints createGBC(int gridx, int gridy) {
+		return createGBC(gridx, gridy, 0, 0);
+	} //end createGBC
 } // end class
