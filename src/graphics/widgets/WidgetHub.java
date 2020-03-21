@@ -9,6 +9,7 @@ package graphics.widgets;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +28,7 @@ public class WidgetHub extends JPanel {
 	private int height; //height of the hub
 	private int width; //width of the hub
 	private ArrayList<Widget> widgets; //widgets and their IDs
+	private Font font; //font for the text
 	
 	public WidgetHub(int width, int height) {
 		//create the JPanel
@@ -47,19 +49,17 @@ public class WidgetHub extends JPanel {
 	 */
 	private void layoutView() {
 		//set the layout manager of the hub
-//		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS)); //vertical layout
-//		this.setLayout(new GridLayout());
 		this.setAlignmentX(CENTER_ALIGNMENT);
 		
 		//add title bar
 		JLabel title = new JLabel("Widget Hub");
 		title.setForeground(Color.RED);
 		title.setFont(title.getFont().deriveFont((float) (AutoSim.PPI * 8)));
-//		title.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		title.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(title);
 		
-//		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
+		//add border to hub
+		this.setBorder(BorderFactory.createEmptyBorder(AutoSim.PPI, AutoSim.PPI, AutoSim.PPI, AutoSim.PPI));
 	} //end layoutView
 	
 	/**

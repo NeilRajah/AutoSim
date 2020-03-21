@@ -126,7 +126,7 @@ public class Robot {
 	/**
 	 * Set the robot into waiting state
 	 */
-	public void waitState() {
+	public void setToWait() {
 		//reset speeds
 		angularVel = 0;
 		linearVel = 0;
@@ -177,6 +177,22 @@ public class Robot {
 	public double getMaxAngSpeed() {
 		return maxAngSpeed;
 	} //end getMaxAngSpeed
+	
+	/**
+	 * Get the width of the robot in inches
+	 * @return Width of robot in inches
+	 */
+	public double getWidthInches() {
+		return kWidth / Util.INCHES_TO_METERS;
+	} //end getWidthInches
+	
+	/**
+	 * Get the length of the robot in inches
+	 * @return length of robot in inches
+	 */
+	public double getLengthInches() {
+		return kLength / Util.INCHES_TO_METERS;
+	} //end getLengthInches
 	
 	/**
 	 * Get the position of the left gearbox

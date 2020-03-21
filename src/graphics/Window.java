@@ -32,13 +32,16 @@ public class Window extends JFrame {
 	private WidgetHub widgetHub; //hub for all the widgets
 	private int height; //height of window in pixels
 	private int width; //width of window in pixels
+	private boolean debug; //whether the window is for debugging or not
 	
 	/**
 	 * Create a window
+	 * @param debug Whether the window is for debugging
 	 */
-	public Window() {
+	public Window(boolean debug) {
 		super();
 		
+		this.debug = debug;
 		layoutView();
 	} //end constructor
 	
@@ -50,29 +53,55 @@ public class Window extends JFrame {
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridBagLayout());
 		
+		//set up respective components
+		setUpEnvironment();
+		setUpWidgetHub();
+		setUpUIBar();
+	} //end layoutView
+	
+	/**
+	 * Set up the Environment
+	 */
+	private void setUpEnvironment() {
 		//environment where robot acts in
-		width = AutoSim.PPI * Util.FIELD_WIDTH; //convert from inches to pixels
+		//convert from inches to pixels
+		width = AutoSim.PPI * Util.FIELD_WIDTH; 
 		height = AutoSim.PPI * Util.FIELD_HEIGHT;
-		env = new Environment(width, height);
+		
+		if (debug) {
+			env = new Environment(height, height); //square
+			env.setDebug();
+		} else {
+			env = new Environment(width, height); //long field
+		} //if
 		mainPanel.add(env, JComponentUtil.createGBC(0, 0));
-		
-		//add Widget Hub
-		widgetHub = new WidgetHub(width * 1/5, env.height() + height/15);
-		GridBagConstraints widgGridBag = JComponentUtil.createGBC(1, 0);
-		widgGridBag.gridheight = 2;
-		mainPanel.add(widgetHub, widgGridBag);
-		
-		//UI Bar
-		bar = new UIBar(width, height / 15);
-		mainPanel.add(bar, JComponentUtil.createGBC(0, 1));
-		
-		//add UI bar to environment
-		env.addUIBar(bar);
 		
 		//add controllers
 		EnvironmentController envCtrl = new EnvironmentController(env);
 		env.addMouseMotionListener(envCtrl);
-	} //end layoutView
+	} //end setUpEnvironment
+	
+	/**
+	 * Set up the Widget Hub
+	 */
+	private void setUpWidgetHub() {
+		//add Widget Hub
+		widgetHub = new WidgetHub(width * 1/6, env.height() + height/15);
+		GridBagConstraints widgGridBag = JComponentUtil.createGBC(1, 0);
+		widgGridBag.gridheight = 2;
+		mainPanel.add(widgetHub, widgGridBag);
+	} //end setUpWidgetHub
+	
+	/**
+	 * Set up the UI bar
+	 */
+	private void setUpUIBar() {
+		bar = new UIBar(env.width(), height / 15);
+		mainPanel.add(bar, JComponentUtil.createGBC(0, 1));
+		
+		//add UI bar to environment
+		env.addUIBar(bar);
+	} //end setUpUIBar
 	
 	/**
 	 * Configure and launch the window
@@ -88,7 +117,7 @@ public class Window extends JFrame {
 		if (AutoSim.TOP_SCREEN) {
 			this.setLocation(AutoSim.SCREEN_WIDTH/2, -AutoSim.SCREEN_HEIGHT + 100);
 		} else {
-			this.setLocation(10, 10);
+			this.setLocation(AutoSim.SCREEN_WIDTH/2 - this.getWidth()/2, AutoSim.SCREEN_HEIGHT/2 - this.getHeight()/2);
 		}
 		this.setVisible(true);
 		
@@ -119,6 +148,7 @@ public class Window extends JFrame {
 	 */
 	public void addCommandGroup(CommandGroup cg) {
 		cg.run();
+		System.out.println(!(cg != null)); //is cg null
 		env.setPoses(cg.getPoses());
 		env.setCurves(cg.getCurves());
 		env.setData(cg.getData());

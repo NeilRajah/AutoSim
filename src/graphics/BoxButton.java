@@ -40,7 +40,7 @@ public class BoxButton extends JComponent {
 	public BoxButton(int width, int height, String text) {
 		super();
 		
-		this.text = text;	
+		this.text = text;
 		
 		//set the size of the box
 		this.setPreferredSize(new Dimension(width, height));
@@ -49,7 +49,7 @@ public class BoxButton extends JComponent {
 		fontSize = Util.FONT_SIZE;	
 		
 		//regular Oxygen font
-		f = Util.getFileFont(Util.OXYGEN_LOCATION);
+		f = Util.getFileFont(Painter.OXYGEN_FONT);
 		
 		//set the corner radius and colors
 		cornerRad = AutoSim.PPI * 10;		

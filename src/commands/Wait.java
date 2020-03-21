@@ -40,7 +40,7 @@ public class Wait extends Command {
 	protected void initialize() {
 		updates = (int) (waitTime / Util.UPDATE_PERIOD);
 		loop.setState(STATE.WAITING);
-		robot.waitState();
+		robot.setToWait();
 	} //end initialize
 
 	/**

@@ -92,30 +92,8 @@ public abstract class CommandGroup {
 		
 		//output test information
 		if (testing) {
-			//get the number of commands being tested
-			int numTests = 0;
-			ArrayList<Integer> failIndices = new ArrayList<Integer>();
-			
-			for (int i = 0; i < commands.size(); i++) {
-				numTests += commands.get(i).testing ? 1 : 0; //add if the command is testing
-				
-				if (commands.get(i).getPassed() == Util.FAILED) {
-					failIndices.add((i - 2) / 4 + 1); //every fourth command starting
-				} //if
-			} //loop
-			
-			//output test information to the screen
-			System.out.println();
-			Util.println("");
-			System.out.println("NUMBER OF TESTS: " + numTests);
-			System.out.println("TESTS PASSED: " + passed);
-			System.out.print("TESTS FAILED: " + (numTests - passed) + " [");	
-			for (int i = 0; i < failIndices.size() - 1; i++) {
-				System.out.print(failIndices.get(i) + ", ");
-			} //loop
-			System.out.print(failIndices.isEmpty() ? 0 : failIndices.get(failIndices.size() - 1));
-			System.out.println("]");
-		} //testing
+			outputTestInformation();
+		} //if
 		
 		isRunning = false;
 	} //end start
@@ -159,4 +137,33 @@ public abstract class CommandGroup {
 	public ArrayList<HashMap<ROBOT_KEY, Object>> getData() {
 		return data;
 	} //end getData
+	
+	/**
+	 * Output all the test information to the screen
+	 */
+	private void outputTestInformation() {
+		//get the number of commands being tested
+		int numTests = 0;
+		ArrayList<Integer> failIndices = new ArrayList<Integer>();
+		
+		for (int i = 0; i < commands.size(); i++) {
+			numTests += commands.get(i).testing ? 1 : 0; //add if the command is testing
+			
+			if (commands.get(i).getPassed() == Util.FAILED) {
+				failIndices.add((i - 2) / 4 + 1); //every fourth command starting
+			} //if
+		} //loop
+		
+		//output test information to the screen
+		System.out.println();
+		Util.println("");
+		System.out.println("NUMBER OF TESTS: " + numTests);
+		System.out.println("TESTS PASSED: " + passed);
+		System.out.print("TESTS FAILED: " + (numTests - passed) + " [");	
+		for (int i = 0; i < failIndices.size() - 1; i++) {
+			System.out.print(failIndices.get(i) + ", ");
+		} //loop
+		System.out.print(failIndices.isEmpty() ? 0 : failIndices.get(failIndices.size() - 1));
+		System.out.println("]");
+	} //end outputTestInformation
 } //end class

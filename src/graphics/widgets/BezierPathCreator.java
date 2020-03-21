@@ -8,17 +8,19 @@
 package graphics.widgets;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import graphics.BoxButton;
+import graphics.Painter;
 import main.AutoSim;
 import model.motion.QuinticBezierPath;
 import util.JComponentUtil;
@@ -28,39 +30,31 @@ public class BezierPathCreator extends JPanel {
 	private int width; //width in pixels
 	private int height; //height in pixels
 	private QuinticBezierPath curve; //curve being manipulated
-	private HashMap<String, JTextPane> textBoxes; //text boxes for control points
+	private HashMap<String, JTextField> textBoxes; //text boxes for control points
 	
 	public BezierPathCreator(int width, int height) {
 		super();
 		
 		this.width = width;
 		this.height = height;
-		textBoxes = new HashMap<String, JTextPane>();
+		textBoxes = new HashMap<String, JTextField>();
 		
 		layoutView();
 		
-		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, AutoSim.PPI * 2));
+//		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, AutoSim.PPI * 2));
+		this.setBorder(BorderFactory.createLineBorder(Color.RED, 10));
+
 	}
 	
 	private void layoutView() {
 		layoutControlPointArea();
 	}
 	
-	private JPanel topRow() {
+	private void topRow() {
 		//instead of returning, can pass in JPanel the top row is to be added to
-		JPanel topRow = JComponentUtil.boxPanel(true);
-		
-		JLabel title = new JLabel("Bezier Curve Creator");
-		title.setFont(title.getFont().deriveFont((float) (AutoSim.PPI * 8)));
-		topRow.add(title);
-		
-		return topRow;
 	}
 	
-	private void layoutControlPointArea() {
-		//loop with modulus to give names
-		//i % 2 == 0 -> x, == 1 -> y; n = (i % 6) + 1; loop 12 times
-		
+	private void layoutControlPointArea() {		
 		//panel with gridbag layout
 		//add toprow
 		//add panel to this
@@ -71,45 +65,52 @@ public class BezierPathCreator extends JPanel {
 		controlPointArea.setLayout(gb);
 		
 		//top row
-		JPanel topRow = topRow();
-		gb.setConstraints(topRow, JComponentUtil.createGBC(0, 0));
-		controlPointArea.add(topRow);
+		JLabel title = new JLabel("Bezier Curve Creator", SwingConstants.CENTER);
+		title.setFont(title.getFont().deriveFont((float) (AutoSim.PPI * 8)));
+		title.setPreferredSize(new Dimension(width, height/10));
+		
+		GridBagConstraints topRowConstraint = JComponentUtil.createGBC(0, 0);
+		topRowConstraint.gridwidth = 3;
+		gb.setConstraints(title, topRowConstraint);
+		controlPointArea.add(title);
 		
 		//text areas
 		int y = 0;
 		for (int i = 0; i < 12; i++) {
 			//add to HashMap
 			String key = (i % 2 == 0 ? "x" : "y") + Integer.toString(i % 6 / 2); //x0, y0, x1, ...
-			JTextPane textBox = JComponentUtil.textPane(this.width / 6, this.height / 10);
+			JTextField textBox = JComponentUtil.textField(this.width / 6, this.height / 10);
 			textBoxes.put(key, textBox);
 			
-			//change y height for the buttons (every two text areas, add a button)
+			//for every two text areas, add one button
 			if (i % 2 == 0) {
 				y++;
 //				JPanel button = new JPanel();
-				BoxButton btn = new BoxButton(this.width / 6, this.height / 10, "P" + i % 6, true, true); //P0, P1, ...
+				BoxButton btn = new BoxButton(this.width / 5, this.height / 10, "P" + (y - 1), true, true); //P0, P1, ...
+//				JTextField btn = JComponentUtil.textField(200, 200);
 //				button.add(btn);
 //				btn.setBorder(BorderFactory.createLineBorder(Color.black));
-				btn.setPreferredSize(btn.getSize());
-				gb.setConstraints(btn, JComponentUtil.createGBC(0, y));
+//				btn.setPreferredSize(btn.getSize());
+				gb.setConstraints(btn, JComponentUtil.createGBC(0, y, 0.25, 1));
 				btn.setBorder(BorderFactory.createEmptyBorder(AutoSim.PPI, AutoSim.PPI, AutoSim.PPI, AutoSim.PPI));
 				controlPointArea.add(btn);
+				
+				//button not changing size, needs to be smaller
 			} //if
 			
 			//constrain to grid (x = 1, 2, 1, 2, 1 ...)
-			gb.setConstraints(textBox, JComponentUtil.createGBC(i % 2 + 1, y));
+			gb.setConstraints(textBox, JComponentUtil.createGBC(i % 2 + 1, y, 0.375, 1));
 			
 			//center the text
 			textBox.setText(key);
-			SimpleAttributeSet attribs = new SimpleAttributeSet();
-			StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
-			textBox.setParagraphAttributes(attribs, true);
+			textBox.setHorizontalAlignment(SwingConstants.CENTER); //center text
+			textBox.setFont(Painter.createFont(Painter.OXYGEN_FONT, AutoSim.PPI * 10));
 			
-//			textBox.setBorder(BorderFactory.createLineBorder(Color.black));
+			textBox.setBorder(BorderFactory.createLineBorder(Color.black, (int) (AutoSim.PPI * 0.2)));
 			//extra paddding
-			textBox.setBorder(BorderFactory.createEmptyBorder(AutoSim.PPI, AutoSim.PPI, AutoSim.PPI, AutoSim.PPI));
+//			textBox.setBorder(BorderFactory.createEmptyBorder(AutoSim.PPI, AutoSim.PPI, AutoSim.PPI, AutoSim.PPI));
 			
-			//	add controller	//
+			//		add controllers		//
 			
 			//add to panel
 			controlPointArea.add(textBox);
@@ -117,5 +118,5 @@ public class BezierPathCreator extends JPanel {
 		
 		//add all to panel
 		this.add(controlPointArea);
-	}
+	} //end layoutControlPointArea
 } //end class

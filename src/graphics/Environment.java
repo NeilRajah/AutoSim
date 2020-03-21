@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
@@ -76,7 +77,8 @@ public class Environment extends JComponent {
 		poseIndex = 0;
 		curveIndex = 0;
 		
-//		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
+		//add border
+		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, AutoSim.PPI * 2));
 	} //end constructor
 	
 	//Pose
@@ -185,6 +187,10 @@ public class Environment extends JComponent {
 	 */
 	public void setDebug() {
 		debug = true;
+		
+		//change size to square
+		this.width = height;
+		this.setPreferredSize(new Dimension(width, height));
 	} //end setDebug
 	
 	/**
@@ -202,12 +208,12 @@ public class Environment extends JComponent {
 			g2.fillRect(0, 0, width, height);
 			
 			g2.setColor(Color.black);
-			Painter.drawGrid(g2, width, height, 12 * AutoSim.PPI);
+			Painter.drawGrid(g2, width, height, 12 * AutoSim.PPI); //12 inches
 		} //if
 		
 		//stroke for lines
 		g2 = (Graphics2D) g;
-		g2.setStroke(new BasicStroke(10.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 2), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		g2.setColor(Color.RED);
 		
 		//draw the current path
@@ -227,7 +233,7 @@ public class Environment extends JComponent {
 			g2.setColor(Color.GRAY);
 			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);
 			Point robot = poses.get(poseIndex).getPoint();
-			int pointRad = 8;
+			int pointRad = (int) (AutoSim.PPI * 1.6);
 			Painter.drawPoint(g2, goal, pointRad);
 			Painter.drawPoint(g2, robot, pointRad);
 			

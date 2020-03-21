@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -21,7 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.border.Border;
 
 public class JComponentUtil {
 	// PANELS//
@@ -138,6 +141,16 @@ public class JComponentUtil {
 
 		return text;
 	} // end textArea
+	
+	/**
+	 * Create a text field
+	 */
+	public static JTextField textField(int width, int height) {
+		JTextField text = new JTextField();
+		text.setPreferredSize(new Dimension(width, height));
+
+		return text;
+	} // end textArea
 
 	/**
 	 * Create a button with a title of standard size 
@@ -192,4 +205,13 @@ public class JComponentUtil {
 	public static GridBagConstraints createGBC(int gridx, int gridy) {
 		return createGBC(gridx, gridy, 0, 0);
 	} //end createGBC
+	
+	/**
+	 * Create an empty border with thickness pad
+	 * @param pad Thickness of border edges in pixels
+	 * @return Empty border with thickness pad
+	 */
+	public static Border paddedBorder(int pad) {
+		return BorderFactory.createEmptyBorder(pad, pad, pad, pad);
+	} //end paddedBorder
 } // end class

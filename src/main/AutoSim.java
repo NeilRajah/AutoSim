@@ -8,9 +8,13 @@
 package main;
 
 import java.awt.Color;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
+import commands.CommandList;
+import commands.DriveDistance;
 import commands.routines.DriveToGoalDemo;
 import graphics.Painter;
 import graphics.Window;
@@ -30,7 +34,6 @@ import util.Util.ROBOT_KEY;
 public class AutoSim {
 	//Constants
 	private static Window w; //window to add components to
-	public static final boolean TOP_SCREEN = true; //if displaying to second monitor
 	
 	//Screen dimensions in pixels for scaling
 	public static int SCREEN_WIDTH; 
@@ -39,29 +42,25 @@ public class AutoSim {
 	//Pixels Per Inch (ppi), used for scaling to different screen resolutions
 	public static int PPI;
 	
+	//Whether the application is being displayed to the top screen
+	public static boolean TOP_SCREEN;
+	
+	//DriveLoop instance to be controlled (change to getInstance()?)
 	public static DriveLoop driveLoop;
+	
+	//CommandGroup to be run
 	private static CommandGroup cg;
 	
 	/**
 	 * Create a Window and launch the program
 	 */
 	public static void main(String[] args) {
-		//set the scaling constants
-		if (TOP_SCREEN) {
-			SCREEN_WIDTH = 1920;
-			SCREEN_HEIGHT = 1080;
-		} else {
-			SCREEN_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width);
-			SCREEN_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height);
-			//always chooses primary monitor's resolution
-		} //if
-		PPI = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
-		
-		initialize(); //run the simulation
+		//initialize the program
+		initializeScreen();
+		initializeSimulation(); 
 		
 		//create the window and launch it
-		w = new Window();
-		w.setDebug();
+		w = new Window(true); //true for debug, false for not
 		addWidgets(); //add widgets to the widget hub
 		w.launch();
 		
@@ -71,17 +70,42 @@ public class AutoSim {
 	} //end main
 	
 	/**
+	 * Set the constants related to the screen
+	 */
+	private static void initializeScreen() {
+		int screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices().length;
+		//set the scaling constants
+		if (screens > 1) {
+			//monitor is 1080p
+			SCREEN_WIDTH = 1920;
+			SCREEN_HEIGHT = 1080;
+			TOP_SCREEN = true;
+		} else {
+			//get monitor resolution
+			SCREEN_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width);
+			SCREEN_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height);
+			TOP_SCREEN = false;
+			//always chooses primary monitor's resolution
+		} //if
+		
+		//5 pixels per inch on a 3840x2160 screen
+		PPI = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
+		
+//		Util.println(screens, SCREEN_WIDTH, SCREEN_HEIGHT, PPI);
+	} //end initializeScreen
+	
+	/**
 	 * Initialize the program by creating the robot and the command group
 	 */
-	private static void initialize() {
+	private static void initializeSimulation() {
 		//create robot
 		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2); //14ft/s 2 NEO gearbox each side
 		Robot r = new Robot(6, 153, 30, 30, gb); //153lb 6" wheel dia 30"x30" chassis
-		r.setXY(new Point(100,100));
+		r.setXY(new Point(Util.FIELD_HEIGHT/2 - r.getWidthInches()/2,100));
 		
 		//set graphics parameters for drawing the robot
-		Painter.robotLength = r.getLengthPixels();
-		Painter.robotWidth = r.getWidthPixels();
+		Painter.ROBOT_LENGTH = r.getLengthPixels();
+		Painter.ROBOT_WIDTH = r.getWidthPixels();
 		
 		//create the feedback controllers and loop for the robot
 		PIDController drivePID = new PIDController(Util.kP_DRIVE, Util.kI_DRIVE, Util.kD_DRIVE, r.getMaxLinSpeed());
@@ -89,16 +113,8 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-//		cg = new EightCellAuto();
-		cg = new DriveToGoalDemo();
-//		cg = new DriveToGoalTest();
-//		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
-//		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200,200), 1, 12, 0, false));
-//		cg = new CommandList(new TimedVoltage(driveLoop, r.getMaxLinSpeed() * 0.5, 10));
-//		cg = new CommandList(new MoveQuintic(driveLoop, FieldPoints.curve2));
-//		cg = new CommandList(new Wait(driveLoop, 0.25));
-		
-		Util.println("Initialized");
+		//cg = new DriveToGoalDemo();
+		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize
 	
 	/**

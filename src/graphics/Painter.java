@@ -6,18 +6,23 @@
  */
 package graphics;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
+import java.io.File;
 
 import main.AutoSim;
 import model.Point;
 import model.Pose;
 
 public class Painter {
-	//Values
-	public static int robotLength = 0; //length of robot in pixels
-	public static int robotWidth = 0; //width of robot in pixels
+	//Painting constants
+	public static int ROBOT_LENGTH = 0; //length of robot in pixels
+	public static int ROBOT_WIDTH = 0; //width of robot in pixels
 	public static final int CORNER_RAD = AutoSim.PPI * 6; //corner radius
+	
+	//Fonts
+	public static final String SF_UI_FONT = "src/resources/SF-UI-Display-Light.ttf";
+	public static final String OXYGEN_FONT = "src/resources/Oxygen-Regular.ttf";
 	
 	/**
 	 * Draw a string to the screen
@@ -45,10 +50,10 @@ public class Painter {
 		
 		//draw body of robot
 		g2.setColor(p.getColor());
-		g2.fillRoundRect(-robotLength/2, -robotWidth/2, robotLength, robotWidth, CORNER_RAD, CORNER_RAD);
+		g2.fillRoundRect(-ROBOT_LENGTH/2, -ROBOT_WIDTH/2, ROBOT_LENGTH, ROBOT_WIDTH, CORNER_RAD, CORNER_RAD);
 		
 		//draw back-end indicator (straight box so only round edges at front)
-		g2.fillRoundRect(-robotLength/2, -robotWidth/2, CORNER_RAD, robotWidth, CORNER_RAD/4, CORNER_RAD/4);
+		g2.fillRoundRect(-ROBOT_LENGTH/2, -ROBOT_WIDTH/2, CORNER_RAD, ROBOT_WIDTH, CORNER_RAD/4, CORNER_RAD/4);
 		
 //		g2.translate(-p.getPoint().getY()*AutoSim.ppi, -p.getPoint().getX()*AutoSim.ppi);
 //		g2.rotate(-p.getHeading());
@@ -91,4 +96,21 @@ public class Painter {
 		
 		g2.drawLine(y1, x1, y2, x2);
 	} //end drawLine
+	
+	/**
+	 * Set the font of a Graphics2D object
+	 * @param g2 Used for drawing
+	 * @param filename Directory of the font file
+	 * @param fontSize Value to scale pixels per inch by
+	 */
+	public static Font createFont(String filename, int fontSize) {
+		Font f = new Font(Font.SANS_SERIF, Font.PLAIN, fontSize); //default font
+		
+		try {
+			f = Font.createFont(Font.TRUETYPE_FONT, new File(filename));
+			f = f.deriveFont((float) fontSize);
+		} catch (Exception e) {} //try-catch
+		
+		return f;
+	} //end createFont
 } //end Painter 

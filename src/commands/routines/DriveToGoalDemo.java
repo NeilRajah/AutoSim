@@ -60,9 +60,6 @@ public class DriveToGoalDemo extends CommandGroup {
 			
 			//add the command to the group
 			add(new DriveToGoal(loop, new Point(x,y), 1.5, topSpeed, minSpeed, reverse));
-			
-			//wait for a split second before running next command
-//			add(new Wait(loop, 0.2));
 		} //loop
 	} //end constructor
 } //end class

@@ -26,7 +26,6 @@ public class UIBar extends JComponent {
 	private int height; //component height
 	
 	//Updated
-	private float fontSize; //font size
 	private String cursorLoc; //x,y location of cursor in inches
 	private String time; //time from start in seconds
 	private String currentCmd; //name of current command
@@ -47,8 +46,7 @@ public class UIBar extends JComponent {
 		this.height = height;
 		this.setPreferredSize(new Dimension(width, height));
 		
-		//update constants
-		fontSize = (float) (height / 1.75);
+		//update constants=
 		cursorLoc = "(x,y): 0 0";
 		time = "0.0000s";
 		currentCmd = "";
@@ -125,7 +123,7 @@ public class UIBar extends JComponent {
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g; //g2 for better drawing
 		
-		setFont(g2); //set the font
+		g2.setFont(Painter.createFont(Painter.SF_UI_FONT, AutoSim.PPI * 15)); //set the font
 		
 		//move origin to bottom left
 		g2.scale(1.0, -1.0);
@@ -138,22 +136,7 @@ public class UIBar extends JComponent {
 		//draw text
 		g2.setColor(Color.black);
 		Painter.drawFlippedString(g2, cursorLoc, 0, TEXT_HEIGHT); //cursor location
-		Painter.drawFlippedString(g2, time, 1000, TEXT_HEIGHT); //simulation time
-		Painter.drawFlippedString(g2, currentCmd, 1500, TEXT_HEIGHT);
+		Painter.drawFlippedString(g2, time, (int) width, TEXT_HEIGHT); //simulation time
+		Painter.drawFlippedString(g2, currentCmd, (int) width, TEXT_HEIGHT); //name of command being run
 	} //end paintComponent
-	
-	/**
-	 * Set the font of the component
-	 * @param g2 - used for drawing
-	 */
-	private void setFont(Graphics2D g2) {
-		Font f = new Font(Font.SANS_SERIF, Font.PLAIN, (int) fontSize); //default font
-		
-		try {
-			f = Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/SF-UI-Display-Light.ttf"));
-			f = f.deriveFont(fontSize);
-		} catch (Exception e) {} //try-catch
-		
-		g2.setFont(f);
-	} //end setFont
 } //end class

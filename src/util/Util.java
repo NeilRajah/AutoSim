@@ -17,8 +17,8 @@ public class Util {
 	public static final double LBS_TO_KG = 0.453592;
 	public static final double UPDATE_PERIOD = 0.005; //5ms
 	public static final double V_INTERCEPT = 0.206; //voltage required to overcome frictional losses
-	public static final int FIELD_WIDTH = 648; //inches
-	public static final int FIELD_HEIGHT = 324; //inches
+	public static final int FIELD_WIDTH = 648; //width of field in inches
+	public static final int FIELD_HEIGHT = 324; //height of field in inches
 	public static final double MAX_VOLTAGE = 12.0; //max voltage in Volts
 	public static final double LOOKAHEAD_DIST = 6; //additional distance to look ahead
 	
@@ -92,8 +92,7 @@ public class Util {
 	public static final int ANIMATION_PERIOD = (int) (1000 * UPDATE_PERIOD);
 	
 	//Graphics Constants
-	public static final float FONT_SIZE = AutoSim.PPI * 5f;
-	public static final String OXYGEN_LOCATION = "";
+	public static final float FONT_SIZE = AutoSim.PPI * 8f;
 	
 	//Calculations
 	
