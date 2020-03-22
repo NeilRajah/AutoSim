@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
+
 import graphics.BoxButton;
 import graphics.Painter;
 import main.AutoSim;
@@ -78,26 +80,35 @@ public class BezierPathCreator extends JPanel {
 		gb.setConstraints(title, topRowConstraint);
 		controlPointArea.add(title);
 		
-		//text areas
+		//add buttons and text boxes
 		int y = 0;
 		for (int i = 0; i < 12; i++) {
-			//add to HashMap
+			//create textbox and add to HashMap
 			String key = (i % 2 == 0 ? "x" : "y") + Integer.toString(i % 6 / 2); //x0, y0, x1, ...
-			JTextField textBox = JComponentUtil.textField(key, this.width / 6, this.height / 10, AutoSim.PPI * 8);
+			JTextField textBox = JComponentUtil.textField(key, this.width / 6, this.height / 10, AutoSim.PPI * 4);
 			textBoxes.put(key, textBox); //add to map
 			
 			//for every two text areas, add one button
 			if (i % 2 == 0) {
-				y++;
+				y++; //increment row position in grid
+				
+				//create button
 				BoxButton btn = new BoxButton(this.width / 5, this.height / 10, "P" + (y - 1), true, true); //P0, P1, ...
 				gb.setConstraints(btn, JComponentUtil.createGBC(0, y, 0.25, 1));
+				
+				//add controller
+				
+				//add button to panel
 				controlPointArea.add(btn);
 			} //if
 			
 			//constrain to grid (x = 1, 2, 1, 2, 1 ...)
 			gb.setConstraints(textBox, JComponentUtil.createGBC(i % 2 + 1, y, 0.375, 1));
 			
-			//		add controllers		//
+			//add textbox controller
+			TextBoxController boxController = new TextBoxController(textBox);
+			textBox.addKeyListener(boxController);
+			textBox.addFocusListener(boxController);
 			
 			//add to panel
 			controlPointArea.add(textBox);
