@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import graphics.BoxButton;
-import graphics.BoxButtonController;
+import graphics.ButtonController;
 import graphics.Painter;
 import main.AutoSim;
 import model.motion.QuinticBezierPath;
@@ -96,7 +96,8 @@ public class BezierPathCreator extends JPanel {
 				gb.setConstraints(button, JComponentUtil.createGBC(0, y, 0.25, 1));
 				
 				//add controller
-				BoxButtonController btnCtrl = new BoxButtonController(button, Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
+				ButtonController btnCtrl = new ButtonController(button, System.out::println); //change this
+				btnCtrl.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
 				button.addMouseListener(btnCtrl);
 				
 				//add button to panel

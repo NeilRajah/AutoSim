@@ -57,6 +57,7 @@ public class Window extends JFrame {
 		setUpEnvironment();
 		setUpWidgetHub();
 		setUpUIBar();
+		setUpStartButton();
 	} //end layoutView
 	
 	/**
@@ -75,7 +76,11 @@ public class Window extends JFrame {
 		} else {
 			env = new Environment(width, height); //long field
 		} //if
-		mainPanel.add(env, JComponentUtil.createGBC(0, 0));
+		
+		//add to grid
+		GridBagConstraints envGBC = JComponentUtil.createGBC(0, 0);
+		envGBC.gridwidth = 2;
+		mainPanel.add(env, envGBC);
 		
 		//add controllers
 		EnvironmentController envCtrl = new EnvironmentController(env);
@@ -91,7 +96,7 @@ public class Window extends JFrame {
 	private void setUpWidgetHub() {
 		//add Widget Hub
 		widgetHub = new WidgetHub(width * 1/6, env.height() + height/15);
-		GridBagConstraints widgGridBag = JComponentUtil.createGBC(1, 0);
+		GridBagConstraints widgGridBag = JComponentUtil.createGBC(2, 0);
 		widgGridBag.gridheight = 2;
 		mainPanel.add(widgetHub, widgGridBag);
 	} //end setUpWidgetHub
@@ -100,12 +105,25 @@ public class Window extends JFrame {
 	 * Set up the UI bar
 	 */
 	private void setUpUIBar() {
-		bar = new UIBar(env.width(), height / 15);
+		bar = new UIBar((int) (env.width() * 0.8), height / 15);
 		mainPanel.add(bar, JComponentUtil.createGBC(0, 1));
 		
 		//add UI bar to environment
 		env.addUIBar(bar);
 	} //end setUpUIBar
+	
+	/**
+	 * Set up the start button
+	 */
+	private void setUpStartButton() {
+		BoxButton start = new BoxButton((int) (env.width() * 0.2), bar.height(), "Start", true, true);
+		
+		ButtonController startCtrl = new ButtonController(start, this::runAnimation); 
+		startCtrl.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
+		start.addMouseListener(startCtrl);
+		
+		mainPanel.add(start, JComponentUtil.createGBC(1, 1));
+	} //end setUpStartButton
 	
 	/**
 	 * Configure and launch the window
@@ -124,6 +142,7 @@ public class Window extends JFrame {
 			this.setLocation(AutoSim.SCREEN_WIDTH/2 - this.getWidth()/2, AutoSim.SCREEN_HEIGHT/2 - this.getHeight()/2);
 		}
 		this.setVisible(true);
+		env.update();
 		
 		Util.println("Window launched");
 	} //end launch
@@ -155,6 +174,8 @@ public class Window extends JFrame {
 		env.setPoses(cg.getPoses());
 		env.setCurves(cg.getCurves());
 		env.setData(cg.getData());
+		env.incrementPoseIndex();
+		env.update();
 	} //end addCommandGroup
 	
 	/**
@@ -163,8 +184,8 @@ public class Window extends JFrame {
 	public void runAnimation() {
 		//loop for running simulation
 		Runnable loop = () -> {
-			//1 second delay from open to simulation launch
-			Util.pause(1000);
+			//slight delay before running
+			Util.pause(250);
 			Util.println("Starting loop");
 			Util.println("Number of poses:", env.getNumPoses());
 			Util.println("Total time:", env.getNumPoses() * Util.UPDATE_PERIOD);

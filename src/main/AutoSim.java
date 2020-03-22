@@ -8,13 +8,10 @@
 package main;
 
 import java.awt.Color;
-import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
-import commands.CommandList;
-import commands.DriveDistance;
 import commands.routines.DriveToGoalDemo;
 import graphics.Painter;
 import graphics.Window;
@@ -59,14 +56,15 @@ public class AutoSim {
 		initializeScreen();
 		initializeSimulation(); 
 		
-		//create the window and launch it
+		//create the window 
 		w = new Window(true); //true for debug, false for not
 		addWidgets(); //add widgets to the widget hub
-		w.launch();
 		
-		//add the command group and run it
-		w.addCommandGroup(cg);		
-		w.runAnimation();
+		//add the command group
+		w.addCommandGroup(cg);
+		
+		//launch the application
+		w.launch();
 	} //end main
 	
 	/**
@@ -90,8 +88,6 @@ public class AutoSim {
 		
 		//5 pixels per inch on a 3840x2160 screen
 		PPI = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
-		
-//		Util.println(screens, SCREEN_WIDTH, SCREEN_HEIGHT, PPI);
 	} //end initializeScreen
 	
 	/**
@@ -101,7 +97,6 @@ public class AutoSim {
 		//create robot
 		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2); //14ft/s 2 NEO gearbox each side
 		Robot r = new Robot(6, 153, 30, 30, gb); //153lb 6" wheel dia 30"x30" chassis
-		r.setXY(new Point(Util.FIELD_HEIGHT/2 - r.getWidthInches()/2,100));
 		
 		//set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -114,7 +109,7 @@ public class AutoSim {
 		
 		//create the command group
 		cg = new DriveToGoalDemo();
-//		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
+//		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, r.getMaxLinSpeed()));
 	} //end initialize
 	
 	/**

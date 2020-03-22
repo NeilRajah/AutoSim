@@ -9,7 +9,6 @@ package commands.routines;
 
 import commands.CommandGroup;
 import commands.DriveToGoal;
-import commands.Wait;
 import main.AutoSim;
 import model.DriveLoop;
 import model.Point;
@@ -35,9 +34,10 @@ public class DriveToGoalDemo extends CommandGroup {
 		double topSpeed = loop.getRobotClone().getMaxLinSpeed();
 		double minSpeed = 6;
 		boolean reverse = false;
+		int numPoints = 100;
 		
 		//add points to drive to
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < numPoints; i++) {
 			//create random x and y values to be within
 			double x = Math.random() * (maxX - minX) + minX;
 			double y = Math.random() * (maxY - minY) + minY;
@@ -48,18 +48,18 @@ public class DriveToGoalDemo extends CommandGroup {
 				minSpeed = 6;
 				reverse = false;
 				
-			} else if (i == 9) { //last drive
+			} else if (i == numPoints-1) { //last drive
 				minSpeed = 0;
 				reverse = false;
 				
 			} else { //other points
-				topSpeed = Math.random() * (loop.getRobotClone().getMaxLinSpeed()/2) + loop.getRobotClone().getMaxLinSpeed()/2;
+//				topSpeed = Math.random() * (loop.getRobotClone().getMaxLinSpeed()/2) + loop.getRobotClone().getMaxLinSpeed()/2;
 				reverse = Math.random() > 0.5;
 				minSpeed = topSpeed/2;								
 			} //if
 			
 			//add the command to the group
-			add(new DriveToGoal(loop, new Point(x,y), 1.5, topSpeed, minSpeed, reverse));
+			add(new DriveToGoal(loop, new Point(x,y), 1, topSpeed, minSpeed, reverse));
 		} //loop
 	} //end constructor
 } //end class

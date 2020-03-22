@@ -46,7 +46,7 @@ public class UIBar extends JComponent {
 		
 		//update constants=
 		cursorLoc = "(x,y): 0 0";
-		time = "0.0000s";
+		time = "0.0000";
 		currentCmd = "";
 		TEXT_HEIGHT = height / 10;
 		
@@ -136,7 +136,7 @@ public class UIBar extends JComponent {
 		//draw text
 		g2.setColor(Color.black);
 		Painter.drawFlippedString(g2, cursorLoc, 0, TEXT_HEIGHT); //cursor location
-		Painter.drawFlippedString(g2, time, (int) (width * 0.8), TEXT_HEIGHT); //simulation time
+		Painter.drawFlippedString(g2, time + "s", (int) (width * 0.7), TEXT_HEIGHT); //simulation time
 		Painter.drawFlippedString(g2, currentCmd, (int) (width * 0.4), TEXT_HEIGHT); //name of command being run
 	} //end paintComponent
 } //end class

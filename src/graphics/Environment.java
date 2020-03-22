@@ -27,6 +27,7 @@ import main.AutoSim;
 import model.Point;
 import model.Pose;
 import model.motion.QuinticBezierPath;
+import util.Util;
 import util.Util.ROBOT_KEY;
 
 public class Environment extends JComponent {
@@ -74,7 +75,7 @@ public class Environment extends JComponent {
 		debug = false;
 		
 		//reset values
-		poseIndex = 0;
+		poseIndex = -1;
 		curveIndex = 0;
 		
 		//add border
@@ -221,11 +222,11 @@ public class Environment extends JComponent {
 		AffineTransform oldTransform = g2.getTransform();
 		if (poses != null && !poses.isEmpty()) { //if the pose is not null or empty
 			Painter.drawPose(g2, poses.get(poseIndex));
-		} //if		
+		} //if
 		g2.setTransform(oldTransform);
 		
-		//draw the goal point
-		try {
+		//draw the goal point if not the first step
+		if (poseIndex > 0) {
 			g2.setColor(Color.GRAY);
 			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);
 			Point robot = poses.get(poseIndex).getPoint();
@@ -234,7 +235,7 @@ public class Environment extends JComponent {
 			Painter.drawPoint(g2, robot, pointRad);
 			
 			Painter.drawLine(g2, goal, robot);
-		} catch (Exception e) {}
+		} //if
 	} //end paintComponent
 	
 	//User Interaction

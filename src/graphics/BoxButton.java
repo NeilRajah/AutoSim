@@ -85,18 +85,14 @@ public class BoxButton extends JComponent {
 	 */
 	public void paintComponent(Graphics g) {
 		//draw border
-		int wall;
 		if (border) {
 			g.setColor(backgroundColor.darker());
 			g.fillRoundRect(AutoSim.PPI, 0, this.getWidth(), this.getHeight(), cornerRad, cornerRad);
-			wall = AutoSim.PPI;
-		} else {
-			wall = 0;
 		} //if
 		
 		//draw the inside
 		g.setColor(backgroundColor);
-		g.fillRoundRect(AutoSim.PPI, wall, this.getWidth(), this.getHeight(), cornerRad, cornerRad);
+		g.fillRoundRect(AutoSim.PPI, 0, this.getWidth(), this.getHeight(), cornerRad, cornerRad);
 		
 		//set the text color
 		g.setColor(textColor);
@@ -130,6 +126,20 @@ public class BoxButton extends JComponent {
 	public boolean isLocked() {
 		return locked;
 	} //end isLocked
+	
+	/**
+	 * Lock the button from user input
+	 */
+	public void lock() {
+		locked = true;
+	} //end lock
+	
+	/**
+	 * Unlock the button to accept user input
+	 */
+	public void unlock() {
+		locked = false;
+	} //end unlock
 	
 	/**
 	 * Get the box text
