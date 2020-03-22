@@ -27,6 +27,11 @@ public class DriveToGoal extends Command {
 	private double scale; // amount to scale the top speed by
 	private double lookahead; // additional distance to add onto setpoint to cruise to minSpeed
 	
+	/*
+	 * Why do you spin so much
+	 * make a bunch of test cases, check first deltaAngle to see if its most efficient (ie. > 180, > 360, etc.)
+	 */
+	
 	/**
 	 * Drive to a goal point using the P2P control scheme
 	 * 

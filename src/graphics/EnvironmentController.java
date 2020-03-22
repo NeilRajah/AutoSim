@@ -13,6 +13,14 @@ public class EnvironmentController implements MouseMotionListener {
 	//Attributes
 	private Environment env; //Environment instance to update
 	
+	/*
+	 * Add points for bezier
+	 * pressing on point locks it, no other can update (don't check which one mouse is over until release)
+	 * BezierPathCreator (BPC) button locks point, click updates point buttons to show which is locked
+	 * Update BPC when moving points to change text box values (0.1, 0.01 tolerance)
+	 * calls repaint() everytime it updates, draw path with only 100 points (faster)
+	 */
+	
 	/**
 	 * Create an environment controller with an environment
 	 * Environment env - environment to get information from 

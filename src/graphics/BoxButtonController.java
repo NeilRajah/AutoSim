@@ -12,6 +12,12 @@ import java.awt.event.MouseListener;
 
 public class BoxButtonController implements MouseListener {
 	
+	/*
+	 * Takes a consumer
+	 * runs the method when clicked 
+	 * 	ie. runAnimation(), set point active, etc.
+	 */
+	
 	public BoxButtonController() {
 		// TODO Auto-generated constructor stub
 	}

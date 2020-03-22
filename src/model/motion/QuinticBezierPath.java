@@ -25,6 +25,10 @@ public class QuinticBezierPath {
 	private double length; //total length of the curve
 	private int[][] polyline; //polyline used for graphics
 	
+	/*
+	 * Paramaterize so each point has t, dist, heading, curvature/radius, and can lin int between them
+	 */
+	
 	/**
 	 * Create a quintic bezier path given an array of control points
 	 * @param controlPts - (x,y) control points
