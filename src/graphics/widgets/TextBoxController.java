@@ -78,9 +78,14 @@ public class TextBoxController implements FocusListener, KeyListener {
 	} //end focusGained
 
 	/**
-	 * Unimplemented
+	 * Set the ghost text if nothing has been typed
 	 */
-	public void focusLost(FocusEvent arg0) {}
+	public void focusLost(FocusEvent f) {
+		if (textArea.getText().equals("")) {
+			textArea.setForeground(Color.LIGHT_GRAY);
+			textArea.setText(key);
+		} //if
+	} //end focusLost
 	
 	/**
 	 * Unimplemented

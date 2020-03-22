@@ -13,15 +13,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
-
 import graphics.BoxButton;
+import graphics.BoxButtonController;
 import graphics.Painter;
 import main.AutoSim;
 import model.motion.QuinticBezierPath;
@@ -84,7 +82,7 @@ public class BezierPathCreator extends JPanel {
 		int y = 0;
 		for (int i = 0; i < 12; i++) {
 			//create textbox and add to HashMap
-			String key = (i % 2 == 0 ? "x" : "y") + Integer.toString(i % 6 / 2); //x0, y0, x1, ...
+			String key = (i % 2 == 0 ? "x" : "y") + Integer.toString(i/2 % 6); //x0, y0, x1, ...
 			JTextField textBox = JComponentUtil.textField(key, this.width / 6, this.height / 10, AutoSim.PPI * 4);
 			textBoxes.put(key, textBox); //add to map
 			
@@ -93,13 +91,16 @@ public class BezierPathCreator extends JPanel {
 				y++; //increment row position in grid
 				
 				//create button
-				BoxButton btn = new BoxButton(this.width / 5, this.height / 10, "P" + (y - 1), true, true); //P0, P1, ...
-				gb.setConstraints(btn, JComponentUtil.createGBC(0, y, 0.25, 1));
+				BoxButton button = new BoxButton(this.width / 5, this.height / 10, "P" + (y - 1), true, true); //P0, P1, ...
+				button.setBackgroundColor(new Color(120, 130, 140));
+				gb.setConstraints(button, JComponentUtil.createGBC(0, y, 0.25, 1));
 				
 				//add controller
+				BoxButtonController btnCtrl = new BoxButtonController(button, Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
+				button.addMouseListener(btnCtrl);
 				
 				//add button to panel
-				controlPointArea.add(btn);
+				controlPointArea.add(button);
 			} //if
 			
 			//constrain to grid (x = 1, 2, 1, 2, 1 ...)

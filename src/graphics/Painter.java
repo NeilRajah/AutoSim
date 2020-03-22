@@ -6,6 +6,7 @@
  */
 package graphics;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.io.File;
@@ -23,6 +24,10 @@ public class Painter {
 	//Fonts
 	public static final String SF_UI_FONT = "src/resources/SF-UI-Display-Light.ttf";
 	public static final String OXYGEN_FONT = "src/resources/Oxygen-Regular.ttf";
+	
+	//Colors
+	public static final Color BEZ_BTN_LIGHT = new Color(120, 130, 140);
+	public static final Color BEZ_BTN_DARK = new Color(110, 120, 130);
 	
 	/**
 	 * Draw a string to the screen

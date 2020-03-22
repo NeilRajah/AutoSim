@@ -32,6 +32,7 @@ public class BoxButton extends JComponent {
 	private float fontSize; //font size in pixels
 	private int cornerRad; //radius of the corners in pixels
 	private boolean border; //whether OBOX has border
+	private boolean locked; //whether the button should not respond to user input
 	
 	/*
 	 * Create an OBox with a width, height and text inside
@@ -42,7 +43,9 @@ public class BoxButton extends JComponent {
 	public BoxButton(int width, int height, String text) {
 		super();
 		
+		//set attributes
 		this.text = text;
+		this.locked = false;
 		
 		//set the size of the box
 		this.setPreferredSize(new Dimension(width, height));
@@ -73,11 +76,7 @@ public class BoxButton extends JComponent {
 	public BoxButton(int width, int height, String text, boolean straight, boolean border) {
 		this(width, height, text);
 		
-		if (straight) {
-			cornerRad = 0;
-		} else {
-			cornerRad = 60;
-		} //if
+		cornerRad = straight ? 0 : 60;
 	} //end constructor
 	
 	/*
@@ -108,9 +107,7 @@ public class BoxButton extends JComponent {
 		
 		//set the font to use antialiasing or not
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setRenderingHint(
-		        RenderingHints.KEY_TEXT_ANTIALIASING,
-		        RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		
 		//draw the text centered on the button
 		g.drawString(text, (this.getWidth() / 2) - (fm.stringWidth(text) / 2), 
@@ -123,11 +120,20 @@ public class BoxButton extends JComponent {
 	 */
 	public void setBackgroundColor(Color c) {
 		backgroundColor = c;
+		repaint();
 	} //end setBackgroundColor
 
-	/*
-	 * Get the text to the box
-	 * return text - text of the box
+	/**
+	 * Check if the button is locked 
+	 * @return locked Whether the button is locked to user input
+	 */
+	public boolean isLocked() {
+		return locked;
+	} //end isLocked
+	
+	/**
+	 * Get the box text
+	 * @return text Text within the box
 	 */
 	public String getText() {
 		return text;

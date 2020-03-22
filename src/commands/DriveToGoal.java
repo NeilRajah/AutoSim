@@ -34,7 +34,6 @@ public class DriveToGoal extends Command {
 	
 	/**
 	 * Drive to a goal point using the P2P control scheme
-	 * 
 	 * @param driveLoop drivetrain loop to update
 	 * @param goal goal point to drive to
 	 * @param tolerance tolerance to be within in inches
