@@ -11,8 +11,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+
+import util.Util;
 
 public class SpeedDisplay extends JComponent {
 	//Attributes
@@ -42,6 +43,7 @@ public class SpeedDisplay extends JComponent {
 	 */
 	public void update(double newSpeed) {
 		speed = Math.abs(newSpeed);
+		Util.println("speedDisplay:", speed / maxSpeed);
 		repaint();
 	} //end setSpeed
 	

@@ -62,8 +62,6 @@ public class TextBoxController implements FocusListener, KeyListener {
 		if (!IntStream.of(VALID_KEYCODES).anyMatch(x -> x == (int) k.getKeyChar())) {
 			k.consume(); //consume the event and ignore it
 		} //if
-		
-		//update textArea
 	} //end keyTyped
 
 	/**

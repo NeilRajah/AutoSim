@@ -23,4 +23,4 @@ public class BezierPathCreatorWidget extends Widget {
 		// TODO Auto-generated method stub
 	}
 
-}
+} //end class

@@ -189,6 +189,7 @@ public class Window extends JFrame {
 			Util.println("Starting loop");
 			Util.println("Number of poses:", env.getNumPoses());
 			Util.println("Total time:", env.getNumPoses() * Util.UPDATE_PERIOD);
+			System.out.println();
 			
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {

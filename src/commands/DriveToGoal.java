@@ -30,6 +30,7 @@ public class DriveToGoal extends Command {
 	/*
 	 * Why do you spin so much
 	 * make a bunch of test cases, check first deltaAngle to see if its most efficient (ie. > 180, > 360, etc.)
+	 * has happened when switching from fwd to rev
 	 */
 	
 	/**

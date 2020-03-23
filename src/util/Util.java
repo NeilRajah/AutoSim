@@ -303,6 +303,7 @@ public class Util {
 		for (double dbl : d) {
 			System.out.printf("%.4f ", dbl); //four decimal places
 		} //loop
+		System.out.println();
 	} //end println
 	
 	/**

@@ -31,10 +31,11 @@ public class DriveToGoalDemo extends CommandGroup {
 		double minY = 15, maxY = Util.FIELD_WIDTH/2 - minY;
 		
 		//topSpeed, minSpeed and reverse
-		double topSpeed = loop.getRobotClone().getMaxLinSpeed();
+		double maxSpeed = loop.getRobot().getMaxLinSpeed();
+		double topSpeed = maxSpeed;
 		double minSpeed = 6;
 		boolean reverse = false;
-		int numPoints = 100;
+		int numPoints = 1;
 		
 		//add points to drive to
 		for (int i = 0; i < numPoints; i++) {
@@ -44,7 +45,7 @@ public class DriveToGoalDemo extends CommandGroup {
 			
 			//set the speeds and reverse
 			if (i == 0) { //first drive
-				topSpeed = loop.getRobotClone().getMaxLinSpeed();
+//				topSpeed = maxSpeed;
 				minSpeed = 6;
 				reverse = false;
 				
@@ -59,7 +60,7 @@ public class DriveToGoalDemo extends CommandGroup {
 			} //if
 			
 			//add the command to the group
-			add(new DriveToGoal(loop, new Point(x,y), 1, topSpeed, minSpeed, reverse));
+			add(new DriveToGoal(loop, new Point(x,y), 1, maxSpeed, minSpeed, reverse));
 		} //loop
 	} //end constructor
 } //end class

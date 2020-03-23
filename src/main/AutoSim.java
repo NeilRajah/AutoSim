@@ -12,7 +12,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
-import commands.routines.DriveToGoalDemo;
+import commands.CommandList;
+import commands.DriveDistance;
+import commands.DriveToGoal;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.BezierPathCreator;
@@ -97,6 +99,7 @@ public class AutoSim {
 		//create robot
 		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2); //14ft/s 2 NEO gearbox each side
 		Robot r = new Robot(6, 153, 30, 30, gb); //153lb 6" wheel dia 30"x30" chassis
+		r.setXY(new Point(30,30));
 		
 		//set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -108,8 +111,9 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-		cg = new DriveToGoalDemo();
+//		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, r.getMaxLinSpeed()));
+		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200, 200), 1, r.getMaxLinSpeed(), 0, false));
 	} //end initialize
 	
 	/**
@@ -126,8 +130,9 @@ public class AutoSim {
 		SpeedDisplayWidget angSpd = new SpeedDisplayWidget(new SpeedDisplay(w.getHubWidth(), 
 				w.getHubHeight() * 1/8, driveLoop.getRobot().getMaxAngSpeed()), ROBOT_KEY.ANG_VEL);
 		angSpd.setColor(Color.ORANGE);
-		w.addWidget(angSpd);
+//		w.addWidget(angSpd);
 		
+		//bezier path creator widget
 		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
 		w.addWidget(bezWidg);
 	} //end addWidgets
