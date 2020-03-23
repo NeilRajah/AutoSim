@@ -35,7 +35,7 @@ public class DriveToGoalDemo extends CommandGroup {
 		double topSpeed = maxSpeed;
 		double minSpeed = 6;
 		boolean reverse = false;
-		int numPoints = 1;
+		int numPoints = 20;
 		
 		//add points to drive to
 		for (int i = 0; i < numPoints; i++) {

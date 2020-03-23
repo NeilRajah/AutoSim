@@ -104,8 +104,8 @@ public class Robot {
 		
 		//top speeds
 		maxLinSpeed = (Math.PI * leftGearbox.getMotorParameters()[0] * kWheelRad)/
-					(360 * leftGearbox.getGearRatio() * Util.INCHES_TO_METERS);
-		maxAngSpeed = (24 * maxLinSpeed * Util.INCHES_TO_METERS) / (kWidth);
+					(360 * leftGearbox.getGearRatio() * Util.INCHES_TO_METERS); //ft/s
+		maxAngSpeed = (24 * maxLinSpeed * Util.INCHES_TO_METERS) / (kWidth); //rad/s
 	} //end computeConstants
 	
 	/**
@@ -361,7 +361,7 @@ public class Robot {
 		angularVel = (kWheelRad / (2 * kPivotArm)) * (rightGearbox.getVel() - leftGearbox.getVel());
 		
 		//linear speed is average of two velocities
-		linearVel = (rightGearbox.getVel() + leftGearbox.getVel()) / 12;
+		linearVel = kWheelRad / Util.INCHES_TO_METERS / 12 * (rightGearbox.getVel() + leftGearbox.getVel()) / 2;
 	} //end updateHeading
 	
 	/**

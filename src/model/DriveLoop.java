@@ -265,6 +265,5 @@ public class DriveLoop {
 		
 		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);
-		Util.println(driveOut / robot.getMaxLinSpeed());
 	} //end driveToGoalLoop	
 } //end class

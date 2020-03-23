@@ -226,7 +226,7 @@ public class Environment extends JComponent {
 		g2.setTransform(oldTransform);
 		
 		//draw the goal point if not the first step
-		if (poseIndex > 0) {
+		if (poseIndex > 0 && (data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT) != null)) {
 			g2.setColor(Color.GRAY);
 			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);
 			Point robot = poses.get(poseIndex).getPoint();

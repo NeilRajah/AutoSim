@@ -43,7 +43,6 @@ public class SpeedDisplay extends JComponent {
 	 */
 	public void update(double newSpeed) {
 		speed = Math.abs(newSpeed);
-		Util.println("speedDisplay:", speed / maxSpeed);
 		repaint();
 	} //end setSpeed
 	

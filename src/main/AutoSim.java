@@ -12,9 +12,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
-import commands.CommandList;
-import commands.DriveDistance;
-import commands.DriveToGoal;
+import commands.routines.DriveToGoalDemo;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.BezierPathCreator;
@@ -111,9 +109,9 @@ public class AutoSim {
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
 		
 		//create the command group
-//		cg = new DriveToGoalDemo();
-//		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, r.getMaxLinSpeed()));
-		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200, 200), 1, r.getMaxLinSpeed(), 0, false));
+		cg = new DriveToGoalDemo();
+//		cg = new CommandList(new DriveDistance(driveLoop, 200, 1, r.getMaxLinSpeed()));
+//		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200, 200), 1, r.getMaxLinSpeed(), 0, false));
 	} //end initialize
 	
 	/**
