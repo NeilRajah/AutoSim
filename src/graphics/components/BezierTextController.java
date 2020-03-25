@@ -43,7 +43,8 @@ public class BezierTextController implements FocusListener, KeyListener {
 		KeyEvent.VK_LEFT,
 		KeyEvent.VK_RIGHT,
 		KeyEvent.VK_KP_LEFT,
-		KeyEvent.VK_KP_RIGHT};
+		KeyEvent.VK_KP_RIGHT,
+		KeyEvent.VK_MINUS};
 	
 	/**
 	 * Create a controller for a text field
@@ -85,9 +86,10 @@ public class BezierTextController implements FocusListener, KeyListener {
 	 * Only allow valid keys and update the textbox
 	 */
 	public void keyReleased(KeyEvent k) {
-		//if key pressed is not valid or if there is an attempt to place multiple periods
+		//if key pressed is not valid OR if there is an attempt to place multiple periods or negative signs
 		if (!IntStream.of(VALID_KEYCODES).anyMatch(x -> x == (int) k.getKeyChar()) ||
-				((int) k.getKeyChar() == KeyEvent.VK_PERIOD && textArea.getText().contains("."))) {
+				((int) k.getKeyChar() == KeyEvent.VK_PERIOD && textArea.getText().contains(".")) ||
+				((int) k.getKeyChar() == KeyEvent.VK_MINUS && textArea.getText().contains("-"))) {
 			k.consume(); //consume the event and ignore it
 		
 		} else {

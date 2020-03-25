@@ -179,9 +179,9 @@ public class Environment extends JComponent {
 		else
 			curves = new ArrayList<int[][]>();
 		
+		//add the points and update the environment
 		curves.add(curve.getPolyline());
-		curveIndex = 0;
-		this.update();
+		update();
 	} //end setCurve
 	
 	//Data
