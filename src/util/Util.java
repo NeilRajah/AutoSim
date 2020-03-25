@@ -383,4 +383,37 @@ public class Util {
 		
 		return f;
 	} //end getFileFont
+	
+	/**
+	 * Checks if a String is a valid number
+	 * @param text String to check for number
+	 * @return Whether or not text is a valid number
+	 */
+	public static boolean isNumber(String text) {
+		//if parse succeeds, string is a number and true is returned
+		try {
+			Integer.parseInt(text); //no need to save; if error isn't caught, text is number
+			return true;
+		} catch (NumberFormatException n) {
+			return false;
+		} //try-catch
+	} //end isNumber
+	
+	/**
+	 * Convert a String to an double
+	 * @param str String to convert
+	 * @return num Numerical form of the String OR a default value of zero
+	 */
+	public static double stringToNum(String str) {
+		double num;
+		
+		//set parsed number
+		try { 
+			num = Double.parseDouble(str);
+		} catch (NumberFormatException n) { //set default
+			num = 0;
+		} //try-catch
+		
+		return num;
+	} //end stringToNum
 } //end Util

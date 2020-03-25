@@ -5,7 +5,7 @@
  * Versatile controller for a button component
  */
 
-package graphics;
+package graphics.components;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;

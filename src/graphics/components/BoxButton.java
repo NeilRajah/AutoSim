@@ -1,4 +1,4 @@
-package graphics;
+package graphics.components;
 /*
  * BoxButton
  * Author: Neil Balaskandarajah
@@ -18,6 +18,7 @@ import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
+import graphics.Painter;
 import main.AutoSim;
 import util.JComponentUtil;
 import util.Util;

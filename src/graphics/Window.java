@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 
 import commands.Command;
 import commands.CommandGroup;
+import graphics.components.BoxButton;
+import graphics.components.ButtonController;
 import graphics.widgets.Widget;
 import graphics.widgets.WidgetHub;
 import main.AutoSim;
@@ -68,13 +70,14 @@ public class Window extends JFrame {
 		//convert from inches to pixels
 		width = AutoSim.PPI * Util.FIELD_WIDTH; 
 		height = AutoSim.PPI * Util.FIELD_HEIGHT;
+		env = Environment.getInstance();
 		
 		//change window shape depending on whether it is in debug or not
 		if (debug) {
-			env = new Environment(height, height); //square
+			env.setSize(height, height);
 			env.setDebug();
 		} else {
-			env = new Environment(width, height); //long field
+			env.setSize(width, height); //long field
 		} //if
 		
 		//add to grid
@@ -189,7 +192,7 @@ public class Window extends JFrame {
 			Util.println("Starting loop");
 			Util.println("Number of poses:", env.getNumPoses());
 			Util.println("Total time:", env.getNumPoses() * Util.UPDATE_PERIOD);
-			System.out.println();
+			env.setSimulating(true);
 			
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {
@@ -202,6 +205,7 @@ public class Window extends JFrame {
 				Util.pause(Util.ANIMATION_PERIOD);
 			} //loop
 			
+			env.setSimulating(false);
 			Util.println("ran");
 		};
 		

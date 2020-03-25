@@ -102,4 +102,19 @@ public class FieldPositioning {
 		
 		return curve;
 	} //end flipCurve
+	
+	/**
+	 * Create an array of Points from a 2D array of points
+	 * @param controlPts - 2D array of points containing (x,y) of control points
+	 * @return control points as Point objects
+	 */
+	public static Point[] pointsFromDoubles(double[][] controlPts) {
+		//turn double[][] to point array 
+		Point[] curvePts = new Point[6];
+		for (int i = 0; i <= 5; i++) {
+			curvePts[i] = new Point(controlPts[i]);
+		} //loop
+		
+		return curvePts;
+	} //end pointsFromDoubles
 } //end class

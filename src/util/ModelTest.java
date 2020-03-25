@@ -216,7 +216,7 @@ class ModelTest {
     		new Point(16.4, 25.2),
     		new Point(24.2, 37.6),
     		new Point(38.3, 24.8)
-    	});
+		}, QuinticBezierPath.FAST_RES);
 		double correctLength = 46.5;
 		assertEquals(correctLength, testPath.getLength(), 1);
 	} //end pathLengthsTest
@@ -226,7 +226,7 @@ class ModelTest {
 	 * Check if the path point calculated at a t value is correct
 	 */
 	void pathPointTest() {
-		QuinticBezierPath testPath = new QuinticBezierPath(FieldPoints.curve);
+		QuinticBezierPath testPath = new QuinticBezierPath(FieldPoints.curve, QuinticBezierPath.FAST_RES);
 		Point correctPoint = new Point(5.4, 3.7);
 		assertEquals(0.0, FieldPositioning.calcDistance(correctPoint, testPath.calcPoint(0)), 0.1);
 	} //end pathPointTest
@@ -322,4 +322,12 @@ class ModelTest {
 	void regulatedClampingTest() {
 		assertEquals(-0.6, Util.regulatedClamp(-0.6, 0.2, 1), 0E-3);
 	} //end regulatedClampingTest
+	
+	@Test
+	/**
+	 * Test the number parsing utility function
+	 */
+	void numberParseTest() {
+		assertEquals(0.7125, Util.stringToNum("0.7125"), 0E-2);
+	} //end numberParseTest
 } //end class

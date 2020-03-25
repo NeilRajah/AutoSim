@@ -31,10 +31,12 @@ public class WidgetHub extends JPanel {
 	private ArrayList<Widget> widgets; //widgets and their IDs
 	private Font font; //font for the text
 	
+	/**
+	 * Create a WidgetHub
+	 * @param width Width in pixels
+	 * @param height Height in pixels
+	 */
 	public WidgetHub(int width, int height) {
-		//create the JPanel
-//		super(); 
-		
 		//set attributes
 		this.width = width;
 		this.height = height;

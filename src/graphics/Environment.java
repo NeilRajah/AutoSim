@@ -32,6 +32,9 @@ import util.Util.ROBOT_KEY;
 
 public class Environment extends JComponent {
 	//Attributes
+	//Singleton Instance
+	private static Environment mInstance; //single instance of the Environment
+	
 	//Configured
 	private int width; //width of the environment
 	private int height; //height of the environment
@@ -46,22 +49,46 @@ public class Environment extends JComponent {
 	private ArrayList<HashMap<ROBOT_KEY, Object>> data; //data from the robot
 	private int poseIndex; //index in pose list of pose to draw
 	private int curveIndex; //index in curve list of curve to draw
-	
-	//Debug
 	private boolean debug; //whether to display the field or not
+	private boolean simulating; //true when the animation is running
 	
 	/**
 	 * The environment the robot is simulated in
-	 * @param width - width of the component
-	 * @param height - height of the component
 	 */
-	public Environment(int width, int height) {
+	private Environment() {
 		super();
 		
+		//reset values
+		debug = false;
+		poseIndex = -1;
+		curveIndex = 0;
+		simulating = false;
+		
+		//add border
+		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, AutoSim.PPI * 2));
+	} //end constructor
+	
+	/**
+	 * Get the single instance of the Environment
+	 * @return Single instance of the environment
+	 */
+	public static Environment getInstance() {
+		if (mInstance == null)
+			mInstance = new Environment();
+		
+		return mInstance;
+	} //end getInstance
+	
+	/**
+	 * Set the size of the Environment
+	 * @param width Width in pixels
+	 * @param height Height in pixels
+	 */
+	public void setSize(int width, int height) {
 		//set the width and height of the component
-		this.width = width;
-		this.height = height;
-		this.setPreferredSize(new Dimension(width, height));
+		mInstance.width = width;
+		mInstance.height = height;
+		mInstance.setPreferredSize(new Dimension(width, height));
 		
 		//open field image
 		try {
@@ -72,15 +99,17 @@ public class Environment extends JComponent {
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} //try-catch
-		debug = false;
-		
-		//reset values
-		poseIndex = -1;
-		curveIndex = 0;
-		
-		//add border
-		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, AutoSim.PPI * 2));
-	} //end constructor
+	} //end setSize
+	
+	//Simulation
+	
+	/**
+	 * Set the status of the simulation
+	 * @param isSimulating Whether or not the simulation is running
+	 */
+	public void setSimulating(boolean isSimulating) {
+		this.simulating = isSimulating;
+	} //end setSimulating
 	
 	//Pose
 	
@@ -124,10 +153,10 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Add curve to be used for graphics
-	 * @param qbp Bezier curve to be followed
+	 * @param paths Bezier curve to be followed
 	 */
-	public void setCurves(ArrayList<int[][]> qbp) {
-		curves = qbp;
+	public void setCurves(ArrayList<int[][]> paths) {
+		curves = paths;
 	} //end setCurve
 	
 	/**
@@ -138,6 +167,22 @@ public class Environment extends JComponent {
 		bar.setTime(poseIndex);
 		repaint();
 	} //end incrementPoseIndex
+	
+	/**
+	 * Set the curve to be drawn (intended for widget use)
+	 * @param curve Curve to be drawn
+	 */
+	public void setCurve(QuinticBezierPath curve) {
+		//clear the list (if it isn't null) and add the curve
+		if (curves != null)
+			curves.clear();
+		else
+			curves = new ArrayList<int[][]>();
+		
+		curves.add(curve.getPolyline());
+		curveIndex = 0;
+		this.update();
+	} //end setCurve
 	
 	//Data
 	
@@ -208,14 +253,15 @@ public class Environment extends JComponent {
 			Painter.drawGrid(g2, width, height, 12 * AutoSim.PPI); //12 inches
 		} //if
 		
-		//stroke for lines
-		g2 = (Graphics2D) g;
-		g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 2), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-		g2.setColor(Color.RED);
-		
 		//draw the current path
 		if (curves != null && !curves.isEmpty()) {
-			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], QuinticBezierPath.RESOLUTION);
+			//stroke for lines
+			g2 = (Graphics2D) g;
+			g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 2), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+			g2.setColor(Color.RED);
+			
+			//draw the curve
+			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], curves.get(curveIndex)[0].length);
 		} //if
 
 		//draw the current pose
@@ -227,13 +273,15 @@ public class Environment extends JComponent {
 		
 		//draw the goal point if not the first step
 		if (poseIndex > 0 && (data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT) != null)) {
+			//drawing values
 			g2.setColor(Color.GRAY);
 			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);
 			Point robot = poses.get(poseIndex).getPoint();
 			int pointRad = (int) (AutoSim.PPI * 1.6);
+			
+			//points to draw and line between them
 			Painter.drawPoint(g2, goal, pointRad);
 			Painter.drawPoint(g2, robot, pointRad);
-			
 			Painter.drawLine(g2, goal, robot);
 		} //if
 	} //end paintComponent

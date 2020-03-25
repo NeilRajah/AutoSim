@@ -9,10 +9,9 @@ package commands;
 import java.util.ArrayList;
 
 import model.DriveLoop;
+import model.FieldPositioning;
 import model.Point;
-import model.Pose;
 import model.motion.QuinticBezierPath;
-import util.Util;
 
 public class MoveQuintic extends Command {
 	// Attributes
@@ -37,7 +36,7 @@ public class MoveQuintic extends Command {
 	public MoveQuintic(DriveLoop loop, Point[] curvePts) {
 		//set attributes
 		this.loop = loop; //state machine to control the robot
-		this.curve = new QuinticBezierPath(curvePts); //quintic bezier path
+		this.curve = new QuinticBezierPath(curvePts, QuinticBezierPath.HIGH_RES); //quintic bezier path
 		
 		//update t value
 		t = start;
@@ -57,7 +56,7 @@ public class MoveQuintic extends Command {
 	 * @param controlPts - control points for the curve
 	 */
 	public MoveQuintic(DriveLoop loop, double[][] controlPts) {		
-		this(loop, QuinticBezierPath.pointsFromDoubles(controlPts));
+		this(loop, FieldPositioning.pointsFromDoubles(controlPts));
 	} //end constructor
 
 	@Override

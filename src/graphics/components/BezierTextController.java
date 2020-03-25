@@ -5,7 +5,7 @@
  * Controller for a text box
  */
 
-package graphics.widgets;
+package graphics.components;
 
 import java.awt.Color;
 import java.awt.event.FocusEvent;
@@ -14,12 +14,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.stream.IntStream;
 
-import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-public class TextBoxController implements FocusListener, KeyListener {
+import graphics.widgets.BezierPathCreator;
+import util.Util;
+
+public class BezierTextController implements FocusListener, KeyListener {
 	//Attributes
 	private JTextComponent textArea; //component being controlled
+	private BezierPathCreator bpc; //main widget
 	private String key; //key from the textArea
 	
 	//Constants
@@ -46,8 +49,10 @@ public class TextBoxController implements FocusListener, KeyListener {
 	 * Create a controller for a text field
 	 * @param textArea JTextField to be controlled
 	 */
-	public TextBoxController(JTextComponent textArea) {
+	public BezierTextController(JTextComponent textArea, BezierPathCreator bpc) {
+		//set attributes
 		this.textArea = textArea;
+		this.bpc = bpc;
 		this.key = this.textArea.getText();
 		
 		//set the text to light gray
@@ -55,24 +60,15 @@ public class TextBoxController implements FocusListener, KeyListener {
 	} //end constructor
 
 	/**
-	 * Only allow valid keys and update the textbox
-	 */
-	public void keyTyped(KeyEvent k) {		
-		//if key pressed is not valid
-		if (!IntStream.of(VALID_KEYCODES).anyMatch(x -> x == (int) k.getKeyChar())) {
-			k.consume(); //consume the event and ignore it
-		} //if
-	} //end keyTyped
-
-	/**
 	 * Change the color of the text in the box to the primary color when focused
 	 * @param f Event created when component gains focus
 	 */
 	public void focusGained(FocusEvent f) {
 		if (textArea.getText().equals(key)) {
-			textArea.setForeground(Color.BLACK);
 			textArea.setText("");
 		} //if
+
+		textArea.setForeground(Color.BLACK);
 	} //end focusGained
 
 	/**
@@ -84,14 +80,29 @@ public class TextBoxController implements FocusListener, KeyListener {
 			textArea.setText(key);
 		} //if
 	} //end focusLost
+
+	/**
+	 * Only allow valid keys and update the textbox
+	 */
+	public void keyReleased(KeyEvent k) {
+		//if key pressed is not valid or if there is an attempt to place multiple periods
+		if (!IntStream.of(VALID_KEYCODES).anyMatch(x -> x == (int) k.getKeyChar()) ||
+				((int) k.getKeyChar() == KeyEvent.VK_PERIOD && textArea.getText().contains("."))) {
+			k.consume(); //consume the event and ignore it
+		
+		} else {
+			//update the curve
+			bpc.setCurveCoordinate(key, Util.stringToNum(textArea.getText()));
+		} //if
+	} //end keyReleased
 	
 	/**
 	 * Unimplemented
 	 */
-	public void keyPressed(KeyEvent arg0) {}
-
+	public void keyPressed(KeyEvent k) {}
+	
 	/**
 	 * Unimplemented
 	 */
-	public void keyReleased(KeyEvent arg0) {}
+	public void keyTyped(KeyEvent k) {}
 } //end class

@@ -10,17 +10,22 @@ package graphics.widgets;
 import javax.swing.JPanel;
 
 public class BezierPathCreatorWidget extends Widget {
-	//Attributes
-	private JPanel bezierPathCreator; //bezier path UI component
 	
+	/**
+	 * Create a widget containing a BezierPathCreator
+	 * @param panel Panel containing the BezierPathCreator
+	 */
 	public BezierPathCreatorWidget(JPanel panel) {
 		super(panel);
-		// TODO Auto-generated constructor stub
-	}
+		
+	} //end constructor
 
-	@Override
+	/**
+	 * Update the widget given update values
+	 * @param values Values given from the update
+	 */
 	public void update(double[] values) {
-		// TODO Auto-generated method stub
-	}
+	
+	} //end update
 
 } //end class
