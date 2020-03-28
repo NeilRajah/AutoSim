@@ -40,7 +40,7 @@ public abstract class CommandGroup {
 		curves = new ArrayList<int[][]>();
 		data = new ArrayList<HashMap<ROBOT_KEY, Object>>();
 		
-		testing = this.getClass().getSimpleName().contains("Test");
+		testing = this.getClass().getSimpleName().contains("Test"); //if test is in group name
 		passed = 0;
 	} //end initialize
 	

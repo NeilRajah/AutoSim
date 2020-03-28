@@ -146,7 +146,7 @@ public class BezierPathCreator extends JPanel {
 		
 		//send to environment
 		if (allBoxesValid()) {
-			Environment.getInstance().setCurve(curve);
+			Environment.getInstance().setPath(curve);
 		} //if
 	} //end setCurveCoordinate
 	
@@ -170,7 +170,7 @@ public class BezierPathCreator extends JPanel {
 			//set x and y values
 			if (entry.getKey().contains("x")) {
 				x = Double.parseDouble(entry.getValue().getText());
-				Util.println("x", x);
+				
 			} else if (entry.getKey().contains("y")) {
 				y = Double.parseDouble(entry.getValue().getText());
 			} //if
@@ -183,7 +183,7 @@ public class BezierPathCreator extends JPanel {
 		
 		//set the control points and the curve
 		curve.setControlPoints(points);
-		Environment.getInstance().setCurve(curve);
+		Environment.getInstance().setPath(curve);
 	} //end updateControlPoints
 	
 	/**
@@ -203,4 +203,34 @@ public class BezierPathCreator extends JPanel {
 		
 		return true;
 	} //end allBoxesValid
+	
+	/**
+	 * Set the control points to the boxes
+	 * @param controlPoints Points for the text boxes to show
+	 */
+	public void setControlPoints(Point[] controlPoints) {
+		Iterator<Entry<String, JTextField>> it = textBoxes.entrySet().iterator(); //for looping through map
+		int loops = 0; //number of elements visited
+		
+		//iterates in y,x,y,x,y ... pattern
+		while (it.hasNext()) {
+			//get entry
+			Map.Entry<String, JTextField> entry = (Entry<String, JTextField>) it.next();	
+			
+			//set x and y values of control points to textbox
+			if (entry.getKey().contains("x")) {
+				entry.getValue().setText(Double.toString(controlPoints[loops/2].getX()));
+				
+			} else if (entry.getKey().contains("y")) {
+				entry.getValue().setText(Double.toString(controlPoints[loops/2].getY()));
+			} //if
+
+			loops++;
+		} //while
+		
+
+		//set the control points and the curve
+		curve.setControlPoints(controlPoints);
+		Environment.getInstance().setPath(curve);
+	} //end setControlPoints
 } //end class

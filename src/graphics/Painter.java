@@ -6,6 +6,7 @@
  */
 package graphics;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -59,11 +60,6 @@ public class Painter {
 		
 		//draw back-end indicator (straight box so only round edges at front)
 		g2.fillRoundRect(-ROBOT_LENGTH/2, -ROBOT_WIDTH/2, CORNER_RAD, ROBOT_WIDTH, CORNER_RAD/4, CORNER_RAD/4);
-		
-//		g2.translate(-p.getPoint().getY()*AutoSim.ppi, -p.getPoint().getX()*AutoSim.ppi);
-//		g2.rotate(-p.getHeading());
-//		g2.dispose();
-//		g2 = originalG2;
 	} //end drawPose
 	
 	/**
@@ -85,14 +81,35 @@ public class Painter {
 		} //loop
 	} //end drawGrid
 	
+	/**
+	 * Draw a point in real space
+	 * @param g2 Used for drawing
+	 * @param p point to draw
+	 * @param rad Radius of point
+	 */
 	public static void drawPoint(Graphics2D g2, Point p, int rad) {
-		rad *= AutoSim.PPI;
+		rad *= AutoSim.PPI; //scale to pixels
 		int x = (int) (p.getX() * AutoSim.PPI);
 		int y = (int) (p.getY() * AutoSim.PPI);
 		
 		g2.fillOval((int) (y - rad/2.0), (int) (x - rad/2.0), rad, rad);
 	} //end drawPoint
 	
+	/**
+	 * Draw a point with a standard radius
+	 * @param g2 Used for drawing
+	 * @param p Point in real space
+	 */
+	public static void drawPoint(Graphics2D g2, Point p) {
+		drawPoint(g2, p, 8);
+	} //end drawPoint
+	
+	/**
+	 * Draw a line between two points in real space
+	 * @param g2 Used for drawing
+	 * @param start Start point in inches
+	 * @param end End point in inches
+	 */
 	public static void drawLine(Graphics2D g2, Point start, Point end) {
 		int x1 = (int) (start.getX() * AutoSim.PPI);
 		int y1 = (int) (start.getY() * AutoSim.PPI);
@@ -116,6 +133,15 @@ public class Painter {
 			f = f.deriveFont((float) fontSize);
 		} catch (Exception e) {} //try-catch
 		
-		return f;
+		return f; //return default font if not able to load from file
 	} //end createFont
+	
+	/**
+	 * Set the transparency of the Graphics2D object
+	 * @param g2 Used for drawing
+	 * @param transparency Transparency factor from 0 to 1 inclusive
+	 */
+	public static void setTransparency(Graphics2D g2, double transparency) {
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) transparency));
+	} //end setTransparency
 } //end Painter 

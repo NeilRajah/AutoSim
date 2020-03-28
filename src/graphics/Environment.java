@@ -6,6 +6,7 @@
  */
 package graphics;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -45,12 +46,15 @@ public class Environment extends JComponent {
 	
 	//Updated
 	private ArrayList<Pose> poses; //list of robot poses to draw
-	private ArrayList<int[][]> curves; //points for the bezier path
 	private ArrayList<HashMap<ROBOT_KEY, Object>> data; //data from the robot
 	private int poseIndex; //index in pose list of pose to draw
 	private int curveIndex; //index in curve list of curve to draw
 	private boolean debug; //whether to display the field or not
 	private boolean simulating; //true when the animation is running
+	
+	//Curves
+	private ArrayList<int[][]> curves; //points for the bezier path
+	private Point[] controlPoints; //control points for path	
 	
 	/**
 	 * The environment the robot is simulated in
@@ -170,9 +174,9 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Set the curve to be drawn (intended for widget use)
-	 * @param curve Curve to be drawn
+	 * @param path Curve to be drawn
 	 */
-	public void setCurve(QuinticBezierPath curve) {
+	public void setPath(QuinticBezierPath path) {
 		//clear the list (if it isn't null) and add the curve
 		if (curves != null)
 			curves.clear();
@@ -180,8 +184,10 @@ public class Environment extends JComponent {
 			curves = new ArrayList<int[][]>();
 		
 		//add the points and update the environment
-		curves.add(curve.getPolyline());
+		curves.add(path.getPolyline());
+		this.controlPoints = path.getControlPoints();
 		update();
+		Util.println(curves.size());
 	} //end setCurve
 	
 	//Data
@@ -252,17 +258,35 @@ public class Environment extends JComponent {
 			g2.setColor(Color.black);
 			Painter.drawGrid(g2, width, height, 12 * AutoSim.PPI); //12 inches
 		} //if
+		g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 2), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		
 		//draw the current path
 		if (curves != null && !curves.isEmpty()) {
 			//stroke for lines
 			g2 = (Graphics2D) g;
-			g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 2), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-			g2.setColor(Color.RED);
+			g2.setColor(Color.WHITE);
 			
 			//draw the curve
 			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], curves.get(curveIndex)[0].length);
-		} //if
+			
+			//draw the control points
+			if (curves.size() == 1) {	
+				//control points
+				g2.setColor(new Color(230, 230, 230));
+				for (int i = 0; i < 6; i++) {
+					Painter.drawPoint(g2, controlPoints[i]);
+				} //loop
+				
+				//tangents
+				Painter.setTransparency(g2, 0.8);
+				Painter.drawLine(g2, controlPoints[0], controlPoints[1]);
+				Painter.drawLine(g2, controlPoints[4], controlPoints[5]);
+				Painter.setTransparency(g2, 1.0);
+			} //if
+		} else {
+			Util.println("didn't draw curve");
+			Util.println(curves.size());
+		}
 
 		//draw the current pose
 		AffineTransform oldTransform = g2.getTransform();
@@ -277,11 +301,10 @@ public class Environment extends JComponent {
 			g2.setColor(Color.GRAY);
 			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);
 			Point robot = poses.get(poseIndex).getPoint();
-			int pointRad = (int) (AutoSim.PPI * 1.6);
 			
 			//points to draw and line between them
-			Painter.drawPoint(g2, goal, pointRad);
-			Painter.drawPoint(g2, robot, pointRad);
+			Painter.drawPoint(g2, goal);
+			Painter.drawPoint(g2, robot);
 			Painter.drawLine(g2, goal, robot);
 		} //if
 	} //end paintComponent

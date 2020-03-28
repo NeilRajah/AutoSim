@@ -116,7 +116,6 @@ public class WidgetHub extends JPanel {
 				widgets.get(i).update(values);
 			} //if
 		} //loop
-		
 	} //end update
 
 	/**

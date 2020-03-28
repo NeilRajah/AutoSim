@@ -1,15 +1,15 @@
 /**
- * EnvironmentController
+ * EnvironmentUIController
  * Author: Neil Balaskandarajah
  * Created on: 02/01/2020
- * Controller for the Environment
+ * Controller for the Environment to update the UI bar
  */
 package graphics;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-public class EnvironmentController implements MouseMotionListener {
+public class EnvironmentUIController implements MouseMotionListener {
 	//Attributes
 	private Environment env; //Environment instance to update
 	
@@ -25,7 +25,7 @@ public class EnvironmentController implements MouseMotionListener {
 	 * Create an environment controller with an environment
 	 * Environment env - environment to get information from 
 	 */
-	public EnvironmentController(Environment env) {
+	public EnvironmentUIController(Environment env) {
 		super();
 		
 		//set attributes

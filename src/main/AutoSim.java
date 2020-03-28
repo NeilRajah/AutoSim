@@ -25,6 +25,7 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import util.FieldPoints;
 import util.Util;
 import util.Util.ROBOT_KEY;
 
@@ -132,6 +133,7 @@ public class AutoSim {
 		
 		//bezier path creator widget
 		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
+		bezWidg.setControlPoints(FieldPoints.curve);
 		w.addWidget(bezWidg);
 	} //end addWidgets
 } //end AutoSim

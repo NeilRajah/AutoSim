@@ -74,7 +74,7 @@ public class Window extends JFrame {
 		
 		//change window shape depending on whether it is in debug or not
 		if (debug) {
-			env.setSize(height, height);
+			env.setSize(height, height); //square
 			env.setDebug();
 		} else {
 			env.setSize(width, height); //long field
@@ -86,7 +86,7 @@ public class Window extends JFrame {
 		mainPanel.add(env, envGBC);
 		
 		//add controllers
-		EnvironmentController envCtrl = new EnvironmentController(env);
+		EnvironmentUIController envCtrl = new EnvironmentUIController(env);
 		env.addMouseMotionListener(envCtrl);
 		
 		//set focus
@@ -174,10 +174,14 @@ public class Window extends JFrame {
 	 */
 	public void addCommandGroup(CommandGroup cg) {
 		cg.run();
-		env.setPoses(cg.getPoses());
-		env.setCurves(cg.getCurves());
+		env.setPoses(cg.getPoses());		
 		env.setData(cg.getData());
 		env.incrementPoseIndex();
+		
+		//don't add empty curves
+		if (cg.getCurves() != null && !cg.getCurves().isEmpty())
+			env.setCurves(cg.getCurves());
+		
 		env.update();
 	} //end addCommandGroup
 	
