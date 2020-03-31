@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import model.DriveLoop;
 import model.FieldPositioning;
 import model.Point;
-import model.motion.QuinticBezierPath;
+import model.motion.BezierPath;
 
 public class MoveQuintic extends Command {
 	// Attributes
@@ -23,7 +23,7 @@ public class MoveQuintic extends Command {
 	private double step = 0.001;
 	
 	//Configured
-	private QuinticBezierPath curve; //quintic bezier curve
+	private BezierPath curve; //quintic bezier curve
 	
 	//Updated
 	private double t; //t value for the current point
@@ -36,7 +36,7 @@ public class MoveQuintic extends Command {
 	public MoveQuintic(DriveLoop loop, Point[] curvePts) {
 		//set attributes
 		this.loop = loop; //state machine to control the robot
-		this.curve = new QuinticBezierPath(curvePts, QuinticBezierPath.HIGH_RES); //quintic bezier path
+		this.curve = new BezierPath(curvePts, BezierPath.HIGH_RES); //quintic bezier path
 		
 		//update t value
 		t = start;

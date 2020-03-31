@@ -6,7 +6,6 @@
  */
 package graphics;
 
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,10 +23,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
+import graphics.widgets.Circle;
 import main.AutoSim;
 import model.Point;
 import model.Pose;
-import model.motion.QuinticBezierPath;
+import model.motion.BezierPath;
 import util.Util;
 import util.Util.ROBOT_KEY;
 
@@ -54,7 +54,7 @@ public class Environment extends JComponent {
 	
 	//Curves
 	private ArrayList<int[][]> curves; //points for the bezier path
-	private Point[] controlPoints; //control points for path	
+	private Circle[] controlPoints; //control points for path	
 	
 	/**
 	 * The environment the robot is simulated in
@@ -176,7 +176,7 @@ public class Environment extends JComponent {
 	 * Set the curve to be drawn (intended for widget use)
 	 * @param path Curve to be drawn
 	 */
-	public void setPath(QuinticBezierPath path) {
+	public void setPath(GraphicBezierPath path) {
 		//clear the list (if it isn't null) and add the curve
 		if (curves != null)
 			curves.clear();
@@ -185,9 +185,8 @@ public class Environment extends JComponent {
 		
 		//add the points and update the environment
 		curves.add(path.getPolyline());
-		this.controlPoints = path.getControlPoints();
+		this.controlPoints = path.getCircles();
 		update();
-		Util.println(curves.size());
 	} //end setCurve
 	
 	//Data
@@ -272,9 +271,8 @@ public class Environment extends JComponent {
 			//draw the control points
 			if (curves.size() == 1) {	
 				//control points
-				g2.setColor(new Color(230, 230, 230));
 				for (int i = 0; i < 6; i++) {
-					Painter.drawPoint(g2, controlPoints[i]);
+					Painter.drawCircle(g2, controlPoints[i]);
 				} //loop
 				
 				//tangents

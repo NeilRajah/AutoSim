@@ -21,21 +21,21 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import graphics.Environment;
+import graphics.GraphicBezierPath;
 import graphics.Painter;
 import graphics.components.BezierTextController;
 import graphics.components.BoxButton;
 import graphics.components.ButtonController;
 import main.AutoSim;
 import model.Point;
-import model.motion.QuinticBezierPath;
+import model.motion.BezierPath;
 import util.JComponentUtil;
-import util.Util;
 
 public class BezierPathCreator extends JPanel {
 	//Attributes
 	private int width; //width in pixels
 	private int height; //height in pixels
-	private QuinticBezierPath curve; //curve being manipulated
+	private GraphicBezierPath curve; //curve being manipulated
 	private HashMap<String, JTextField> textBoxes; //text boxes for control points
 	
 	/**
@@ -50,7 +50,7 @@ public class BezierPathCreator extends JPanel {
 		this.width = width;
 		this.height = height;
 		textBoxes = new HashMap<String, JTextField>();
-		this.curve = new QuinticBezierPath(QuinticBezierPath.FAST_RES);
+		this.curve = new GraphicBezierPath();
 		
 		//layout all components
 		layoutView();
@@ -104,8 +104,6 @@ public class BezierPathCreator extends JPanel {
 			BezierTextController boxController = new BezierTextController(textBox, this);
 			textBox.addKeyListener(boxController);
 			textBox.addFocusListener(boxController);
-
-			textBox.setText(Integer.toString(i * 10)); //CHANGE to load from file (if file exist, demo path, etc.)
 			
 			//for every two text areas, add one button
 			if (i % 2 == 0) {
@@ -115,10 +113,12 @@ public class BezierPathCreator extends JPanel {
 				BoxButton button = new BoxButton(this.width / 5, this.height / 10, "P" + (y - 1), true, true); //P0, P1, ...
 				gb.setConstraints(button, JComponentUtil.createGBC(0, y, 0.25, 1));
 				
-				//add controller
-				ButtonController btnCtrl = new ButtonController(button, System.out::println); //change this to locking
+				//add graphics controller
+				ButtonController btnCtrl = new ButtonController(button); //for colors
 				btnCtrl.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
 				button.addMouseListener(btnCtrl);
+				
+				//add locking controller
 				
 				//add button to panel
 				controlPointArea.add(button);
@@ -158,7 +158,7 @@ public class BezierPathCreator extends JPanel {
 		int loops = 0; //number of loops
 		double x = 0; //x value of point
 		double y = 0; //y value of point
-		Point[] points = new Point[6]; //new control point array
+		Circle[] circles = new Circle[6]; //new control point array
 		
 		//iterates in y,x,y,x,y ... pattern
 		while (it.hasNext()) {
@@ -167,22 +167,29 @@ public class BezierPathCreator extends JPanel {
 			//get entry
 			Map.Entry<String, JTextField> entry = (Entry<String, JTextField>) it.next();	
 			
-			//set x and y values
-			if (entry.getKey().contains("x")) {
-				x = Double.parseDouble(entry.getValue().getText());
+			//catch formatting errors
+			try {
+				//set x and y values
+				if (entry.getKey().contains("x")) {
+					x = Double.parseDouble(entry.getValue().getText());
+					
+				} else if (entry.getKey().contains("y")) {
+					y = Double.parseDouble(entry.getValue().getText());
+				} //if
 				
-			} else if (entry.getKey().contains("y")) {
-				y = Double.parseDouble(entry.getValue().getText());
-			} //if
+			} catch (NumberFormatException e) {
+				x = 0;
+				y = 0;
+			} //try-catch
 			
 			//set the point
 			if (loops % 2 == 0) {
-				points[loops / 2 - 1] = new Point(x, y);
+				circles[loops / 2 - 1] = new Circle(x, y, Painter.BEZ_BTN_DARK);
 			} //if
 		} //while
 		
 		//set the control points and the curve
-		curve.setControlPoints(points);
+		curve.setCircles(circles);
 		Environment.getInstance().setPath(curve);
 	} //end updateControlPoints
 	
@@ -206,9 +213,9 @@ public class BezierPathCreator extends JPanel {
 	
 	/**
 	 * Set the control points to the boxes
-	 * @param controlPoints Points for the text boxes to show
+	 * @param circles Circles for the text boxes to show
 	 */
-	public void setControlPoints(Point[] controlPoints) {
+	public void setCircles(Circle[] circles) {
 		Iterator<Entry<String, JTextField>> it = textBoxes.entrySet().iterator(); //for looping through map
 		int loops = 0; //number of elements visited
 		
@@ -219,18 +226,17 @@ public class BezierPathCreator extends JPanel {
 			
 			//set x and y values of control points to textbox
 			if (entry.getKey().contains("x")) {
-				entry.getValue().setText(Double.toString(controlPoints[loops/2].getX()));
+				entry.getValue().setText(Double.toString(circles[loops/2].getX()));
 				
 			} else if (entry.getKey().contains("y")) {
-				entry.getValue().setText(Double.toString(controlPoints[loops/2].getY()));
+				entry.getValue().setText(Double.toString(circles[loops/2].getY()));
 			} //if
 
 			loops++;
 		} //while
 		
-
 		//set the control points and the curve
-		curve.setControlPoints(controlPoints);
+		curve.setCircles(circles);
 		Environment.getInstance().setPath(curve);
 	} //end setControlPoints
 } //end class

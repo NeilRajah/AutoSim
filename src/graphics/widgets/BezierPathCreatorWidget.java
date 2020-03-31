@@ -7,12 +7,13 @@
 
 package graphics.widgets;
 
+import graphics.GraphicBezierPath;
 import model.FieldPositioning;
 import model.Point;
 
 public class BezierPathCreatorWidget extends Widget {
 	//Attributes
-	private BezierPathCreator bpc;
+	private BezierPathCreator bpc; //path creator JComponent
 	
 	/**
 	 * Create a widget containing a BezierPathCreator
@@ -29,7 +30,7 @@ public class BezierPathCreatorWidget extends Widget {
 	 * @param points Control points of path 
 	 */
 	public void setControlPoints(Point[] points) {
-		bpc.setControlPoints(points);
+		bpc.setCircles(GraphicBezierPath.circlesFromPoints(points));
 	} //end setControlPoints
 	
 	/**
@@ -37,7 +38,7 @@ public class BezierPathCreatorWidget extends Widget {
 	 * @param points Control points of path 
 	 */
 	public void setControlPoints(double[][] points) {
-		bpc.setControlPoints(FieldPositioning.pointsFromDoubles(points));
+		bpc.setCircles(GraphicBezierPath.circlesFromCoordinates(points));
 	} //end setControlPoints
 	
 	/**

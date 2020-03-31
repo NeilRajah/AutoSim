@@ -12,6 +12,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.io.File;
 
+import graphics.widgets.Circle;
 import main.AutoSim;
 import model.Point;
 import model.Pose;
@@ -103,6 +104,16 @@ public class Painter {
 	public static void drawPoint(Graphics2D g2, Point p) {
 		drawPoint(g2, p, 8);
 	} //end drawPoint
+	
+	/**
+	 * Draw a circle with a standard radius
+	 * @param g2 Used for drawing 
+	 * @param c Circle to draw
+	 */
+	public static void drawCircle(Graphics2D g2, Circle c) {
+		g2.setColor(c.getColor());
+		drawPoint(g2, c, 8);
+	} //end drawCircle
 	
 	/**
 	 * Draw a line between two points in real space

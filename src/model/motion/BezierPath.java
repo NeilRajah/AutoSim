@@ -1,5 +1,5 @@
 /**
- * QuinticBezierPath
+ * BezierPath
  * Author: Neil Balaskandarajah
  * Created on: 16/02/2020
  * Path object for a bezier curve
@@ -12,7 +12,7 @@ import model.FieldPositioning;
 import model.Point;
 import util.Util;
 
-public class QuinticBezierPath {
+public class BezierPath {
 	//Constants
 	public static final int HIGH_RES = 1000;
 	public static final int FAST_RES = 100;
@@ -36,7 +36,7 @@ public class QuinticBezierPath {
 	 * @param controlPts - (x,y) control points
 	 * @param numSegments Number of segments the curve is split up into
 	 */
-	public QuinticBezierPath(Point[] controlPts, int numSegments) {
+	public BezierPath(Point[] controlPts, int numSegments) {
 		//set attributes
 		this.controlPts = controlPts;
 		this.numSegments = numSegments;
@@ -50,7 +50,7 @@ public class QuinticBezierPath {
 	 * @param controlPts (x,y) control point coordinates in arrays
 	 * @param numSegments Number of segments the curve is split up into 
 	 */
-	public QuinticBezierPath(double[][] controlPts, int numSegments) {
+	public BezierPath(double[][] controlPts, int numSegments) {
 		//set attributes
 		this.controlPts = new Point[6];
 		this.numSegments = numSegments;
@@ -67,7 +67,7 @@ public class QuinticBezierPath {
 	/**
 	 * Default constructor that creates a blank curve
 	 */
-	public QuinticBezierPath(int numSegments) {
+	public BezierPath(int numSegments) {
 		//set attributes
 		this.controlPts = new Point[6];
 		this.numSegments = numSegments;

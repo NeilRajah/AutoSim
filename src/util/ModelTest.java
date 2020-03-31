@@ -25,7 +25,7 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
-import model.motion.QuinticBezierPath;
+import model.motion.BezierPath;
 import util.Util.ROBOT_KEY;
 
 class ModelTest {
@@ -209,14 +209,14 @@ class ModelTest {
 	 * Check if the length of the path is correct
 	 */
 	void pathLengthTest() {
-		QuinticBezierPath testPath = new QuinticBezierPath(new Point[] {
+		BezierPath testPath = new BezierPath(new Point[] {
     		new Point(7.3, 3.3),
     		new Point(4.7, 11.9),
     		new Point(32.3, 3.5),
     		new Point(16.4, 25.2),
     		new Point(24.2, 37.6),
     		new Point(38.3, 24.8)
-		}, QuinticBezierPath.FAST_RES);
+		}, BezierPath.FAST_RES);
 		double correctLength = 46.5;
 		assertEquals(correctLength, testPath.getLength(), 1);
 	} //end pathLengthsTest
@@ -226,7 +226,7 @@ class ModelTest {
 	 * Check if the path point calculated at a t value is correct
 	 */
 	void pathPointTest() {
-		QuinticBezierPath testPath = new QuinticBezierPath(FieldPoints.curve, QuinticBezierPath.FAST_RES);
+		BezierPath testPath = new BezierPath(FieldPoints.curve, BezierPath.FAST_RES);
 		Point correctPoint = new Point(5.4, 3.7);
 		assertEquals(0.0, FieldPositioning.calcDistance(correctPoint, testPath.calcPoint(0)), 0.1);
 	} //end pathPointTest
