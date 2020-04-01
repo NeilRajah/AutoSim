@@ -25,8 +25,8 @@ import graphics.GraphicBezierPath;
 import graphics.Painter;
 import graphics.components.BezierTextController;
 import graphics.components.BoxButton;
-import graphics.components.ButtonController;
-import graphics.widgets.ControlCircleController.BUTTON_STATE;
+import graphics.components.BoxButton.BUTTON_STATE;
+import graphics.components.LockButtonController;
 import main.AutoSim;
 import util.JComponentUtil;
 
@@ -36,6 +36,7 @@ public class BezierPathCreator extends JPanel {
 	private int height; //height in pixels
 	private GraphicBezierPath curve; //curve being manipulated
 	private HashMap<String, JTextField> textBoxes; //text boxes for control points
+	private BoxButton[] buttons; //buttons for control points
 	
 	/**
 	 * Create a BezierPathCreator with a width and a height
@@ -48,7 +49,8 @@ public class BezierPathCreator extends JPanel {
 		//set attributes
 		this.width = width;
 		this.height = height;
-		textBoxes = new HashMap<String, JTextField>();
+		this.textBoxes = new HashMap<String, JTextField>();
+		this.buttons = new BoxButton[6];
 		this.curve = new GraphicBezierPath();
 		
 		//layout all components
@@ -108,13 +110,14 @@ public class BezierPathCreator extends JPanel {
 			if (i % 2 == 0) {
 				y++; //increment row position in grid
 				
-				//create button
+				//create button and add to array
 				BoxButton button = new BoxButton(this.width / 5, this.height / 10, "P" + (y - 1), true, true); //P0, P1, ...
+				button.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
+				buttons[y-1] = button;
 				gb.setConstraints(button, JComponentUtil.createGBC(0, y, 0.25, 1));
 				
 				//add graphics controller
-				ButtonController btnCtrl = new ButtonController(button); //for colors
-				btnCtrl.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
+				LockButtonController btnCtrl = new LockButtonController(button, this::requestToggle); 
 				button.addMouseListener(btnCtrl);
 				
 				//add locking controller
@@ -141,7 +144,7 @@ public class BezierPathCreator extends JPanel {
 	 * @param key Index of the circle in the array
 	 * @param state State of the button
 	 */
-	public void updateCircle(int key, BUTTON_STATE state) {
+	public void updateCircle(int key, BoxButton.BUTTON_STATE state) {
 		switch (state) {
 			case DEFAULT:
 				curve.setCircleDefault(key);
@@ -152,8 +155,8 @@ public class BezierPathCreator extends JPanel {
 				break;
 				
 			case LOCK:
-				if (!curve.circleIsLocked()) 
-					curve.lockCircle(key);
+				curve.unlockAllCircles();
+				curve.lockCircle(key);
 				break;
 		} //switch-case
 	} //end updateCircle
@@ -211,9 +214,8 @@ public class BezierPathCreator extends JPanel {
 			} //if
 		} //while
 		
-		//set the control points and the curve
-		curve.
-		setCircles(circles);
+		//set the control circles and the curve
+		curve.setCircles(circles);
 		Environment.getInstance().setPath(curve);
 	} //end updateControlPoints
 	
@@ -248,7 +250,7 @@ public class BezierPathCreator extends JPanel {
 			//get entry
 			Map.Entry<String, JTextField> entry = (Entry<String, JTextField>) it.next();	
 			
-			//set x and y values of control points to textbox
+			//set x and y values of control points to the textboxes
 			if (entry.getKey().contains("x")) {
 				entry.getValue().setText(Double.toString(circles[loops/2].getX()));
 				
@@ -259,8 +261,33 @@ public class BezierPathCreator extends JPanel {
 			loops++;
 		} //while
 		
-		//set the control points and the curve
+		//set the control circles and the curve
 		curve.setCircles(circles);
 		Environment.getInstance().setPath(curve);
 	} //end setControlPoints
+	
+	/**
+	 * Request a toggle for a button
+	 * @param index Index of button in buttons array
+	 */
+	private void requestToggle(int index) {
+		int lockIndex = -1; //index of locked button
+		for (int i = 0; i < buttons.length; i++) {
+			if (buttons[i].isLocked())
+				lockIndex = i;
+		} //loop
+		
+		if (lockIndex == -1) { //no buttons locked
+			//lock this
+			buttons[index].setState(BUTTON_STATE.LOCK); 
+		
+		} else if (lockIndex != index) { //another button is locked
+			//lock this, unlock that
+			buttons[lockIndex].setState(BUTTON_STATE.DEFAULT);
+			buttons[index].setState(BUTTON_STATE.LOCK); 
+			
+		} else if (lockIndex == index) { //this button is locked
+ 			buttons[index].setState(BUTTON_STATE.DEFAULT);
+		} //if
+	} //end requestToggle
 } //end class

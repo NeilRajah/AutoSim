@@ -115,4 +115,13 @@ public class GraphicBezierPath extends BezierPath {
 		
 		return false;
 	} //end circleIsLocked
+	
+	/**
+	 * Unlock all circles in the curve
+	 */
+	public void unlockAllCircles() {
+		for (int i = 0; i < circles.length; i++) {
+			circles[i].setDefault();
+		} //loop
+	} //end unlockAllCircles
 } //end class

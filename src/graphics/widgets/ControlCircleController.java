@@ -15,68 +15,54 @@ import graphics.components.BoxButton;
 
 public class ControlCircleController implements MouseListener {
 	//Attributes
+	private BoxButton button; //button being controlled
 	private int key; //index of the control circle being updated
-	private BiConsumer<Integer, BUTTON_STATE> updateCircle; //method that updates circle
-	private boolean locked; //whether the circle is locked or not
-	
-	//Possible actions
-	public static enum BUTTON_STATE {
-		DEFAULT,
-		HOVER,
-		LOCK
-	} //end enum
+	private BiConsumer<Integer, BoxButton.BUTTON_STATE> updateCircle; //method that updates circle
 	
 	/**
 	 * Create a circle controller to update a button
 	 * @param button Point button
 	 * @param method Method to run that updates the circle
 	 */
-	public ControlCircleController(BoxButton button, BiConsumer<Integer, BUTTON_STATE> method) {
+	public ControlCircleController(BoxButton button, BiConsumer<Integer, BoxButton.BUTTON_STATE> method) {
 		//set attributes
+		this.button = button;
 		this.updateCircle = method;
 		
 		//get key from button text
 		this.key = Integer.parseInt(button.getText().substring(1)); //P0 -> 0, P1 -> 1, ...
-		
-		//start with the button not locked
-		this.locked = false;
 	} //end constructor
 
 	/**
-	 * Set the state of the button to be locked or hovered based on user clicks
-	 */
-	public void mouseClicked(MouseEvent m) {
-		locked = !locked;
-		
-		if (locked)
-			updateCircle.accept(key, BUTTON_STATE.LOCK);
-		else
-			updateCircle.accept(key, BUTTON_STATE.HOVER);
-	} //end mouseClicked
-
-	/**
-	 * Set the control circle to hover
+	 * Update circle state to button state
 	 */
 	public void mouseEntered(MouseEvent m) {
-		if (!locked)
-			updateCircle.accept(key, BUTTON_STATE.HOVER);
+		updateCircle.accept(key, button.getState());
 	} //end mouseEntered
 
 	/**
-	 * Set the control circle to default
+	 * Update circle state to button state
 	 */
 	public void mouseExited(MouseEvent m) {
-		if (!locked)
-			updateCircle.accept(key, BUTTON_STATE.DEFAULT);		
+		updateCircle.accept(key, button.getState());
 	} //end mouseExited
 
-	/*
-	 * Unimplemented
+	/**
+	 * Update circle state to button state
 	 */
-	public void mousePressed(MouseEvent m) {}
+	public void mousePressed(MouseEvent m) {
+		updateCircle.accept(key, button.getState());
+	}
 
+	/**
+	 * Update circle state to button state
+	 */
+	public void mouseReleased(MouseEvent m) {
+		updateCircle.accept(key, button.getState());
+	} //end mouseReleased
+	
 	/*
 	 * Unimplemented
 	 */
-	public void mouseReleased(MouseEvent m) {}
+	public void mouseClicked(MouseEvent m) {} 
 } //end class

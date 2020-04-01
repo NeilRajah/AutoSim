@@ -27,13 +27,24 @@ public class BoxButton extends JComponent {
 	//Attributes
 	private String text; //text for the box
 	
-	private Color backgroundColor; //box background color
+	private Color defColor; //default color
+	private Color hoverColor; //hovered over color
+	private Color pressColor; //locked color
+	private Color paintColor; //color to be painted with
 	private Color textColor; //text color
+	
 	private Font f; //Font for text
 	private float fontSize; //font size in pixels
 	private int cornerRad; //radius of the corners in pixels
 	private boolean border; //whether OBOX has border
-	private boolean locked; //whether the button should not respond to user input
+	private BUTTON_STATE state; //state the button is in
+	
+	//Possible actions
+	public static enum BUTTON_STATE {
+		DEFAULT,
+		HOVER,
+		LOCK	
+	} //end enum
 	
 	/*
 	 * Create an OBox with a width, height and text inside
@@ -46,24 +57,27 @@ public class BoxButton extends JComponent {
 		
 		//set attributes
 		this.text = text;
-		this.locked = false;
+		this.fontSize = Util.FONT_SIZE;	
+		
+		//set the corner radius and default colors colors
+		this.cornerRad = AutoSim.PPI * 10;		
+		this.defColor = Color.LIGHT_GRAY;
+		this.hoverColor = Color.GRAY;
+		this.pressColor = Color.BLACK;
+		this.paintColor = defColor;
+		this.textColor = Color.WHITE;
 		
 		//set the size of the box
 		this.setPreferredSize(new Dimension(width, height));
 		
-		//set the font size
-		fontSize = Util.FONT_SIZE;	
-		
 		//regular Oxygen font
-		f = Util.getFileFont(Painter.SF_UI_FONT);
-		
-		//set the corner radius and colors
-		cornerRad = AutoSim.PPI * 10;		
-		backgroundColor = Color.BLACK;
-		textColor = Color.WHITE;
+		this.f = Util.getFileFont(Painter.SF_UI_FONT);
 		
 		//add padding around component
 		this.setBorder(JComponentUtil.paddedBorder(AutoSim.PPI * 2));
+		
+		//set the default state
+		setState(BUTTON_STATE.DEFAULT);
 	} //end constructor
 	
 	/*
@@ -87,12 +101,12 @@ public class BoxButton extends JComponent {
 	public void paintComponent(Graphics g) {
 		//draw border
 		if (border) {
-			g.setColor(backgroundColor.darker());
+			g.setColor(paintColor.darker());
 			g.fillRoundRect(AutoSim.PPI, 0, this.getWidth(), this.getHeight(), cornerRad, cornerRad);
 		} //if
 		
 		//draw the inside
-		g.setColor(backgroundColor);
+		g.setColor(paintColor);
 		g.fillRoundRect(AutoSim.PPI, 0, this.getWidth(), this.getHeight(), cornerRad, cornerRad);
 		
 		//set the text color
@@ -111,36 +125,69 @@ public class BoxButton extends JComponent {
 							(this.getHeight() / 2) + (fm.getAscent() / 2) - (int) (Util.FONT_SIZE * 0.12));
 	} //end paintComponent
 	
-	/*
-	 * Set the background color of the box
-	 * Color c - background color for the box
+	/**
+	 * Set the colors to be used by the button
+	 * @param light Light color to paint background regularly
+	 * @param dark Dark color to paint background on hover
 	 */
-	public void setBackgroundColor(Color c) {
-		backgroundColor = c;
+	public void setColors(Color light, Color dark) {
+		defColor = light;
+		hoverColor = dark;
+		pressColor = dark.darker();
+		paintColor = defColor;
 		repaint();
-	} //end setBackgroundColor
+	} //end setColors
+	
+	/**
+	 * Set the state of the button and change the color
+	 * @param state New button state
+	 */
+	public void setState(BUTTON_STATE state) {
+		this.state = state;
+		
+		//change color of the button
+		switch (this.state) {
+			case DEFAULT:
+				paintColor = defColor;
+				break;
+			
+			case HOVER:
+				paintColor = hoverColor;
+				break;
+			
+			case LOCK:
+				paintColor = pressColor;
+				break;
+		} //switch
+		
+		repaint();
+	} //end setState
 
 	/**
 	 * Check if the button is locked 
 	 * @return locked Whether the button is locked to user input
 	 */
 	public boolean isLocked() {
-		return locked;
+		return state.equals(BUTTON_STATE.LOCK);
 	} //end isLocked
 	
 	/**
-	 * Lock the button from user input
+	 * Toggle the button lock state
 	 */
-	public void lock() {
-		locked = true;
-	} //end lock
+	public void toggleLock() {
+		if (state.equals(BUTTON_STATE.LOCK))
+			setState(BUTTON_STATE.HOVER);
+		else
+			setState(BUTTON_STATE.LOCK);
+	} //end toggleLock
 	
 	/**
-	 * Unlock the button to accept user input
+	 * Get the state of the button
+	 * @return Button state
 	 */
-	public void unlock() {
-		locked = false;
-	} //end unlock
+	public BUTTON_STATE getState() {
+		return state;
+	} //end getState
 	
 	/**
 	 * Get the box text
@@ -157,13 +204,6 @@ public class BoxButton extends JComponent {
 	public void setText(String text) {
 		this.text = text;
 	} //end setText
-	
-	/*
-	 * Update the box
-	 */
-	public void update() {
-		repaint();
-	} //end update
 	
 	/*
 	 * Set the font size of the box

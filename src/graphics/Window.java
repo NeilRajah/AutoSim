@@ -118,9 +118,9 @@ public class Window extends JFrame {
 	 */
 	private void setUpStartButton() {
 		BoxButton start = new BoxButton((int) (env.width() * 0.2), bar.height(), "Start", true, true);
+		start.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
 		
 		ButtonController startCtrl = new ButtonController(start, this::runAnimation); 
-		startCtrl.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
 		start.addMouseListener(startCtrl);
 		
 		mainPanel.add(start, JComponentUtil.createGBC(1, 1));
@@ -137,11 +137,10 @@ public class Window extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setResizable(false); 
-		if (AutoSim.TOP_SCREEN) {
-			this.setLocation(AutoSim.SCREEN_WIDTH/2, -AutoSim.SCREEN_HEIGHT + 100);
-		} else {
+		if (AutoSim.TOP_SCREEN)
+			this.setLocation((int) (AutoSim.SCREEN_WIDTH / 2.6), -AutoSim.SCREEN_HEIGHT + 100);
+		else
 			this.setLocation(AutoSim.SCREEN_WIDTH/2 - this.getWidth()/2, AutoSim.SCREEN_HEIGHT/2 - this.getHeight()/2);
-		}
 		this.setVisible(true);
 		env.update();
 		
