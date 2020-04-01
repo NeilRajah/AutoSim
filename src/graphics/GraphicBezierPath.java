@@ -31,22 +31,6 @@ public class GraphicBezierPath extends BezierPath {
 	public GraphicBezierPath() {
 		super(BezierPath.FAST_RES);
 	} //end constructor
-
-	/**
-	 * Return the path's circles
-	 */
-	public Circle[] getCircles() {
-		return circles;
-	} //end getCircles
-	
-	/**
-	 * Set the circles for the curve
-	 * @param circles Circle control points of the curve
-	 */
-	public void setCircles(Circle[] circles) {
-		this.circles = circles;
-		this.setControlPoints(circles);
-	} //end setCircles
 	
 	/**
 	 * Create an array of Circles from an array of Points
@@ -77,5 +61,58 @@ public class GraphicBezierPath extends BezierPath {
 		
 		return circles;
 	} //end circlesFromCoordinates
+
+	/**
+	 * Return the path's circles
+	 */
+	public Circle[] getCircles() {
+		return circles;
+	} //end getCircles
 	
+	/**
+	 * Set the circles for the curve
+	 * @param circles Circle control points of the curve
+	 */
+	public void setCircles(Circle[] circles) {
+		this.circles = circles;
+		this.setControlPoints(circles);
+	} //end setCircles
+	
+	/**
+	 * Set a circle in the array to be hovered over
+	 * @param i Index of the circle
+	 */
+	public void setCircleHover(int i) {
+		circles[i].setHovered();
+	} //end setCircleHover
+	
+	/**
+	 * Set a circle in the array to be locked
+	 * @param i Index of the circle
+	 */
+	public void lockCircle(int i) {
+		circles[i].setLocked();
+	} //end lockCircle
+	
+	/**
+	 * Set a circle in the array to be returned to default
+	 * @param i Index of the circle
+	 */
+	public void setCircleDefault(int i) {
+		circles[i].setDefault();
+	} //end setCircleDefault
+	
+	/**
+	 * Check if a circle is locke in the curve
+	 * @return Whether a control circle is locked or not
+	 */
+	public boolean circleIsLocked() {
+		for (int i = 0; i < circles.length; i++) {
+			if (circles[i].isLocked()) {
+				return true;
+			} //if
+		} //loop
+		
+		return false;
+	} //end circleIsLocked
 } //end class

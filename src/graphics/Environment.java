@@ -269,13 +269,14 @@ public class Environment extends JComponent {
 			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], curves.get(curveIndex)[0].length);
 			
 			//draw the control points
-			if (curves.size() == 1) {	
+			if (curves.size() == 1) {					
 				//control points
 				for (int i = 0; i < 6; i++) {
 					Painter.drawCircle(g2, controlPoints[i]);
 				} //loop
 				
 				//tangents
+				g2.setColor(Color.GRAY);
 				Painter.setTransparency(g2, 0.8);
 				Painter.drawLine(g2, controlPoints[0], controlPoints[1]);
 				Painter.drawLine(g2, controlPoints[4], controlPoints[5]);

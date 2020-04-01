@@ -8,8 +8,6 @@ package graphics;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.util.HashMap;
 
 import javax.swing.JFrame;

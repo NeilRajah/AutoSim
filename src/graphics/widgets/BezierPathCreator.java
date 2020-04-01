@@ -26,9 +26,8 @@ import graphics.Painter;
 import graphics.components.BezierTextController;
 import graphics.components.BoxButton;
 import graphics.components.ButtonController;
+import graphics.widgets.ControlCircleController.BUTTON_STATE;
 import main.AutoSim;
-import model.Point;
-import model.motion.BezierPath;
 import util.JComponentUtil;
 
 public class BezierPathCreator extends JPanel {
@@ -75,7 +74,7 @@ public class BezierPathCreator extends JPanel {
 	/**
 	 * Layout the area containing all the control points
 	 */
-	private void layoutControlPointArea() {	
+	private void layoutControlPointArea() {			
 		//panel and layout
 		JPanel controlPointArea = new JPanel();
 		GridBagLayout gb = new GridBagLayout();
@@ -119,6 +118,8 @@ public class BezierPathCreator extends JPanel {
 				button.addMouseListener(btnCtrl);
 				
 				//add locking controller
+				ControlCircleController circCtrl = new ControlCircleController(button, this::updateCircle);
+				button.addMouseListener(circCtrl);
 				
 				//add button to panel
 				controlPointArea.add(button);
@@ -134,6 +135,28 @@ public class BezierPathCreator extends JPanel {
 		//add all to panel
 		this.add(controlPointArea);
 	} //end layoutControlPointArea
+	
+	/**
+	 * Update a circle in the curve
+	 * @param key Index of the circle in the array
+	 * @param state State of the button
+	 */
+	public void updateCircle(int key, BUTTON_STATE state) {
+		switch (state) {
+			case DEFAULT:
+				curve.setCircleDefault(key);
+				break;
+				
+			case HOVER:
+				curve.setCircleHover(key);
+				break;
+				
+			case LOCK:
+				if (!curve.circleIsLocked()) 
+					curve.lockCircle(key);
+				break;
+		} //switch-case
+	} //end updateCircle
 	
 	/**
 	 * Set a coordinate value in the curvecurve
@@ -189,7 +212,8 @@ public class BezierPathCreator extends JPanel {
 		} //while
 		
 		//set the control points and the curve
-		curve.setCircles(circles);
+		curve.
+		setCircles(circles);
 		Environment.getInstance().setPath(curve);
 	} //end updateControlPoints
 	

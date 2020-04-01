@@ -30,7 +30,7 @@ public class Circle extends Point {
 		
 		this.color = color;
 		this.hoverColor = this.color.darker();
-		this.lockedColor = this.color.darker();
+		this.lockedColor = hoverColor.darker();
 	} //end constructor
 	
 	/**
@@ -75,5 +75,22 @@ public class Circle extends Point {
 		this.hovered = false;
 		Environment.getInstance().update();
 	} //end setLocked
+	
+	/**
+	 * Get whether or not the circle is locked
+	 * @return Locked state of the button
+	 */
+	public boolean isLocked() {
+		return locked;
+	} //end isLocked
+	
+	/**
+	 * Set the circle to its default state
+	 */
+	public void setDefault() {
+		this.locked = false;
+		this.hovered = false;
+		Environment.getInstance().update();
+	} //end setDefault
 
 } //end class
