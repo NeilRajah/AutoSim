@@ -124,4 +124,15 @@ public class GraphicBezierPath extends BezierPath {
 			circles[i].setDefault();
 		} //loop
 	} //end unlockAllCircles
+	
+	/**
+	 * Translate a circle in the x and y directions
+	 * @param i Index of the circle in the array
+	 * @param dx Change in x position
+	 * @param dy Change in y position
+	 */
+	public void moveCircle(int i, double dx, double dy) {
+		circles[i].setX(circles[i].getX() + dx);
+		circles[i].setY(circles[i].getY() + dy);
+	} //end moveCircle
 } //end class

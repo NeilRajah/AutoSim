@@ -7,6 +7,7 @@
 
 package graphics.widgets;
 
+import graphics.Environment;
 import graphics.GraphicBezierPath;
 import model.FieldPositioning;
 import model.Point;
@@ -22,9 +23,22 @@ public class BezierPathCreatorWidget extends Widget {
 	public BezierPathCreatorWidget(BezierPathCreator bpc) {
 		super(bpc);
 		
+		//set attributes
 		this.bpc = bpc;
+		
+		//add the controllers
+		registerControllers();
 	} //end constructor
 
+	/**
+	 * Add the key and mouse controllers
+	 */
+	public void registerControllers() {
+		//key controller
+		EnvironmentKeyController ekc = new EnvironmentKeyController(bpc::moveCircle);
+		Environment.getInstance().addKeyListener(ekc);
+	} //end registerControllers
+	
 	/**
 	 * Set the control points of the path 
 	 * @param points Control points of path 
@@ -48,5 +62,4 @@ public class BezierPathCreatorWidget extends Widget {
 	public void update(double[] values) {
 	
 	} //end update
-
 } //end class

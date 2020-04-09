@@ -241,6 +241,18 @@ public class Environment extends JComponent {
 	} //end setDebug
 	
 	/**
+	 * Set the focus state of the Enviroinment
+	 * @param focus Focus state of the Environment
+	 */
+	public void setFocused(boolean focus) {
+		this.setFocusable(focus);
+		
+		Color color = focus ? Color.YELLOW : Color.BLACK;
+		this.setBorder(BorderFactory.createLineBorder(color, AutoSim.PPI * 2));
+		update();
+	} //end setFocused
+	
+	/**
 	 * Draw the environment
 	 * @param g - responsible for drawing
 	 */
@@ -250,6 +262,7 @@ public class Environment extends JComponent {
 		//draw the field image as the background
 		if (!debug) {
 			g2.drawImage(field, 0, 0, null);
+			
 		} else {
 			g2.setColor(Color.LIGHT_GRAY);
 			g2.fillRect(0, 0, width, height);
@@ -258,6 +271,8 @@ public class Environment extends JComponent {
 			Painter.drawGrid(g2, width, height, 12 * AutoSim.PPI); //12 inches
 		} //if
 		g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 2), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		
+		//can refactor each individual step into methods
 		
 		//draw the current path
 		if (curves != null && !curves.isEmpty()) {
@@ -282,10 +297,7 @@ public class Environment extends JComponent {
 				Painter.drawLine(g2, controlPoints[4], controlPoints[5]);
 				Painter.setTransparency(g2, 1.0);
 			} //if
-		} else {
-			Util.println("didn't draw curve");
-			Util.println(curves.size());
-		}
+		} //if
 
 		//draw the current pose
 		AffineTransform oldTransform = g2.getTransform();
@@ -326,4 +338,6 @@ public class Environment extends JComponent {
 	public void setBarCursorLocation(int x, int y) {
 		bar.setCursorLocation(x, y);
 	} //end setBarCursorLocation
+	
+	
 } //end Environment

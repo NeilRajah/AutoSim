@@ -110,6 +110,8 @@ public class BezierPathCreator extends JPanel {
 			if (i % 2 == 0) {
 				y++; //increment row position in grid
 				
+				//bellow can be refactored into one method
+				
 				//create button and add to array
 				BoxButton button = new BoxButton(this.width / 5, this.height / 10, "P" + (y - 1), true, true); //P0, P1, ...
 				button.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
@@ -271,11 +273,7 @@ public class BezierPathCreator extends JPanel {
 	 * @param index Index of button in buttons array
 	 */
 	private void requestToggle(int index) {
-		int lockIndex = -1; //index of locked button
-		for (int i = 0; i < buttons.length; i++) {
-			if (buttons[i].isLocked())
-				lockIndex = i;
-		} //loop
+		int lockIndex = getLockedButton();
 		
 		if (lockIndex == -1) { //no buttons locked
 			//lock this
@@ -290,4 +288,38 @@ public class BezierPathCreator extends JPanel {
  			buttons[index].setState(BUTTON_STATE.DEFAULT);
 		} //if
 	} //end requestToggle
+	
+	/**
+	 * Get the index of the locked button
+	 * @return index of locked button, -1 if none are locked
+	 */
+	private int getLockedButton() {
+		int lockIndex = -1; //index of locked button
+		for (int i = 0; i < buttons.length; i++) {
+			if (buttons[i].isLocked())
+				lockIndex = i;
+		} //loop
+		
+		return lockIndex;
+	} //end getLockedButton
+	
+	/**
+	 * Translate a circle in the x and y directions
+	 * @param dx Change in x position
+	 * @param dy Change in y position
+	 */
+	public void moveCircle(double dx, double dy) {
+		int l = getLockedButton();
+		
+		//move the circle and update the textboxes
+		if (l != -1) {
+			curve.moveCircle(l, dx, dy);
+			textBoxes.get("x".concat(Integer.toString(l))).setText(
+					 	  Double.toString(curve.getCircles()[l].getX()));
+			textBoxes.get("y".concat(Integer.toString(l))).setText(
+				 	  Double.toString(curve.getCircles()[l].getY()));
+		} //if
+		
+		updateControlPoints();
+	} //end movePoint
 } //end class

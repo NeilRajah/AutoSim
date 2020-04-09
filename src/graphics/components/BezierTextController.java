@@ -57,7 +57,7 @@ public class BezierTextController implements FocusListener, KeyListener {
 		this.key = this.textArea.getText();
 		
 		//set the text to light gray
-		this.textArea.setForeground(Color.LIGHT_GRAY);
+//		this.textArea.setForeground(Color.LIGHT_GRAY);
 	} //end constructor
 
 	/**

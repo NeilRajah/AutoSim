@@ -86,6 +86,7 @@ public class Window extends JFrame {
 		//add controllers
 		EnvironmentUIController envCtrl = new EnvironmentUIController(env);
 		env.addMouseMotionListener(envCtrl);
+		env.addFocusListener(envCtrl);
 		
 		//set focus
 		env.setFocusable(true);
