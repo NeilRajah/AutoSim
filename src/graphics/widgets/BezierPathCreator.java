@@ -123,7 +123,7 @@ public class BezierPathCreator extends JPanel {
 				button.addMouseListener(btnCtrl);
 				
 				//add locking controller
-				ControlCircleController circCtrl = new ControlCircleController(button, this::updateCircle);
+				CircleButtonController circCtrl = new CircleButtonController(button, this::updateCircle);
 				button.addMouseListener(circCtrl);
 				
 				//add button to panel
@@ -215,6 +215,11 @@ public class BezierPathCreator extends JPanel {
 				circles[loops / 2 - 1] = new Circle(x, y, Painter.BEZ_BTN_DARK);
 			} //if
 		} //while
+		
+		//reset the locked button
+		int lockIndex = getLockedButton();
+		if (lockIndex != -1)
+			circles[lockIndex].setLocked();
 		
 		//set the control circles and the curve
 		curve.setCircles(circles);
@@ -312,12 +317,14 @@ public class BezierPathCreator extends JPanel {
 		int l = getLockedButton();
 		
 		//move the circle and update the textboxes
-		if (l != -1) {
-			curve.moveCircle(l, dx, dy);
-			textBoxes.get("x".concat(Integer.toString(l))).setText(
-					 	  Double.toString(curve.getCircles()[l].getX()));
-			textBoxes.get("y".concat(Integer.toString(l))).setText(
-				 	  Double.toString(curve.getCircles()[l].getY()));
+		if (l != -1 && allBoxesValid()) {
+			JTextField xBox = textBoxes.get("x".concat(Integer.toString(l)));
+			double xVal = Double.parseDouble(xBox.getText()) + dx;
+			xBox.setText(String.format("%.1f", xVal));
+			
+			JTextField yBox = textBoxes.get("y".concat(Integer.toString(l)));
+			double yVal = Double.parseDouble(yBox.getText()) + dy;
+			yBox.setText(String.format("%.1f", yVal));
 		} //if
 		
 		updateControlPoints();

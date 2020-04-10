@@ -1,5 +1,5 @@
 /**
- * ControlCircleController
+ * CircleButtonController
  * Author: Neil Balaskandarajah
  * Created on: 31/03/2020
  * Controller for changing the control circle state based on user mouse actions
@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 
 import graphics.components.BoxButton;
 
-public class ControlCircleController implements MouseListener {
+public class CircleButtonController implements MouseListener {
 	//Attributes
 	private BoxButton button; //button being controlled
 	private int key; //index of the control circle being updated
@@ -24,7 +24,7 @@ public class ControlCircleController implements MouseListener {
 	 * @param button Point button
 	 * @param method Method to run that updates the circle
 	 */
-	public ControlCircleController(BoxButton button, BiConsumer<Integer, BoxButton.BUTTON_STATE> method) {
+	public CircleButtonController(BoxButton button, BiConsumer<Integer, BoxButton.BUTTON_STATE> method) {
 		//set attributes
 		this.button = button;
 		this.updateCircle = method;

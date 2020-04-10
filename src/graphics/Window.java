@@ -64,7 +64,6 @@ public class Window extends JFrame {
 	 * Set up the Environment
 	 */
 	private void setUpEnvironment() {
-		//environment where robot acts in
 		//convert from inches to pixels
 		width = AutoSim.PPI * Util.FIELD_WIDTH; 
 		height = AutoSim.PPI * Util.FIELD_HEIGHT;

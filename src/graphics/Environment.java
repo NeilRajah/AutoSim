@@ -103,6 +103,9 @@ public class Environment extends JComponent {
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} //try-catch
+		
+		//set focus traversable
+		this.setFocusable(true);
 	} //end setSize
 	
 	//Simulation
@@ -245,7 +248,12 @@ public class Environment extends JComponent {
 	 * @param focus Focus state of the Environment
 	 */
 	public void setFocused(boolean focus) {
-		this.setFocusable(focus);
+		if (focus) {
+			this.setFocusable(true);
+			this.requestFocus();
+		} else {
+			this.setFocusable(false);
+		} //if
 		
 		Color color = focus ? Color.YELLOW : Color.BLACK;
 		this.setBorder(BorderFactory.createLineBorder(color, AutoSim.PPI * 2));
@@ -259,65 +267,20 @@ public class Environment extends JComponent {
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g; //Graphics2D for better graphics
 	    
-		//draw the field image as the background
-		if (!debug) {
-			g2.drawImage(field, 0, 0, null);
-			
-		} else {
-			g2.setColor(Color.LIGHT_GRAY);
-			g2.fillRect(0, 0, width, height);
-			
-			g2.setColor(Color.black);
-			Painter.drawGrid(g2, width, height, 12 * AutoSim.PPI); //12 inches
-		} //if
+		//draw the background
+		drawBackground(g2);
+		
+		//reset the stroke
 		g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 2), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		
-		//can refactor each individual step into methods
-		
 		//draw the current path
-		if (curves != null && !curves.isEmpty()) {
-			//stroke for lines
-			g2 = (Graphics2D) g;
-			g2.setColor(Color.WHITE);
-			
-			//draw the curve
-			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], curves.get(curveIndex)[0].length);
-			
-			//draw the control points
-			if (curves.size() == 1) {					
-				//control points
-				for (int i = 0; i < 6; i++) {
-					Painter.drawCircle(g2, controlPoints[i]);
-				} //loop
-				
-				//tangents
-				g2.setColor(Color.GRAY);
-				Painter.setTransparency(g2, 0.8);
-				Painter.drawLine(g2, controlPoints[0], controlPoints[1]);
-				Painter.drawLine(g2, controlPoints[4], controlPoints[5]);
-				Painter.setTransparency(g2, 1.0);
-			} //if
-		} //if
+		drawPath(g2);
 
 		//draw the current pose
-		AffineTransform oldTransform = g2.getTransform();
-		if (poses != null && !poses.isEmpty()) { //if the pose is not null or empty
-			Painter.drawPose(g2, poses.get(poseIndex));
-		} //if
-		g2.setTransform(oldTransform);
+		drawCurrentPose(g2);
 		
-		//draw the goal point if not the first step
-		if (poseIndex > 0 && (data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT) != null)) {
-			//drawing values
-			g2.setColor(Color.GRAY);
-			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);
-			Point robot = poses.get(poseIndex).getPoint();
-			
-			//points to draw and line between them
-			Painter.drawPoint(g2, goal);
-			Painter.drawPoint(g2, robot);
-			Painter.drawLine(g2, goal, robot);
-		} //if
+		//draw the goal point
+		drawGoalPoint(g2);
 	} //end paintComponent
 	
 	//User Interaction
@@ -339,5 +302,88 @@ public class Environment extends JComponent {
 		bar.setCursorLocation(x, y);
 	} //end setBarCursorLocation
 	
+	//Graphics
 	
+	/**
+	 * Draw the background of the Environment
+	 * @param g2
+	 */
+	private void drawBackground(Graphics2D g2) {
+		//draw the field image as the background
+		if (!debug) {
+			g2.drawImage(field, 0, 0, null);
+			
+		} else {
+			g2.setColor(Color.LIGHT_GRAY);
+			g2.fillRect(0, 0, width, height);
+			
+			g2.setColor(Color.black);
+			Painter.drawGrid(g2, width, height, 12 * AutoSim.PPI); //12 inches
+		} //if
+		
+		//draw the x and y indicators
+		g2.setFont(Painter.createFont(Painter.SF_UI_FONT, AutoSim.PPI * 8));
+		g2.drawString("y", (int) (width * 0.975),(int) (height * 0.03));
+		g2.drawString("x", (int) (width * 0.015),(int) (height * 0.985));
+	} //end drawBackground
+	
+	/**
+	 * Draw the current path 
+	 * @param g2 Object for drawing
+	 */
+	private void drawPath(Graphics2D g2) {
+		//draw the current path
+		if (curves != null && !curves.isEmpty()) {
+			//stroke for lines
+			g2.setColor(Color.WHITE);
+			
+			//draw the curve
+			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], curves.get(curveIndex)[0].length);
+			
+			//draw the control points
+			if (curves.size() == 1) {					
+				//control points
+				for (int i = 0; i < 6; i++) {
+					Painter.drawCircle(g2, controlPoints[i]);
+				} //loop
+				
+				//tangents
+				g2.setColor(Color.GRAY);
+				Painter.setTransparency(g2, 0.8);
+				Painter.drawLine(g2, controlPoints[0], controlPoints[1]);
+				Painter.drawLine(g2, controlPoints[4], controlPoints[5]);
+				Painter.setTransparency(g2, 1.0);
+			} //if
+		} //if
+	} //end drawPath
+
+	/**
+	 * Draw the current pose in the simulation
+	 * @param g2 Object for drawing
+	 */
+	private void drawCurrentPose(Graphics2D g2) {
+		AffineTransform oldTransform = g2.getTransform();
+		if (poses != null && !poses.isEmpty()) { //if the pose is not null or empty
+			Painter.drawPose(g2, poses.get(poseIndex));
+		} //if
+		g2.setTransform(oldTransform);
+	} //end drawCurrentPose
+	
+	/**
+	 * Draw the goal point the robot is travelling to, if it has one
+	 * @param g2 Object for drawing
+	 */
+	private void drawGoalPoint(Graphics2D g2) {
+		if (poseIndex > 0 && (data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT) != null)) {
+			//drawing values
+			g2.setColor(Color.GRAY);
+			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);
+			Point robot = poses.get(poseIndex).getPoint();
+			
+			//points to draw and line between them
+			Painter.drawPoint(g2, goal);
+			Painter.drawPoint(g2, robot);
+			Painter.drawLine(g2, goal, robot);
+		} //if
+	} //end drawGoalPoint
 } //end Environment

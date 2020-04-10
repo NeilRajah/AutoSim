@@ -73,6 +73,7 @@ public class AutoSim {
 	 */
 	private static void initializeScreen() {
 		int screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices().length;
+		screens = 0;
 		//set the scaling constants
 		if (screens > 1) {
 			//monitor is 1080p
@@ -121,15 +122,15 @@ public class AutoSim {
 	private static void addWidgets() {
 		//Linear speed display
 		SpeedDisplayWidget linSpd = new SpeedDisplayWidget(new SpeedDisplay(w.getHubWidth(), 
-				w.getHubHeight() * 1/8, driveLoop.getRobot().getMaxLinSpeed()), ROBOT_KEY.LIN_VEL);
-		linSpd.setColor(Color.GREEN);
+			w.getHubHeight() * 1/8, driveLoop.getRobot().getMaxLinSpeed()), ROBOT_KEY.LIN_VEL);
+		linSpd.setColors(Color.GREEN, Color.RED);
 		w.addWidget(linSpd);		
 		
 		//Angular speed display
 		SpeedDisplayWidget angSpd = new SpeedDisplayWidget(new SpeedDisplay(w.getHubWidth(), 
-				w.getHubHeight() * 1/8, driveLoop.getRobot().getMaxAngSpeed()), ROBOT_KEY.ANG_VEL);
-		angSpd.setColor(Color.ORANGE);
-//		w.addWidget(angSpd);
+			w.getHubHeight() * 1/8, driveLoop.getRobot().getMaxAngSpeed()), ROBOT_KEY.ANG_VEL);
+		angSpd.setColors(Color.ORANGE, Color.BLUE);
+		w.addWidget(angSpd);
 		
 		//bezier path creator widget
 		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));

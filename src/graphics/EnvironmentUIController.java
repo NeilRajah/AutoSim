@@ -45,7 +45,7 @@ public class EnvironmentUIController implements MouseMotionListener, FocusListen
 	 * Set focused to true for the Environment
 	 */
 	public void focusGained(FocusEvent f) {
-		env.setFocused(true);		
+		env.setFocused(true);	
 	} //end focusGained
 
 	/**

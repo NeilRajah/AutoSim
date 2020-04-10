@@ -35,8 +35,12 @@ public class BezierPathCreatorWidget extends Widget {
 	 */
 	public void registerControllers() {
 		//key controller
-		EnvironmentKeyController ekc = new EnvironmentKeyController(bpc::moveCircle);
-		Environment.getInstance().addKeyListener(ekc);
+		PathKeyController pkc = new PathKeyController(bpc::moveCircle);
+		Environment.getInstance().addKeyListener(pkc);
+		Environment.getInstance().addMouseListener(pkc);
+		
+		//mouse controller
+//		PathMouseController pmc = new PathMouseController();
 	} //end registerControllers
 	
 	/**

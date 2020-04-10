@@ -51,4 +51,13 @@ public class SpeedDisplayWidget extends Widget {
 	public void setColor(Color color) {
 		sd.setColor(color);
 	} //end setColor
+	
+	/**
+	 * Set two colors for the display
+	 * @param fwdClr Color if speed is positive
+	 * @param revClr Color if speed is negative
+	 */
+	public void setColors(Color fwdClr, Color revClr) {
+		sd.setColors(fwdClr, revClr);
+	} //end setColors
 } //end class
