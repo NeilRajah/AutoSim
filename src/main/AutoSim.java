@@ -73,7 +73,7 @@ public class AutoSim {
 	 */
 	private static void initializeScreen() {
 		int screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices().length;
-		screens = 0;
+//		screens = 0;
 		//set the scaling constants
 		if (screens > 1) {
 			//monitor is 1080p

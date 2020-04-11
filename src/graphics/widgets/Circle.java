@@ -92,5 +92,4 @@ public class Circle extends Point {
 		this.hovered = false;
 		Environment.getInstance().update();
 	} //end setDefault
-
 } //end class

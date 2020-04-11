@@ -22,6 +22,7 @@ public class Painter {
 	public static int ROBOT_LENGTH = 0; //length of robot in pixels
 	public static int ROBOT_WIDTH = 0; //width of robot in pixels
 	public static final int CORNER_RAD = AutoSim.PPI * 6; //corner radius
+	public static final int CIRCLE_RAD = 8; //radius of circle
 	
 	//Fonts
 	public static final String SF_UI_FONT = "src/resources/SF-UI-Display-Light.ttf";
@@ -112,7 +113,7 @@ public class Painter {
 	 */
 	public static void drawCircle(Graphics2D g2, Circle c) {
 		g2.setColor(c.getColor());
-		drawPoint(g2, c, 8);
+		drawPoint(g2, c, CIRCLE_RAD);
 	} //end drawCircle
 	
 	/**

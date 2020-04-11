@@ -66,7 +66,7 @@ public class BezierPathCreator extends JPanel {
 		this.setLayout(gb);
 		
 		//layout each of the components
-		//layoutTopRow();
+//		layoutTopRow();
 		layoutControlPointArea();
 		
 		//update curve points
@@ -329,4 +329,12 @@ public class BezierPathCreator extends JPanel {
 		
 		updateControlPoints();
 	} //end movePoint
+
+	/**
+	 * Get the curve being manipulated
+	 * @return Curve being manipulated
+	 */
+	public GraphicBezierPath getCurve() {
+		return curve;
+	} //end getCurve
 } //end class
