@@ -9,6 +9,7 @@ package graphics.widgets;
 import java.awt.Color;
 
 import graphics.Environment;
+import graphics.components.BoxButton.BUTTON_STATE;
 import model.Point;
 
 public class Circle extends Point {
@@ -92,4 +93,43 @@ public class Circle extends Point {
 		this.hovered = false;
 		Environment.getInstance().update();
 	} //end setDefault
+	
+	/**
+	 * Get the state of the Circle
+	 * @return whether Circle is default, hovered or locked
+	 */
+	public BUTTON_STATE getState() {
+		if (hovered) 
+			return BUTTON_STATE.HOVER;
+		
+		else if (locked) 
+			return BUTTON_STATE.LOCK;
+		
+		return BUTTON_STATE.DEFAULT;
+	} //end getState
+	
+	/**
+	 * Set the state of the circle and update the Environment
+	 * @param state State of the circle
+	 */
+	public void setState(BUTTON_STATE state) {
+		switch (state) {
+			case DEFAULT:
+				hovered = false;
+				locked = false;
+				break;
+			
+			case HOVER:
+				hovered = true;
+				locked = false;
+				break;
+				
+			case LOCK:
+				hovered = false;
+				locked = true;
+				break;
+		} //switch
+		
+		Environment.getInstance().update();
+	} //end setState
 } //end class

@@ -9,6 +9,8 @@ package util;
 
 import static org.junit.Assert.assertEquals;
 
+import java.awt.Color;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,8 @@ import commands.DriveDistance;
 import commands.DriveToGoal;
 import commands.TimedVoltage;
 import commands.routines.ConstantsTest;
+import graphics.components.BoxButton.BUTTON_STATE;
+import graphics.widgets.Circle;
 import model.DriveLoop;
 import model.FieldPositioning;
 import model.Gearbox;
@@ -330,4 +334,19 @@ class ModelTest {
 	void numberParseTest() {
 		assertEquals(0.7125, Util.stringToNum("0.7125"), 0E-2);
 	} //end numberParseTest
+	
+	@Test
+	/**
+	 * Test the functionality of getting the Circle's state
+	 */
+	void circleStateTest() {
+		Circle c = new Circle(20, 20, Color.GREEN);
+		c.setHovered();
+		try {
+			assertEquals(true, c.getState().equals(BUTTON_STATE.HOVER));
+		} catch (AssertionError a) {
+			System.out.println("Expected: HOVERED, Actual: " + c.getState());
+			throw a;
+		} //try-catch
+	} //end circleStateTest
 } //end class

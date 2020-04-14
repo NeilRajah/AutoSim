@@ -10,19 +10,21 @@ package graphics.widgets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.function.BiConsumer;
 
 import graphics.GraphicBezierPath;
 import graphics.Painter;
 import graphics.components.BoxButton;
+import graphics.components.BoxButton.BUTTON_STATE;
 import main.AutoSim;
 import model.FieldPositioning;
 import model.Point;
-import util.Util;
 
-public class PathMouseController implements MouseListener, MouseMotionListener {
+public class PathMouseController implements MouseListener, MouseMotionListener, MouseWheelListener {
 	//Attributes
-	private BiConsumer<Integer, BoxButton.BUTTON_STATE> circleUpdate; //method run when updating circle
+	private BiConsumer<Integer, BUTTON_STATE> circleUpdate; //method run when updating circle
 	private GraphicBezierPath path; //path with points
 	
 	/**
@@ -30,7 +32,7 @@ public class PathMouseController implements MouseListener, MouseMotionListener {
 	 * @param bc Method to update circles
 	 * @param gbp Path with circles
 	 */
-	public PathMouseController(BiConsumer<Integer, BoxButton.BUTTON_STATE> bc, GraphicBezierPath gbp) {
+	public PathMouseController(BiConsumer<Integer, BUTTON_STATE> bc, GraphicBezierPath gbp) {
 		//set attributes
 		this.circleUpdate = bc;
 		this.path = gbp;
@@ -50,11 +52,47 @@ public class PathMouseController implements MouseListener, MouseMotionListener {
 		Point ms = getMouseCoordsInches(m);
 		Circle[] circles = path.getCircles();
 		
+		/*
+		 * Stand-alone
+		 * on entry
+		 *	if not locked, hover
+		 * on exit
+		 *  if not locked, default
+		 * on press
+		 * 	toggle lock
+		 * on release
+		 * 	if not locked, hover
+		 * 
+		 * -----------------------
+		 * 
+		 * Tied-in
+		 * on entry
+		 *	if not locked, hover
+		 * on exit
+		 *  if not locked, default
+		 * on press
+		 * 	request lock
+		 * 		if no buttons locked
+		 * 			lock this
+		 * 		if this is locked
+		 * 			unlock this
+		 * 		if one button locked, not this
+		 * 			unlock that, lock this
+		 * on release
+		 * 	if not locked, hover
+		 * 
+		 * ---------------------
+		 * 
+		 * - make sure it works with buttons properly
+		 * - remove setLocked, setHover, only use setState
+		 */
+		
 		for (int i = 0; i < circles.length; i++) {
+			BUTTON_STATE oldState = circles[i].getState();
 			if (FieldPositioning.isWithinBounds(circles[i], ms, Painter.CIRCLE_RAD / (double) AutoSim.PPI)) {
 				circles[i].setHovered();
 			} else {
-				circles[i].setDefault();
+				circles[i].setState(oldState);
 			} //if
 		} //loop
 	} //end mouseMoved
@@ -97,4 +135,9 @@ public class PathMouseController implements MouseListener, MouseMotionListener {
 	private Point getMouseCoordsInches(MouseEvent m) {
 		return new Point(m.getY() / (double) AutoSim.PPI, m.getX() / (double) AutoSim.PPI);
 	} //end getMouseCoordsInches
+	
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent m) {
+		
+	}
 } //end class
