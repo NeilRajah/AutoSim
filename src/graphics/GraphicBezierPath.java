@@ -7,6 +7,7 @@
 
 package graphics;
 
+import graphics.components.BoxButton.BUTTON_STATE;
 import graphics.widgets.Circle;
 import model.Point;
 import model.motion.BezierPath;
@@ -135,4 +136,41 @@ public class GraphicBezierPath extends BezierPath {
 		circles[i].setX(circles[i].getX() + dx);
 		circles[i].setY(circles[i].getY() + dy);
 	} //end moveCircle
+
+	/**
+	 * Get the index of the locked circle
+	 * @return index of locked circle, -1 if none are locked
+	 */
+	private int getLockedCircleIndex() {
+		//extend Lockable interface/extend Lockable for Circles, buttons (share common methods)
+		
+		int lockIndex = -1; //index of locked circle
+		for (int i = 0; i < circles.length; i++) {
+			if (circles[i].isLocked())
+				lockIndex = i;
+		} //loop
+		
+		return lockIndex;
+	} //end getLockedButton
+	
+	/**
+	 * Request to lock a circle
+	 * @param index Index of the circle requested
+	 */
+	public void requestCircleLock(int index) {
+		int lockIndex = getLockedCircleIndex();
+		
+		if (lockIndex == -1) { //no buttons locked
+			//lock this
+			circles[index].setState(BUTTON_STATE.LOCK); 
+		
+		} else if (lockIndex != index) { //another button is locked
+			//lock this, unlock that
+			circles[lockIndex].setState(BUTTON_STATE.DEFAULT);
+			circles[index].setState(BUTTON_STATE.LOCK); 
+			
+		} else if (lockIndex == index) { //this button is locked
+			circles[index].setState(BUTTON_STATE.DEFAULT);
+		} //if
+	} //end requestCircleLock
 } //end class

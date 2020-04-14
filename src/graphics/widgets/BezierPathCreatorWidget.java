@@ -40,7 +40,8 @@ public class BezierPathCreatorWidget extends Widget {
 		Environment.getInstance().addMouseListener(pkc);
 		
 		//mouse controller
-		PathMouseController pmc = new PathMouseController(bpc::updateCircle, bpc.getCurve());
+		PathMouseController pmc = new PathMouseController(bpc::requestCircleUpdate, bpc::requestButtonUpdate, bpc.getCurve());
+		Environment.getInstance().addMouseListener(pmc);
 		Environment.getInstance().addMouseMotionListener(pmc);
 	} //end registerControllers
 	

@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.util.function.BiConsumer;
 
 import graphics.components.BoxButton;
+import graphics.components.BoxButton.BUTTON_STATE;
 
 public class CircleButtonController implements MouseListener {
 	//Attributes
@@ -37,28 +38,28 @@ public class CircleButtonController implements MouseListener {
 	 * Update circle state to button state
 	 */
 	public void mouseEntered(MouseEvent m) {
-		updateCircle.accept(key, button.getState());
+		updateCircle.accept(key, BUTTON_STATE.HOVER);
 	} //end mouseEntered
 
 	/**
 	 * Update circle state to button state
 	 */
 	public void mouseExited(MouseEvent m) {
-		updateCircle.accept(key, button.getState());
+		updateCircle.accept(key, BUTTON_STATE.DEFAULT);
 	} //end mouseExited
 
 	/**
 	 * Update circle state to button state
 	 */
 	public void mousePressed(MouseEvent m) {
-		updateCircle.accept(key, button.getState());
-	}
+		updateCircle.accept(key, BUTTON_STATE.LOCK);
+	} //end mousePressed
 
 	/**
 	 * Update circle state to button state
 	 */
 	public void mouseReleased(MouseEvent m) {
-		updateCircle.accept(key, button.getState());
+		updateCircle.accept(key, BUTTON_STATE.HOVER);
 	} //end mouseReleased
 	
 	/*

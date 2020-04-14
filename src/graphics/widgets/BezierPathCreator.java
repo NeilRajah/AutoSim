@@ -119,11 +119,11 @@ public class BezierPathCreator extends JPanel {
 				gb.setConstraints(button, JComponentUtil.createGBC(0, y, 0.25, 1));
 				
 				//add graphics controller
-				LockButtonController btnCtrl = new LockButtonController(button, this::requestToggle); 
+				LockButtonController btnCtrl = new LockButtonController(button, this::requestButtonToggle); 
 				button.addMouseListener(btnCtrl);
 				
 				//add locking controller
-				CircleButtonController circCtrl = new CircleButtonController(button, this::updateCircle);
+				CircleButtonController circCtrl = new CircleButtonController(button, this::requestCircleUpdate);
 				button.addMouseListener(circCtrl);
 				
 				//add button to panel
@@ -142,23 +142,49 @@ public class BezierPathCreator extends JPanel {
 	} //end layoutControlPointArea
 	
 	/**
-	 * Update a circle in the curve
+	 * Update a circle in the curve from button input
 	 * @param key Index of the circle in the array
 	 * @param state State of the button
 	 */
-	public void updateCircle(int key, BoxButton.BUTTON_STATE state) {
+	public void requestCircleUpdate(int key, BoxButton.BUTTON_STATE state) {
+		//refactor curve to get rid of setCircle___ methods, just use getCircles, getCircle
 		switch (state) {
 			case DEFAULT:
-				curve.setCircleDefault(key);
+				if (!curve.getCircles()[key].isLocked())
+					curve.setCircleDefault(key);
 				break;
 				
 			case HOVER:
-				curve.setCircleHover(key);
+				if (!curve.getCircles()[key].isLocked())
+					curve.setCircleHover(key);
 				break;
 				
-			case LOCK:
-				curve.unlockAllCircles();
-				curve.lockCircle(key);
+			case LOCK:				
+				curve.requestCircleLock(key);
+				break;
+		} //switch-case
+	} //end updateCircle
+	
+	/**
+	 * Update a button
+	 * @param key Index of the circle in the array
+	 * @param state State of the button
+	 */
+	public void requestButtonUpdate(int key, BoxButton.BUTTON_STATE state) {
+		//refactor curve to get rid of setCircle___ methods, just use getCircles, getCircle
+		switch (state) {
+			case DEFAULT:
+				if (!buttons[key].isLocked())
+					buttons[key].setState(BUTTON_STATE.DEFAULT);
+				break;
+				
+			case HOVER:
+				if (!buttons[key].isLocked())
+					buttons[key].setState(BUTTON_STATE.HOVER);
+				break;
+				
+			case LOCK:				
+				requestButtonToggle(key);
 				break;
 		} //switch-case
 	} //end updateCircle
@@ -217,7 +243,7 @@ public class BezierPathCreator extends JPanel {
 		} //while
 		
 		//reset the locked button
-		int lockIndex = getLockedButton();
+		int lockIndex = getLockedButtonIndex();
 		if (lockIndex != -1)
 			circles[lockIndex].setLocked();
 		
@@ -277,8 +303,8 @@ public class BezierPathCreator extends JPanel {
 	 * Request a toggle for a button
 	 * @param index Index of button in buttons array
 	 */
-	private void requestToggle(int index) {
-		int lockIndex = getLockedButton();
+	private void requestButtonToggle(int index) {
+		int lockIndex = getLockedButtonIndex();
 		
 		if (lockIndex == -1) { //no buttons locked
 			//lock this
@@ -298,7 +324,7 @@ public class BezierPathCreator extends JPanel {
 	 * Get the index of the locked button
 	 * @return index of locked button, -1 if none are locked
 	 */
-	private int getLockedButton() {
+	private int getLockedButtonIndex() {
 		int lockIndex = -1; //index of locked button
 		for (int i = 0; i < buttons.length; i++) {
 			if (buttons[i].isLocked())
@@ -314,7 +340,7 @@ public class BezierPathCreator extends JPanel {
 	 * @param dy Change in y position
 	 */
 	public void moveCircle(double dx, double dy) {
-		int l = getLockedButton();
+		int l = getLockedButtonIndex();
 		
 		//move the circle and update the textboxes
 		if (l != -1 && allBoxesValid()) {

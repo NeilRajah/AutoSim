@@ -7,6 +7,7 @@
 
 package graphics.widgets;
 
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -14,6 +15,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.function.BiConsumer;
 
+import util.Util;
+import graphics.Environment;
 import graphics.GraphicBezierPath;
 import graphics.Painter;
 import graphics.components.BoxButton;
@@ -25,104 +28,86 @@ import model.Point;
 public class PathMouseController implements MouseListener, MouseMotionListener, MouseWheelListener {
 	//Attributes
 	private BiConsumer<Integer, BUTTON_STATE> circleUpdate; //method run when updating circle
+	private BiConsumer<Integer, BUTTON_STATE> buttonUpdate; //method run to update button
 	private GraphicBezierPath path; //path with points
+	private int currentCircIndex; //index for the current circle
 	
 	/**
 	 * Create a mouse controller with a method to update circles and the curve
-	 * @param bc Method to update circles
+	 * @param cu Method to update circles
+	 * @param bu Method to update buttons
 	 * @param gbp Path with circles
 	 */
-	public PathMouseController(BiConsumer<Integer, BUTTON_STATE> bc, GraphicBezierPath gbp) {
+	public PathMouseController(BiConsumer<Integer, BUTTON_STATE> cu, BiConsumer<Integer, BUTTON_STATE> bu, 
+								GraphicBezierPath gbp) {
 		//set attributes
-		this.circleUpdate = bc;
+		this.circleUpdate = cu;
+		this.buttonUpdate = bu;
 		this.path = gbp;
+		this.currentCircIndex = 0;
 	} //end constructor
-
-	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
 
 	/**
 	 * Update the circles based on mouse position
-	 * MouseEvent m Cursor information
+	 * @param m Cursor information
 	 */
 	public void mouseMoved(MouseEvent m) {
 		Point ms = getMouseCoordsInches(m);
 		Circle[] circles = path.getCircles();
 		
-		/*
-		 * Stand-alone
-		 * on entry
-		 *	if not locked, hover
-		 * on exit
-		 *  if not locked, default
-		 * on press
-		 * 	toggle lock
-		 * on release
-		 * 	if not locked, hover
-		 * 
-		 * -----------------------
-		 * 
-		 * Tied-in
-		 * on entry
-		 *	if not locked, hover
-		 * on exit
-		 *  if not locked, default
-		 * on press
-		 * 	request lock
-		 * 		if no buttons locked
-		 * 			lock this
-		 * 		if this is locked
-		 * 			unlock this
-		 * 		if one button locked, not this
-		 * 			unlock that, lock this
-		 * on release
-		 * 	if not locked, hover
-		 * 
-		 * ---------------------
-		 * 
-		 * - make sure it works with buttons properly
-		 * - remove setLocked, setHover, only use setState
-		 */
-		
+		//only search through points if over a circle
 		for (int i = 0; i < circles.length; i++) {
-			BUTTON_STATE oldState = circles[i].getState();
-			if (FieldPositioning.isWithinBounds(circles[i], ms, Painter.CIRCLE_RAD / (double) AutoSim.PPI)) {
-				circles[i].setHovered();
+			Circle c = circles[i]; //current circle
+			//if mouse is within a circle
+			boolean over = FieldPositioning.isWithinBounds(c, ms, Painter.CIRCLE_RAD / (double) AutoSim.PPI); 
+			currentCircIndex = over ? i : -1;
+			
+			if (over) {
+				//set to hover
+				Environment.getInstance().setCursor(new Cursor(Cursor.HAND_CURSOR)); //hand cursor
+				circleUpdate.accept(currentCircIndex, BUTTON_STATE.HOVER);
+				buttonUpdate.accept(currentCircIndex, BUTTON_STATE.HOVER);
+
+				break; //no need to loop through rest of points
+				
 			} else {
-				circles[i].setState(oldState);
+				//set to default
+				Environment.getInstance().setCursor(new Cursor(Cursor.DEFAULT_CURSOR)); //regular cursor
+				//refactor to if statement
+
+				circleUpdate.accept(i, BUTTON_STATE.DEFAULT);
+				buttonUpdate.accept(i, BUTTON_STATE.DEFAULT);
 			} //if
 		} //loop
 	} //end mouseMoved
 
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	/**
+	 * Update the current circle on press
+	 * @param m Cursor information
+	 */
+	public void mousePressed(MouseEvent m) {
+		//if over a circle
+		if (currentCircIndex != -1) {
+//			path.getCircles()[currentCircIndex].setLocked();
+			circleUpdate.accept(currentCircIndex, BUTTON_STATE.LOCK);
+			buttonUpdate.accept(currentCircIndex, BUTTON_STATE.LOCK);
+		} //if
+	} //end mousePressed
 
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	/**
+	 * Update the current circle on release
+	 * @param m Cursor information
+	 */
+	public void mouseReleased(MouseEvent m) {
+		//if over a circle
+		if (currentCircIndex != -1 && !path.getCircles()[currentCircIndex].isLocked()) {
+			circleUpdate.accept(currentCircIndex, BUTTON_STATE.HOVER);
+			buttonUpdate.accept(currentCircIndex, BUTTON_STATE.HOVER);
+		} //if
+	} //end mouseReleased
+	
+	
+	public void mouseDragged(MouseEvent m) {
 		// TODO Auto-generated method stub
 
 	}
@@ -140,4 +125,20 @@ public class PathMouseController implements MouseListener, MouseMotionListener, 
 	public void mouseWheelMoved(MouseWheelEvent m) {
 		
 	}
+
+	@Override
+	public void mouseClicked(MouseEvent m) {
+		// TODO Auto-generated method stub
+
+	}
+	
+	/*
+	 * Unimplemented
+	 */
+	public void mouseEntered(MouseEvent m) {}
+
+	/*
+	 * Unimplemented
+	 */
+	public void mouseExited(MouseEvent m) {}
 } //end class

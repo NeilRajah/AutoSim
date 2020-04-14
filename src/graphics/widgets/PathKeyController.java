@@ -17,7 +17,7 @@ import graphics.Environment;
 
 public class PathKeyController implements KeyListener, MouseListener {	
 	//Constants
-	private final double DELTA = 2.0; //change in inches
+	private final double DELTA = 3.0; //change in inches
 	private final double FINE_SCALE = 0.1; //fine control scalar
 	
 	//Attributes
