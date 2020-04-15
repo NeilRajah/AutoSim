@@ -7,10 +7,17 @@
 
 package graphics;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.Scanner;
+
 import graphics.components.BoxButton.BUTTON_STATE;
 import graphics.widgets.Circle;
 import model.Point;
 import model.motion.BezierPath;
+import util.FieldPoints;
+import util.Util;
 
 public class GraphicBezierPath extends BezierPath {
 	//Attributes
@@ -62,6 +69,34 @@ public class GraphicBezierPath extends BezierPath {
 		
 		return circles;
 	} //end circlesFromCoordinates
+	
+	/**
+	 * Create control points from a file
+	 * @param filename Name of file containing circle (x,y) values
+	 * @return Array of Circles
+	 */
+	public static Circle[] circlesFromFile(String filename) {
+		try {
+			//open the file and create the array of Circles
+			BufferedReader in = new BufferedReader(new FileReader(filename));
+			Circle[] circles = new Circle[6];
+			
+			for (int i = 0; i < 6; i++) {
+				String[] xy = in.readLine().split(" ");
+				double x = Double.parseDouble(xy[0]);
+				double y = Double.parseDouble(xy[1]);
+				circles[i] = new Circle(x, y, Painter.BEZ_BTN_DARK);
+			}
+			
+			in.close();
+			return circles;
+			
+		} catch (Exception e) {
+			//message window
+			e.printStackTrace();
+			return circlesFromCoordinates(FieldPoints.curve2);
+		} //try-catch
+	} //end circlesFromFile
 
 	/**
 	 * Return the path's circles

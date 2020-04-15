@@ -134,8 +134,7 @@ public class AutoSim {
 		
 		//bezier path creator widget
 		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
-//		bezWidg.setControlPoints(FieldPoints.curve);
-		bezWidg.setControlPoints(".\\main\\path.txt");
+		bezWidg.setControlPoints("src//main//niceLongCurve.crv");
 		
 		w.addWidget(bezWidg);
 	} //end addWidgets

@@ -70,21 +70,7 @@ public class BezierPathCreatorWidget extends Widget {
 	 * @param filename File containing control points
 	 */
 	public void setControlPoints(String filename) {
-		try {
-			Scanner s = new Scanner(new File(filename));
-			
-			while (s.hasNextLine()) {
-				String line = s.nextLine();
-				System.out.println(line);
-			}
-			
-			s.close();
-		} catch (Exception e) {
-			//message window
-			Util.println("Unable to open file");
-			e.printStackTrace();
-			setControlPoints(FieldPoints.curve);
-		}
+		bpc.setCircles(GraphicBezierPath.circlesFromFile(filename));
 	} //end setControlPoints
 	
 	/**
