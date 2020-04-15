@@ -65,6 +65,7 @@ public class GraphicBezierPath extends BezierPath {
 
 	/**
 	 * Return the path's circles
+	 * @return Circles representing the (x,y) points
 	 */
 	public Circle[] getCircles() {
 		return circles;

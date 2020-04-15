@@ -28,6 +28,7 @@ import graphics.components.BoxButton;
 import graphics.components.BoxButton.BUTTON_STATE;
 import graphics.components.LockButtonController;
 import main.AutoSim;
+import model.Point;
 import util.JComponentUtil;
 
 public class BezierPathCreator extends JPanel {
@@ -344,17 +345,47 @@ public class BezierPathCreator extends JPanel {
 		
 		//move the circle and update the textboxes
 		if (l != -1 && allBoxesValid()) {
+			//get the new (x,y) values by adding the change to the textbox values
 			JTextField xBox = textBoxes.get("x".concat(Integer.toString(l)));
 			double xVal = Double.parseDouble(xBox.getText()) + dx;
-			xBox.setText(String.format("%.1f", xVal));
 			
 			JTextField yBox = textBoxes.get("y".concat(Integer.toString(l)));
 			double yVal = Double.parseDouble(yBox.getText()) + dy;
+			
+			//set the new (x,y) values to the corresponding textboxes and update the circles
+			setTextXY(l, xVal, yVal);
+			updateControlPoints();
+		} //if
+	} //end movePoint
+	
+	/**
+	 * Set the Circle at the index (for use when dragging)
+	 * @param i Index of the Circle being set
+	 * @param p Point with new (x,y) coordinates
+	 */
+	public void setCircle(int i, Point p) {
+//		curve.getCircles()[i].setXY(p);
+		setTextXY(i, p.getX(), p.getY());
+		updateControlPoints();
+		Environment.getInstance().update();
+	} //end setCircle
+	
+	/**
+	 * Set the (x,y) value for a textbox
+	 * @param i Index of the Circle represented by the textboxes
+	 * @param xVal New x value
+	 * @param yVal New y value
+	 */
+	private void setTextXY(int i, double xVal, double yVal) {
+		if (allBoxesValid()) {
+			//set the text of the textbox
+			JTextField xBox = textBoxes.get("x".concat(Integer.toString(i)));
+			xBox.setText(String.format("%.1f", xVal));
+			
+			JTextField yBox = textBoxes.get("y".concat(Integer.toString(i)));
 			yBox.setText(String.format("%.1f", yVal));
 		} //if
-		
-		updateControlPoints();
-	} //end movePoint
+	} //end setTextXY
 
 	/**
 	 * Get the curve being manipulated

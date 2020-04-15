@@ -132,4 +132,13 @@ public class Circle extends Point {
 		
 		Environment.getInstance().update();
 	} //end setState
+	
+//	/**
+//	 * Set the (x,y) values of the point
+//	 * @param p New (x,y) values of the point
+//	 */
+//	public void setXY(Point p) {
+//		this.setX(p.getX());
+//		this.setY(p.getY());
+//	} //end setXY
 } //end class

@@ -27,24 +27,21 @@ import model.Point;
 
 public class PathMouseController implements MouseListener, MouseMotionListener, MouseWheelListener {
 	//Attributes
-	private BiConsumer<Integer, BUTTON_STATE> circleUpdate; //method run when updating circle
-	private BiConsumer<Integer, BUTTON_STATE> buttonUpdate; //method run to update button
+	private BezierPathCreator bpc; //path creator component
 	private GraphicBezierPath path; //path with points
 	private int currentCircIndex; //index for the current circle
+	private boolean dragging; //whether a circle is being dragged
 	
 	/**
 	 * Create a mouse controller with a method to update circles and the curve
-	 * @param cu Method to update circles
-	 * @param bu Method to update buttons
-	 * @param gbp Path with circles
+	 * @param bpc BezierPathCreator component with path
 	 */
-	public PathMouseController(BiConsumer<Integer, BUTTON_STATE> cu, BiConsumer<Integer, BUTTON_STATE> bu, 
-								GraphicBezierPath gbp) {
+	public PathMouseController(BezierPathCreator bpc) {
 		//set attributes
-		this.circleUpdate = cu;
-		this.buttonUpdate = bu;
-		this.path = gbp;
+		this.bpc = bpc;
+		this.path = this.bpc.getCurve();
 		this.currentCircIndex = 0;
+		this.dragging = false;
 	} //end constructor
 
 	/**
@@ -55,30 +52,28 @@ public class PathMouseController implements MouseListener, MouseMotionListener, 
 		Point ms = getMouseCoordsInches(m);
 		Circle[] circles = path.getCircles();
 		
-		//only search through points if over a circle
-		for (int i = 0; i < circles.length; i++) {
-			Circle c = circles[i]; //current circle
-			//if mouse is within a circle
-			boolean over = FieldPositioning.isWithinBounds(c, ms, Painter.CIRCLE_RAD / (double) AutoSim.PPI); 
-			currentCircIndex = over ? i : -1;
-			
-			if (over) {
-				//set to hover
-				Environment.getInstance().setCursor(new Cursor(Cursor.HAND_CURSOR)); //hand cursor
-				circleUpdate.accept(currentCircIndex, BUTTON_STATE.HOVER);
-				buttonUpdate.accept(currentCircIndex, BUTTON_STATE.HOVER);
-
-				break; //no need to loop through rest of points
+		if (!dragging) {
+			//only search through points if over a circle
+			for (int i = 0; i < circles.length; i++) {
+				Circle c = circles[i]; //current circle
+				//if mouse is within a circle
+				boolean over = FieldPositioning.isWithinBounds(c, ms, Painter.CIRCLE_RAD / (double) AutoSim.PPI); 
+				currentCircIndex = over ? i : -1;
 				
-			} else {
-				//set to default
-				Environment.getInstance().setCursor(new Cursor(Cursor.DEFAULT_CURSOR)); //regular cursor
-				//refactor to if statement
+				if (over) { //set to hover
+					Environment.getInstance().setCursor(new Cursor(Cursor.HAND_CURSOR)); //hand cursor
+					bpc.requestCircleUpdate(currentCircIndex, BUTTON_STATE.HOVER);
+					bpc.requestButtonUpdate(currentCircIndex, BUTTON_STATE.HOVER);
 
-				circleUpdate.accept(i, BUTTON_STATE.DEFAULT);
-				buttonUpdate.accept(i, BUTTON_STATE.DEFAULT);
-			} //if
-		} //loop
+					break; //no need to loop through rest of points
+					
+				} else { //set to default
+					Environment.getInstance().setCursor(new Cursor(Cursor.DEFAULT_CURSOR)); //regular cursor
+					bpc.requestCircleUpdate(i, BUTTON_STATE.DEFAULT);
+					bpc.requestButtonUpdate(i, BUTTON_STATE.DEFAULT);
+				} //if
+			} //loop
+		} //if
 	} //end mouseMoved
 
 	/**
@@ -88,9 +83,8 @@ public class PathMouseController implements MouseListener, MouseMotionListener, 
 	public void mousePressed(MouseEvent m) {
 		//if over a circle
 		if (currentCircIndex != -1) {
-//			path.getCircles()[currentCircIndex].setLocked();
-			circleUpdate.accept(currentCircIndex, BUTTON_STATE.LOCK);
-			buttonUpdate.accept(currentCircIndex, BUTTON_STATE.LOCK);
+			bpc.requestCircleUpdate(currentCircIndex, BUTTON_STATE.LOCK);
+			bpc.requestButtonUpdate(currentCircIndex, BUTTON_STATE.LOCK);
 		} //if
 	} //end mousePressed
 
@@ -101,16 +95,24 @@ public class PathMouseController implements MouseListener, MouseMotionListener, 
 	public void mouseReleased(MouseEvent m) {
 		//if over a circle
 		if (currentCircIndex != -1 && !path.getCircles()[currentCircIndex].isLocked()) {
-			circleUpdate.accept(currentCircIndex, BUTTON_STATE.HOVER);
-			buttonUpdate.accept(currentCircIndex, BUTTON_STATE.HOVER);
+			bpc.requestCircleUpdate(currentCircIndex, BUTTON_STATE.HOVER);
+			bpc.requestButtonUpdate(currentCircIndex, BUTTON_STATE.HOVER);
+		
 		} //if
+		
+		dragging = false; //can't be dragging if mouse isn't pressed
 	} //end mouseReleased
 	
-	
+	/**
+	 * Move the current point to where the mouse is dragged
+	 * @param m Cursor information
+	 */
 	public void mouseDragged(MouseEvent m) {
-		// TODO Auto-generated method stub
-
-	}
+		if (currentCircIndex != -1) {
+			dragging = true;
+			bpc.setCircle(currentCircIndex, getMouseCoordsInches(m));
+		} //if
+	} //end mouseDragged
 	
 	/**
 	 * Get the mouse coordinates in real space

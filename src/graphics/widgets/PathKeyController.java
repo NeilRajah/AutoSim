@@ -21,18 +21,18 @@ public class PathKeyController implements KeyListener, MouseListener {
 	private final double FINE_SCALE = 0.1; //fine control scalar
 	
 	//Attributes
-	private BiConsumer<Double, Double> keyUpdate; //method run on key update
 	private double dx = 0; //change in x in inches
 	private double dy = 0; //change in y in inches
 	private boolean fineControl; //whether fine control is enabled
+	private BezierPathCreator bpc; //component containing path
 	
 	/**
 	 * Create a path controller
-	 * @param key
+	 * @param bpc BezierPathCreator component to update
 	 */
-	public PathKeyController(BiConsumer<Double, Double> key) {
+	public PathKeyController(BezierPathCreator bpc) {
 		//set attributes
-		this.keyUpdate = key;
+		this.bpc = bpc;
 		this.fineControl = false;
 	} //end constructor
 	
@@ -67,7 +67,7 @@ public class PathKeyController implements KeyListener, MouseListener {
 			dy *= FINE_SCALE;
 		} //if
 		
-		keyUpdate.accept(dx, dy);
+		bpc.moveCircle(dx, dy);
 	} //end keyPressed
 
 	/**
@@ -91,7 +91,7 @@ public class PathKeyController implements KeyListener, MouseListener {
 	} //end keyReleased
 
 	/**
-	 * Set the focus of the controller
+	 * Set the focus of the Environment when this is clicked
 	 */
 	public void mousePressed(MouseEvent m) {
 		Environment.getInstance().setFocused(true);
