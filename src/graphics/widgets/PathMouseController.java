@@ -97,7 +97,6 @@ public class PathMouseController implements MouseListener, MouseMotionListener, 
 		if (currentCircIndex != -1 && !path.getCircles()[currentCircIndex].isLocked()) {
 			bpc.requestCircleUpdate(currentCircIndex, BUTTON_STATE.HOVER);
 			bpc.requestButtonUpdate(currentCircIndex, BUTTON_STATE.HOVER);
-		
 		} //if
 		
 		dragging = false; //can't be dragging if mouse isn't pressed

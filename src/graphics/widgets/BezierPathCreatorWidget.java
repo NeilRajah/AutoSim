@@ -7,10 +7,14 @@
 
 package graphics.widgets;
 
+import java.io.File;
+import java.util.Scanner;
+
 import graphics.Environment;
 import graphics.GraphicBezierPath;
-import model.FieldPositioning;
 import model.Point;
+import util.FieldPoints;
+import util.Util;
 
 public class BezierPathCreatorWidget extends Widget {
 	//Attributes
@@ -59,6 +63,28 @@ public class BezierPathCreatorWidget extends Widget {
 	 */
 	public void setControlPoints(double[][] points) {
 		bpc.setCircles(GraphicBezierPath.circlesFromCoordinates(points));
+	} //end setControlPoints
+	
+	/**
+	 * Set the control points of the path
+	 * @param filename File containing control points
+	 */
+	public void setControlPoints(String filename) {
+		try {
+			Scanner s = new Scanner(new File(filename));
+			
+			while (s.hasNextLine()) {
+				String line = s.nextLine();
+				System.out.println(line);
+			}
+			
+			s.close();
+		} catch (Exception e) {
+			//message window
+			Util.println("Unable to open file");
+			e.printStackTrace();
+			setControlPoints(FieldPoints.curve);
+		}
 	} //end setControlPoints
 	
 	/**

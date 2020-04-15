@@ -364,7 +364,6 @@ public class BezierPathCreator extends JPanel {
 	 * @param p Point with new (x,y) coordinates
 	 */
 	public void setCircle(int i, Point p) {
-//		curve.getCircles()[i].setXY(p);
 		setTextXY(i, p.getX(), p.getY());
 		updateControlPoints();
 		Environment.getInstance().update();
