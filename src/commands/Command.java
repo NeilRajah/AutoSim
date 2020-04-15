@@ -98,14 +98,7 @@ public abstract class Command implements Runnable {
 			//add the robot information to the respective collections
 			poses.add(robot.getPose());
 			data.add(robot.getData());
-			
-//			Point p = (Point) data.get(data.size()-1).get(ROBOT_KEY.POINT);
-//			Util.println(Integer.toString(iterations) + " " + p.getString()); 
-			
-			//
-			// add the curve
-			//
-			
+
 			//loop the number of iterations
 			iterations++;
 			

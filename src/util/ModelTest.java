@@ -30,6 +30,7 @@ import model.PIDController;
 import model.Point;
 import model.Robot;
 import model.motion.BezierPath;
+import model.motion.TrapezoidalProfile;
 import util.Util.ROBOT_KEY;
 
 class ModelTest {
@@ -349,4 +350,21 @@ class ModelTest {
 			throw a;
 		} //try-catch
 	} //end circleStateTest
+	
+	@Test
+	/**
+	 * Test the functionality of the trapezoidal profile
+	 */
+	void trapProfileTest() {
+		TrapezoidalProfile tp = new TrapezoidalProfile(100, 20, 12);
+		
+		for (double t = 0; t < tp.getTotalTime(); t += Util.UPDATE_PERIOD) {
+			double[] l = tp.getLeftTrajPoint(t);
+			double[] r = tp.getRightTrajPoint(t);
+			Util.tabPrint(t, l[0], r[0], l[1], r[1], l[2], r[2]);
+			System.out.println();
+		} //loop
+		
+		assertEquals(100.0, tp.getLeftTrajPoint(tp.getTotalTime() - 0.05)[0], 0.01);
+	} //end trapProfileTest
 } //end class
