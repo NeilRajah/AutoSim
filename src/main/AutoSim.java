@@ -11,14 +11,13 @@ import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
+import org.knowm.xchart.XYChart;
+
 import commands.CommandGroup;
 import commands.CommandList;
 import commands.DriveOpenLoopProfile;
-import commands.routines.DriveToGoalDemo;
 import graphics.Painter;
 import graphics.Window;
-import graphics.widgets.BezierPathCreator;
-import graphics.widgets.BezierPathCreatorWidget;
 import graphics.widgets.SpeedDisplay;
 import graphics.widgets.SpeedDisplayWidget;
 import model.DriveLoop;
@@ -27,7 +26,8 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
-import util.FieldPoints;
+import model.motion.TrapezoidalProfile;
+import util.PlotGenerator;
 import util.Util;
 import util.Util.ROBOT_KEY;
 
@@ -51,6 +51,9 @@ public class AutoSim {
 	//CommandGroup to be run
 	private static CommandGroup cg;
 	
+	//Trajectory to follow
+	private static TrapezoidalProfile trap;
+	
 	/**
 	 * Create a Window and launch the program
 	 */
@@ -63,11 +66,13 @@ public class AutoSim {
 		w = new Window(true); //true for debug, false for not
 		addWidgets(); //add widgets to the widget hub
 		
-		//add the command group
+		//add the command group and plot data
 		w.addCommandGroup(cg);
+		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
 		//launch the application
 		w.launch();
+			
 	} //end main
 	
 	/**
@@ -99,8 +104,8 @@ public class AutoSim {
 	 */
 	private static void initializeSimulation() {
 		//create robot
-		Gearbox gb = new Gearbox(12.82817, new Motor(Util.NEO), 2); //14ft/s 2 NEO gearbox each side
-		Robot r = new Robot(6, 153, 30, 30, gb); //153lb 6" wheel dia 30"x30" chassis
+		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
+		Robot r = new Robot(4, 120, 30, 30, gb); //120lb 4" wheel dia 30"x30" chassis
 		r.setXY(new Point(30,30));
 		
 		//set graphics parameters for drawing the robot
@@ -114,10 +119,8 @@ public class AutoSim {
 		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR); //need better values
 		
 		//create the command group
-//		cg = new DriveToGoalDemo();
-//		cg = new CommandList(new DriveDistance(driveLoop, 200, 1, r.getMaxLinSpeed()));
-//		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200, 200), 1, r.getMaxLinSpeed(), 0, false));
-		cg = new CommandList(new DriveOpenLoopProfile(driveLoop, 100, 20, 12)); 
+		trap = new TrapezoidalProfile(100, 20, 12);
+		cg = new CommandList(new DriveOpenLoopProfile(driveLoop, trap)); 
 	} //end initialize
 	
 	/**
@@ -141,4 +144,15 @@ public class AutoSim {
 //		bezWidg.setControlPoints("src//main//niceLongCurve.crv");
 //		w.addWidget(bezWidg);
 	} //end addWidgets
+
+	/**
+	 * Plot the robot data to a separate window
+	 */
+	private static void plotData() {
+		XYChart chart = PlotGenerator.createLinearTrajChart(trap, "Profile vs. Robot", 1920, 1080);
+		
+		double[][] robotSeries = PlotGenerator.getXYFromRobotData(cg.getData(), ROBOT_KEY.LIN_VEL);
+		chart.addSeries("Robot", robotSeries[0], robotSeries[1]);
+		PlotGenerator.displayChart(chart);
+	} //end plotData
 } //end AutoSim

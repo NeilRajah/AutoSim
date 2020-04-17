@@ -44,6 +44,17 @@ public class Gearbox {
 	} //end constructor
 	
 	/**
+	 * Get the correct gear ratio from desired robot parameters
+	 * @param motor Motor in gearbox
+	 * @param wheelDiaIN Wheel diameter in inches
+	 * @param topSpeedFPS Top robot speed in feet per second
+	 * @return Ratio that fulfills above parameters
+	 */
+	public static double ratioFromTopSpeed(double[] motor, double wheelDiaIN, double topSpeedFPS) {
+		return (Math.PI * motor[0] * wheelDiaIN) / (720 * topSpeedFPS);
+	} //end ratioFromTopSpeed
+	
+	/**
 	 * Safely get a copy of this gearbox
 	 * @return - identical copy of this gearbox
 	 */

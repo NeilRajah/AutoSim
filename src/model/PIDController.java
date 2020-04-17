@@ -23,9 +23,10 @@ public class PIDController {
 
 	/**
 	 * Create a PID controller with gains
-	 * @param p - proportionality constant
-	 * @param i - integral constant
-	 * @param d- derivative constant
+	 * @param p Proportionality constant
+	 * @param i Integral constant
+	 * @param d Derivative constant
+	 * @param topSpeed Top speed the controller can output
 	 */
 	public PIDController(double p, double i, double d, double topSpeed) {
 		//set attributes

@@ -67,7 +67,11 @@ public class TrapezoidalProfile extends DriveProfile {
 		
 		int loops = (int) (tT / dt); //number of timesteps
 		
-		for (int i = 0; i < loops; i++) {
+		//add first points
+		this.leftProfile.add(new double[] {0,0, acc});
+		this.rightProfile.add(new double[] {0,0, acc});
+		
+		for (int i = 1; i < loops; i++) {
 			double t = i * dt;
 			if (t < tA) { //accelerating
 				a = acc;

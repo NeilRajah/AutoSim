@@ -31,6 +31,18 @@ public class DriveOpenLoopProfile extends Command {
 		this.traj = new TrapezoidalProfile(totalDist, accDist, maxVel);
 		this.robot = loop.getRobot();
 	} //end constructor
+	
+	/**
+	 * Follow a simple, symmetric trapezoidal motion profile
+	 * @param loop Loop that controls robot
+	 * @param trap Trapezoidal motion profile
+	 */
+	public DriveOpenLoopProfile(DriveLoop loop, TrapezoidalProfile trap) {
+		//set attributes
+		this.loop = loop;
+		this.traj = trap;
+		this.robot = loop.getRobot();
+	} //end constructor
 
 	/**
 	 * Set the state of the loop and zero the index

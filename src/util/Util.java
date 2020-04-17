@@ -39,8 +39,8 @@ public class Util {
 	
 	//Motion Profiling Constants (calculated empirically)
 	//initialized to negative value for detecting errors in not assigning it
-	public static double kV_EMPIR = 0.9908; //voltage -> ft/s, 1.2
-	public static double kA_EMPIR = 0.0; //voltage -> ft/s^2, 0.12
+	public static double kV_EMPIR = 1.2; //voltage -> ft/s, 1.2
+	public static double kA_EMPIR = 0.08; //voltage -> ft/s^2, 0.12
 	
 	//Motors (values from https://motors.vex.com/)
 	//Free Speed (RPM), Free Current (A), Stall Torque (Nm), Stall Current (A)
@@ -52,6 +52,9 @@ public class Util {
 	
 	//Path Constants
 	public static final int[] FIVENOMIAL_CONSTANTS = {1,5,10,10,5,1};
+	
+	//Directory Constants
+	public static final String UTIL_DIR = "./src//util//";
 	
 	//Widget IDs
 	public static enum WIDGET_ID {
@@ -416,4 +419,18 @@ public class Util {
 		
 		return num;
 	} //end stringToNum
+	
+	/**
+	 * Scale all elements of an array by a constant
+	 * @param d Array to scale
+	 * @param s Constant scalar
+	 * @return Scaled array
+	 */
+	public static double[] scaleArray(double[] d, double s) {
+		for (int i = 0; i < d.length; i++) {
+			d[i] *= s;
+		} //loop
+		
+		return d;
+	} //end scaleArray
 } //end Util

@@ -90,7 +90,7 @@ public abstract class DriveProfile {
 	 * @return Size of the lists
 	 */
 	public int getSize() {
-		return headings.size();
+		return leftProfile.size();
 	} //end getSize
 	
 	/**
