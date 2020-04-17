@@ -120,8 +120,8 @@ public class AutoSim {
 		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR); //need better values
 		
 		//create the command group
-		trap = new TrapezoidalProfile(100, 20, 12);
-		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, trap, 2)); 
+		trap = new TrapezoidalProfile(150, 30, 12);
+		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, trap, 1)); 
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize
 	

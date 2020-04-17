@@ -101,4 +101,12 @@ public abstract class DriveProfile {
 		for (int i = 0; i < headings.size(); i++) 
 			headings.set(i, heading);
 	} //end fillHeadings
+	
+	/**
+	 * Get the total distance of the profile
+	 * @return Final distance in list
+	 */
+	public double getTotalDist() {
+		return leftProfile.get(leftProfile.size() - 1)[0];
+	} //end getTotalDist
 } //end class

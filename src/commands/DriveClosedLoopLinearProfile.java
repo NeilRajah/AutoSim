@@ -50,7 +50,7 @@ public class DriveClosedLoopLinearProfile extends Command {
 	 * Set the state of the loop and zero the index
 	 */
 	protected void initialize() {
-		loop.setClosedLoopLinearProfileState(tolerance);
+		loop.setClosedLoopLinearProfileState(tolerance, traj.getTotalDist());
 		index = 0;
 	} //end initialize
 
@@ -68,7 +68,9 @@ public class DriveClosedLoopLinearProfile extends Command {
 	 * End the command when the trajectory time has passed
 	 */
 	protected boolean isFinished() {
-		return (index * Util.UPDATE_PERIOD) > traj.getTotalTime();
+		return (loop.isDrivePIDAtTarget() && 
+				loop.isRobotSlowerThanPercent(Util.kP_DRIVE * tolerance)) &&
+				(index * Util.UPDATE_PERIOD) > traj.getTotalTime();
 	} //end isFinished
 	
 	protected void end() {

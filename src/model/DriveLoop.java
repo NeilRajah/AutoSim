@@ -328,10 +328,12 @@ public class DriveLoop {
 	/**
 	 * Set the state of the loop to closed loop profile
 	 * @param tolerance Distance tolerance
+	 * @param totalDist Distance setpoint
 	 */
-	public void setClosedLoopLinearProfileState(double tolerance) {
+	public void setClosedLoopLinearProfileState(double tolerance, double totalDist) {
 		this.state = STATE.CLOSED_LOOP_LINEAR_PROFILE;
 		this.tolerance = tolerance;
+		this.goalDist = totalDist;
 	} //end set state
 	
 	/**
