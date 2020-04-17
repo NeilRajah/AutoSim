@@ -27,8 +27,8 @@ public class DriveLoop {
 	private double kV; //feedforward velocity constant
 	private double kA; //feedforward acceleration constant
 	
-	private double leftVel; //left profile velocity
-	private double rightVel; //right profile velocity
+	private double[] leftPVA; //position, velocity and acceleration
+	private double[] rightPVA; 
 	
 	//States the robot can be in
 	public static enum STATE {
@@ -305,15 +305,18 @@ public class DriveLoop {
 	 * @param leftVel Left goal velocity in ft/s
 	 * @param rightVel Right goal velocity in ft/s
 	 */
-	public void updateOpenLoopProfileState(double leftVel, double rightVel) {
-		this.leftVel = leftVel;
-		this.rightVel = rightVel;
+	public void updateOpenLoopProfileState(double[] left, double[] right) {
+		this.leftPVA = left;
+		this.rightPVA = right;
 	} //end updateOpenLoopProfileState
 	
 	/**
 	 * Set the robot output based on left and right goal velocities
 	 */
 	private void openLoopProfileLoop() {
-		robot.update(kV * leftVel, kV * rightVel);
+		double leftOut = kV * leftPVA[1] + kA * leftPVA[2];
+		double rightOut = kV * rightPVA[1] + kA * rightPVA[2];
+		
+		robot.update(leftOut, rightOut);
 	} //end openLoopProfileLoop
 } //end class

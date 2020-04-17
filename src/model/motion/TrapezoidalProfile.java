@@ -29,10 +29,10 @@ public class TrapezoidalProfile extends DriveProfile {
 	 */
 	public TrapezoidalProfile(double totalDist, double accDist, double maxVel) {
 		//set attributes
-		this.dT = totalDist;
-		this.dA = accDist;
-		this.dD = accDist;
-		this.vM = maxVel * 12; //convert to inches
+		this.dT = totalDist / 12; //convert to feet
+		this.dA = accDist / 12; //feet
+		this.dD = accDist / 12; //feet
+		this.vM = maxVel;
 		
 		computeConstants();
 		fillProfiles();

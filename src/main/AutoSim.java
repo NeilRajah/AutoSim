@@ -12,6 +12,8 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import commands.CommandGroup;
+import commands.CommandList;
+import commands.DriveOpenLoopProfile;
 import commands.routines.DriveToGoalDemo;
 import graphics.Painter;
 import graphics.Window;
@@ -109,12 +111,13 @@ public class AutoSim {
 		PIDController drivePID = new PIDController(Util.kP_DRIVE, Util.kI_DRIVE, Util.kD_DRIVE, r.getMaxLinSpeed());
 		PIDController turnPID = new PIDController(Util.kP_TURN, Util.kI_TURN, Util.kD_TURN, r.getMaxLinSpeed());
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
-		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR);
+		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR); //need better values
 		
 		//create the command group
-		cg = new DriveToGoalDemo();
+//		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 200, 1, r.getMaxLinSpeed()));
 //		cg = new CommandList(new DriveToGoal(driveLoop, new Point(200, 200), 1, r.getMaxLinSpeed(), 0, false));
+		cg = new CommandList(new DriveOpenLoopProfile(driveLoop, 100, 20, 12)); 
 	} //end initialize
 	
 	/**
@@ -134,9 +137,8 @@ public class AutoSim {
 		w.addWidget(angSpd);
 		
 		//bezier path creator widget
-		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
-		bezWidg.setControlPoints("src//main//niceLongCurve.crv");
-		
-		w.addWidget(bezWidg);
+//		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
+//		bezWidg.setControlPoints("src//main//niceLongCurve.crv");
+//		w.addWidget(bezWidg);
 	} //end addWidgets
 } //end AutoSim

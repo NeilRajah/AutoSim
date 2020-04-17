@@ -67,7 +67,6 @@ public class BezierPathCreator extends JPanel {
 		this.setLayout(gb);
 		
 		//layout each of the components
-//		layoutTopRow();
 		layoutControlPointArea();
 		
 		//update curve points

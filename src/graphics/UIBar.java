@@ -137,6 +137,6 @@ public class UIBar extends JComponent {
 		g2.setColor(Color.black);
 		Painter.drawFlippedString(g2, cursorLoc, 0, TEXT_HEIGHT); //cursor location
 		Painter.drawFlippedString(g2, time + "s", (int) (width * 0.7), TEXT_HEIGHT); //simulation time
-		Painter.drawFlippedString(g2, currentCmd, (int) (width * 0.4), TEXT_HEIGHT); //name of command being run
+		Painter.drawFlippedString(g2, currentCmd, (int) (width * 0.32), TEXT_HEIGHT); //name of command being run
 	} //end paintComponent
 } //end class
