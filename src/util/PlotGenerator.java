@@ -72,31 +72,7 @@ public class PlotGenerator {
 	 * Display a chart in a separate window
 	 * @param c Chart to display
 	 */
-	public static void displayChart(XYChart c) {
-		/* Display chart using image
-		String filename = "displayChart";
-		saveChartToFile(c, filename);
-		
-		try {
-			Image img = ImageIO.read(new File(Util.UTIL_DIR + filename + ".png"));
-			img = img.getScaledInstance(c.getWidth(), c.getHeight(), BufferedImage.SCALE_SMOOTH);
-			ImageIcon icon = new ImageIcon(img);
-			
-			JFrame frame = new JFrame();
-			
-			JLabel comp = new JLabel();
-			comp.setIcon(icon);
-			frame.add(comp);
-			frame.pack();
-			frame.setVisible(true);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
-		} catch (IOException e) {
-			Util.println("Could not display chart");
-			e.printStackTrace();
-		}
-		*/
-		
+	public static void displayChart(XYChart c) {		
 		new SwingWrapper(c).displayChart();
 		//save to high-res and display
 	} //end displayChart

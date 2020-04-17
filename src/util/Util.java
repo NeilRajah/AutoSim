@@ -38,9 +38,8 @@ public class Util {
 	public static final double kA_MODEL = 0.0203;
 	
 	//Motion Profiling Constants (calculated empirically)
-	//initialized to negative value for detecting errors in not assigning it
-	public static double kV_EMPIR = 1.2; //voltage -> ft/s, 1.2
-	public static double kA_EMPIR = 0.08; //voltage -> ft/s^2, 0.12
+	public static double kV_EMPIR = 1.16667; //voltage -> ft/s, 1.2
+	public static double kA_EMPIR = 0.085; //voltage -> ft/s^2, 0.12
 	
 	//Motors (values from https://motors.vex.com/)
 	//Free Speed (RPM), Free Current (A), Stall Torque (Nm), Stall Current (A)

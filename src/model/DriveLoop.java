@@ -37,7 +37,7 @@ public class DriveLoop {
 		DRIVE_DISTANCE, //PID distance driving
 		TURN_ANGLE, 	//PID angle turning
 		OPEN_LOOP_PROFILE, //FF profile following
-		CLOSED_LOOP_PROFILE //FF + PID profile following
+		CLOSED_LOOP_LINEAR_PROFILE //FF + PID profile following
 	} //end enum
 	
 	/**
@@ -124,6 +124,11 @@ public class DriveLoop {
 			case OPEN_LOOP_PROFILE:
 				//FF
 				openLoopProfileLoop();
+				break;
+				
+			case CLOSED_LOOP_LINEAR_PROFILE:
+				//PID + FF
+				closedLoopLinearProfileLoop();
 				break;
 		} //switch-case
 	} //end onLoop
@@ -319,4 +324,36 @@ public class DriveLoop {
 		
 		robot.update(leftOut, rightOut);
 	} //end openLoopProfileLoop
+
+	/**
+	 * Set the state of the loop to closed loop profile
+	 * @param tolerance Distance tolerance
+	 */
+	public void setClosedLoopLinearProfileState(double tolerance) {
+		this.state = STATE.CLOSED_LOOP_LINEAR_PROFILE;
+		this.tolerance = tolerance;
+	} //end set state
+	
+	/**
+	 * Update the left and right goals
+	 * @param left Left position, velocity and acceleration
+	 * @param right Right position, velocity and acceleration
+	 */
+	public void updateClosedLoopLinearProfileState(double[] left, double[] right) {
+		this.leftPVA = left;
+		this.rightPVA = right;
+	} //end updateClosedLoopLinearProfileState
+	
+	/**
+	 * Set the output based on the goal position, velocity and acceleration
+	 */
+	private void closedLoopLinearProfileLoop() {
+		double pos = leftPVA[0] * 12; //convert to inches
+		double vel = leftPVA[1];
+		double acc = leftPVA[2];
+		
+		double output = kV * vel + kA * acc + drivePID.calcPID(pos, robot.getAveragePos(), this.tolerance);
+//		double output = drivePID.calcRegulatedPID(pos, robot.getAveragePos(), this.tolerance, vel, 0) + kV * vel + kA * acc;
+		robot.update(output, output);
+	} //end closedLinearProfileLoop
 } //end class

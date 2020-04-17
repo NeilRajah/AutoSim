@@ -15,7 +15,8 @@ import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.DriveOpenLoopProfile;
+import commands.DriveClosedLoopLinearProfile;
+import commands.DriveDistance;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -120,7 +121,8 @@ public class AutoSim {
 		
 		//create the command group
 		trap = new TrapezoidalProfile(100, 20, 12);
-		cg = new CommandList(new DriveOpenLoopProfile(driveLoop, trap)); 
+		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, trap, 2)); 
+//		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize
 	
 	/**
