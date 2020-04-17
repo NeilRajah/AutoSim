@@ -27,7 +27,7 @@ public abstract class DriveProfile {
 	 * @return Trajectory point at the corresponding time
 	 */
 	public double[] getLeftTrajPoint(double time) {
-		return leftProfile.get(Math.min((int) (time / Util.UPDATE_PERIOD), leftProfile.size()));
+		return leftProfile.get(Math.min((int) (time / Util.UPDATE_PERIOD), leftProfile.size() - 1));
 	} //end getLeftTrajPoint
 	
 	/**
@@ -45,7 +45,7 @@ public abstract class DriveProfile {
 	 * @return Trajectory point at the corresponding time
 	 */
 	public double[] getRightTrajPoint(double time) {
-		return rightProfile.get(Math.min((int) (time / Util.UPDATE_PERIOD), rightProfile.size()));
+		return rightProfile.get(Math.min((int) (time / Util.UPDATE_PERIOD), rightProfile.size() - 1));
 	} //end getRightTrajPoint
 	
 	/**

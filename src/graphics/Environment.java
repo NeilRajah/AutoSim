@@ -47,7 +47,7 @@ public class Environment extends JComponent {
 	//Updated
 	private ArrayList<Pose> poses; //list of robot poses to draw
 	private ArrayList<HashMap<ROBOT_KEY, Object>> data; //data from the robot
-	private int poseIndex; //index in pose list of pose to draw
+	private static int poseIndex; //index in pose list of pose to draw
 	private int curveIndex; //index in curve list of curve to draw
 	private boolean debug; //whether to display the field or not
 	private boolean simulating; //true when the animation is running
@@ -117,6 +117,14 @@ public class Environment extends JComponent {
 	public void setSimulating(boolean isSimulating) {
 		this.simulating = isSimulating;
 	} //end setSimulating
+	
+	/**
+	 * Get the time of the simulation in seconds
+	 * @return Simulation time in seconds
+	 */
+	public static double getTime() {
+		return poseIndex * Util.UPDATE_PERIOD;
+	} //end getTime
 	
 	//Pose
 	

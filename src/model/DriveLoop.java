@@ -24,6 +24,11 @@ public class DriveLoop {
 	private double topSpeed; 	//max allowable speed
 	private double minSpeed; 	//min allowable speed
 	private double goalAngle; 	//angle to turn to
+	private double kV; //feedforward velocity constant
+	private double kA; //feedforward acceleration constant
+	
+	private double leftVel; //left profile velocity
+	private double rightVel; //right profile velocity
 	
 	//States the robot can be in
 	public static enum STATE {
@@ -31,6 +36,8 @@ public class DriveLoop {
 		DRIVE_TO_GOAL,	//point to point driving
 		DRIVE_DISTANCE, //PID distance driving
 		TURN_ANGLE, 	//PID angle turning
+		OPEN_LOOP_PROFILE, //FF profile following
+		CLOSED_LOOP_PROFILE //FF + PID profile following
 	} //end enum
 	
 	/**
@@ -53,7 +60,19 @@ public class DriveLoop {
 		topSpeed = 0;
 		tolerance = 0;
 	} //end constructor
-
+	
+	//Configure Constants
+	
+	/**
+	 * Set the feedforward values for the robot
+	 * @param kV Velocity feedforward (V / ft/s)
+	 * @param kA Acceleration feedforward (V / ft/s^2)
+	 */
+	public void setFFValues(double kV, double kA) {
+		this.kV = kV;
+		this.kA = kA;
+	} //end setFFValues
+	
 	//States
 	
 	/**
@@ -99,6 +118,12 @@ public class DriveLoop {
 			case TURN_ANGLE:
 				//pid
 				turnAngleLoop();
+				break;
+				
+			//follow a profile with open loop controls
+			case OPEN_LOOP_PROFILE:
+				//FF
+				openLoopProfileLoop();
 				break;
 		} //switch-case
 	} //end onLoop
@@ -266,4 +291,29 @@ public class DriveLoop {
 		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);
 	} //end driveToGoalLoop	
+
+	/**
+	 * Set the state machine into the open loop profile state
+	 */
+	public void setOpenLoopProfileState() {
+		//set the state
+		this.state = STATE.OPEN_LOOP_PROFILE;
+	} //end setOpenLoopProfileState
+	
+	/**
+	 * Update the left and right goal velocities
+	 * @param leftVel Left goal velocity in ft/s
+	 * @param rightVel Right goal velocity in ft/s
+	 */
+	public void updateOpenLoopProfileState(double leftVel, double rightVel) {
+		this.leftVel = leftVel;
+		this.rightVel = rightVel;
+	} //end updateOpenLoopProfileState
+	
+	/**
+	 * Set the robot output based on left and right goal velocities
+	 */
+	private void openLoopProfileLoop() {
+		robot.update(kV * leftVel, kV * rightVel);
+	} //end openLoopProfileLoop
 } //end class

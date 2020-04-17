@@ -365,6 +365,6 @@ class ModelTest {
 			System.out.println();
 		} //loop
 		
-		assertEquals(100.0, tp.getLeftTrajPoint(tp.getTotalTime() - 0.05)[0], 0.01);
+		assertEquals(100.0, tp.getLeftTrajPoint(tp.getTotalTime())[0], 0.5);
 	} //end trapProfileTest
 } //end class

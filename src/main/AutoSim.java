@@ -109,6 +109,7 @@ public class AutoSim {
 		PIDController drivePID = new PIDController(Util.kP_DRIVE, Util.kI_DRIVE, Util.kD_DRIVE, r.getMaxLinSpeed());
 		PIDController turnPID = new PIDController(Util.kP_TURN, Util.kI_TURN, Util.kD_TURN, r.getMaxLinSpeed());
 		driveLoop = new DriveLoop(r, drivePID, turnPID);
+		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR);
 		
 		//create the command group
 		cg = new DriveToGoalDemo();
