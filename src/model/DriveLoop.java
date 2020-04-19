@@ -174,6 +174,15 @@ public class DriveLoop {
 		return robot.isSlowerThanPercent(percent); 
 	} //end isRobotSlowerThanPercent
 	
+	/**
+	 * Return if the robot is slower than a velocity (ft/s)
+	 * @param vel Velocity to be slower than
+	 * @return True if slower, false if not
+	 */
+	public boolean isRobotSlowerThanVel(double vel) {
+		return robot.isSlowerThanPercent(Math.abs(vel) / robot.getMaxLinSpeed());
+	} //end isRobotSlowerThanVel
+	
 	//DriveDistance state
 	
 	/**
@@ -354,8 +363,17 @@ public class DriveLoop {
 		double vel = leftPVA[1];
 		double acc = leftPVA[2];
 		
-		double output = kV * vel + kA * acc + drivePID.calcPID(pos, robot.getAveragePos(), this.tolerance);
-//		double output = drivePID.calcRegulatedPID(pos, robot.getAveragePos(), this.tolerance, vel, 0) + kV * vel + kA * acc;
+		double output = drivePID.calcDVPID(pos, robot.getAveragePos(), vel, tolerance) + calcFFOutput(vel, acc);
 		robot.update(output, output);
 	} //end closedLinearProfileLoop
+	
+	/**
+	 * Calculate the feedforward output based on velocity and acceleration
+	 * @param vel Goal velocity
+	 * @param acc Goal acceleration
+	 * @return Output using feedforward constants determined through characterization
+	 */
+	private double calcFFOutput(double vel, double acc) {
+		return kV * vel + kA * acc;
+	} //end calcFFOutput
 } //end class

@@ -26,7 +26,7 @@ public class Util {
 	//DrivePID constants
 	public static final double kP_DRIVE = 0.32; 
 	public static final double kI_DRIVE = 0.0;
-	public static final double kD_DRIVE = 1.25;
+	public static final double kD_DRIVE = 0.1; //1.25
 
 	//TurnPID constants
 	public static final double kP_TURN = 7.5;

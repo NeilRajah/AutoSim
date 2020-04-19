@@ -16,7 +16,6 @@ import org.knowm.xchart.XYChart;
 import commands.CommandGroup;
 import commands.CommandList;
 import commands.DriveClosedLoopLinearProfile;
-import commands.DriveDistance;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -72,8 +71,7 @@ public class AutoSim {
 		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
 		//launch the application
-		w.launch();
-			
+		w.launch();			
 	} //end main
 	
 	/**
@@ -120,7 +118,7 @@ public class AutoSim {
 		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR); //need better values
 		
 		//create the command group
-		trap = new TrapezoidalProfile(150, 30, 12);
+		trap = new TrapezoidalProfile(200, 30, 12);
 		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, trap, 1)); 
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize

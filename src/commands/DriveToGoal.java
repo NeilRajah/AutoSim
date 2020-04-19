@@ -200,17 +200,11 @@ public class DriveToGoal extends Command {
 	 */
 	private double calcDeltaAngle() {
 		double pointYaw = FieldPositioning.calcGoalYaw(robot.getPoint(), goalPoint); // calculate the yaw to
-//		pointYaw = Util.clampNum(pointYaw, , 180);
 		
 		pointYaw -= reverse ? Math.copySign(180, pointYaw) : 0; // add 180 in opposite direction if reversing
 
 		double deltaAngle = pointYaw - robot.getYaw(); // yaw difference between point yaw and robot yaw
-		
-//		if (printCounter % 5 == 0)
-//		Util.println(goalPoint.getX() - robot.getX(), goalPoint.getY() - robot.getY(),
-//						pointYaw, robot.getYaw(), deltaAngle);
-//		printCounter++;
-		
+				
 		//if angle change is in wrong direction
 		if (Math.abs(deltaAngle) >= 180) {
 			deltaAngle += 360;

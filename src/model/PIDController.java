@@ -131,4 +131,33 @@ public class PIDController {
 		
 		return Util.regulatedClamp(output, botLimit, topLimit);
 	} //end calcRegulatedPID
+	
+	/**
+	 * Return PID output based on a Distance and Velocity goal
+	 * @param setpoint Goal distance
+	 * @param current Current distance
+	 * @param goalVel Goal velocity
+	 * @param epsilon Distance range to be within to be considered done
+	 * @return Feedback output based on distance and velocity
+	 */
+	public double calcDVPID(double setpoint, double current, double goalVel, double epsilon) {
+		//distance error
+		double error = setpoint - current;
+		
+		//update atTarget
+		atTarget = Math.abs(error) <= epsilon;
+		
+		//output based on distance error
+		double pOut = kP * error;
+		
+		//output based on velocity difference from goal velocity
+		double errorVel = (error - lastError) / (Util.UPDATE_PERIOD * 12); // to FPS
+		double dOut = kD * (errorVel - goalVel);
+		
+		//set lastError for next loop
+		lastError = error;
+		
+		//output is sum of both terms
+		return pOut + dOut;
+	} //end calcDVPID
 } //end class
