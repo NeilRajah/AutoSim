@@ -338,11 +338,13 @@ public class DriveLoop {
 	 * Set the state of the loop to closed loop profile
 	 * @param tolerance Distance tolerance
 	 * @param totalDist Distance setpoint
+	 * @param initPos Initial position
 	 */
-	public void setClosedLoopLinearProfileState(double tolerance, double totalDist) {
+	public void setClosedLoopLinearProfileState(double tolerance, double totalDist, double initPos) {
 		this.state = STATE.CLOSED_LOOP_LINEAR_PROFILE;
 		this.tolerance = tolerance;
 		this.goalDist = totalDist;
+		this.drivePID.setInitPos(initPos);
 	} //end set state
 	
 	/**
@@ -359,11 +361,16 @@ public class DriveLoop {
 	 * Set the output based on the goal position, velocity and acceleration
 	 */
 	private void closedLoopLinearProfileLoop() {
-		double pos = leftPVA[0] * 12; //convert to inches
+		double pos = leftPVA[0]; 
 		double vel = leftPVA[1];
 		double acc = leftPVA[2];
 		
-		double output = drivePID.calcDVPID(pos, robot.getAveragePos(), vel, tolerance) + calcFFOutput(vel, acc);
+//		Util.println(pos, vel, acc);
+				
+//		double output = drivePID.calcDVPID(pos, robot.getAveragePos(), vel, tolerance) + calcFFOutput(vel, acc);
+		double output = drivePID.calcDVPID(pos, robot.getAveragePos(), vel, tolerance);
+		output += calcFFOutput(vel, acc);
+		
 		robot.update(output, output);
 	} //end closedLinearProfileLoop
 	

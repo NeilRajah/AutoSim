@@ -24,9 +24,9 @@ public class Util {
 	
 	//PID constants
 	//DrivePID constants
-	public static final double kP_DRIVE = 0.32; 
+	public static final double kP_DRIVE = 0.3; //0.3 P2P, 0.9 traj
 	public static final double kI_DRIVE = 0.0;
-	public static final double kD_DRIVE = 0.1; //1.25
+	public static final double kD_DRIVE = 1.25; //1.25 P2P, 0.13 traj
 
 	//TurnPID constants
 	public static final double kP_TURN = 7.5;
@@ -38,8 +38,8 @@ public class Util {
 	public static final double kA_MODEL = 0.0203;
 	
 	//Motion Profiling Constants (calculated empirically)
-	public static double kV_EMPIR = 1.1; //voltage -> ft/s, 1.2
-	public static double kA_EMPIR = 0.085; //voltage -> ft/s^2, 0.12
+	public static double kV_EMPIR = 1.07; //voltage -> ft/s, 1.2
+	public static double kA_EMPIR = 0.005; //voltage -> ft/s^2, 0.12
 	
 	//Motors (values from https://motors.vex.com/)
 	//Free Speed (RPM), Free Current (A), Stall Torque (Nm), Stall Current (A)

@@ -14,8 +14,7 @@ import java.awt.Toolkit;
 import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
-import commands.CommandList;
-import commands.DriveClosedLoopLinearProfile;
+import commands.routines.DriveToGoalDemo;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -26,6 +25,7 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import model.motion.DriveProfile;
 import model.motion.TrapezoidalProfile;
 import util.PlotGenerator;
 import util.Util;
@@ -52,7 +52,8 @@ public class AutoSim {
 	private static CommandGroup cg;
 	
 	//Trajectory to follow
-	private static TrapezoidalProfile trap;
+//	private static TrapezoidalProfile trap;
+	private static DriveProfile profile;
 	
 	/**
 	 * Create a Window and launch the program
@@ -68,7 +69,7 @@ public class AutoSim {
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
-		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
+//		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
 		//launch the application
 		w.launch();			
@@ -118,8 +119,10 @@ public class AutoSim {
 		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR); //need better values
 		
 		//create the command group
-		trap = new TrapezoidalProfile(200, 30, 12);
-		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, trap, 1)); 
+		profile = new TrapezoidalProfile(120, 24, 12);
+//		profile = new JerkProfile(200, 30, 12);
+//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
+		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize
 	
@@ -149,10 +152,21 @@ public class AutoSim {
 	 * Plot the robot data to a separate window
 	 */
 	private static void plotData() {
-		XYChart chart = PlotGenerator.createLinearTrajChart(trap, "Profile vs. Robot", 1920, 1080);
+		XYChart chart = PlotGenerator.createLinearTrajChart(profile, "Profile vs. Robot", 1920, 1080, 1);
 		
+		/* Position and acc
+		double[][] posSeries = PlotGenerator.getXYFromProfile(profile, 0);
+		chart.addSeries("Position (\")", posSeries[0], posSeries[1]);
+
+		double[][] accSeries = PlotGenerator.getXYFromProfile(profile, 2);
+		chart.addSeries("Acceleration (\")", accSeries[0], accSeries[1]);
+		*/
+		
+		//robot data
 		double[][] robotSeries = PlotGenerator.getXYFromRobotData(cg.getData(), ROBOT_KEY.LIN_VEL);
 		chart.addSeries("Robot", robotSeries[0], robotSeries[1]);
+		
+		//show the chart
 		PlotGenerator.displayChart(chart);
 	} //end plotData
 } //end AutoSim

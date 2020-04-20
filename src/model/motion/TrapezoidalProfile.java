@@ -29,10 +29,10 @@ public class TrapezoidalProfile extends DriveProfile {
 	 */
 	public TrapezoidalProfile(double totalDist, double accDist, double maxVel) {
 		//set attributes
-		this.dT = totalDist / 12; //convert to feet
-		this.dA = accDist / 12; //feet
-		this.dD = accDist / 12; //feet
-		this.vM = maxVel;
+		this.dT = totalDist;
+		this.dA = accDist;
+		this.dD = accDist;
+		this.vM = maxVel * 12; //convert to inches
 		
 		computeConstants();
 		fillProfiles();
@@ -47,8 +47,8 @@ public class TrapezoidalProfile extends DriveProfile {
 		this.dec = -(vM * vM) / (2 * dD); //v^2 / 2d, negative for opposite direction
 		
 		//times
-		this.tA = Math.sqrt((2 * dA) / (acc)); //sqrt(2d/a)
-		this.tD = Math.sqrt((2 * dD) / (Math.abs(dec))); //sqrt(2d/a)
+		this.tA = (2 * dA) / vM; //2d / v
+		this.tD = (2 * dD) / vM; //2d / v
 		double tC = (dT - dA - dD) / vM; //cruise dist / cruise vel
 		this.tT = tA + tC + tD;
 		
@@ -65,14 +65,15 @@ public class TrapezoidalProfile extends DriveProfile {
 		double a = 0; //acceleration
 		double dt = Util.UPDATE_PERIOD; //time interval
 		
-		int loops = (int) (tT / dt); //number of timesteps
+		int loops = (int) Math.ceil(tT / dt); //number of timesteps
 		
 		//add first points
-		this.leftProfile.add(new double[] {0,0, acc});
-		this.rightProfile.add(new double[] {0,0, acc});
+		this.leftProfile.add(new double[] {0, 0, acc});
+		this.rightProfile.add(new double[] {0, 0, acc});
 		
-		for (int i = 1; i < loops; i++) {
-			double t = i * dt;
+		for (int i = 1; i <= loops; i++) {
+			double t = i * dt; //current time
+			
 			if (t < tA) { //accelerating
 				a = acc;
 				v += a * dt; //v = at
@@ -85,13 +86,13 @@ public class TrapezoidalProfile extends DriveProfile {
 				
 			} else { //decelerating
 				a = dec;
-				v += dec * dt;
+				v += dec * dt; //v = at
 				p += v * dt + 0.5 * a * dt * dt; //p = vt + 0.5at^2
 			} //if
 			
 			//add trajectory points to lists
-			this.leftProfile.add(new double[] {p,v,a});
-			this.rightProfile.add(new double[] {p,v,a});
+			this.leftProfile.add(new double[] {p, v / 12, a}); //vel back to ft/s
+			this.rightProfile.add(new double[] {p, v / 12, a});
 		} //loop
 	} //end fillProfiles
 } //end class

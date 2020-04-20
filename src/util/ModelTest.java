@@ -10,6 +10,9 @@ package util;
 import static org.junit.Assert.assertEquals;
 
 import java.awt.Color;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -356,15 +359,36 @@ class ModelTest {
 	 * Test the functionality of the trapezoidal profile
 	 */
 	void trapProfileTest() {
-		TrapezoidalProfile tp = new TrapezoidalProfile(100, 20, 12);
+		TrapezoidalProfile tp = new TrapezoidalProfile(100, 24, 12);
 		
-		for (double t = 0; t < tp.getTotalTime(); t += Util.UPDATE_PERIOD) {
+		/* Print positions and velocities
+		 for (double t = 0; t < tp.getTotalTime(); t += Util.UPDATE_PERIOD) {
 			double[] l = tp.getLeftTrajPoint(t);
 			double[] r = tp.getRightTrajPoint(t);
 			Util.tabPrint(t, l[0], r[0], l[1], r[1], l[2], r[2]);
 			System.out.println();
 		} //loop
+		*/		
 		
-		assertEquals(100.0, tp.getLeftTrajPoint(tp.getTotalTime())[0], 0.5);
+		//open chart plot
+		//PlotGenerator.displayChart(PlotGenerator.createLinearTrajChart(tp, "trapProfileTest", 1920, 1080, 1));
+		
+		assertEquals(100.0, tp.getLeftTrajPoint(tp.getTotalTime())[0], 1);
 	} //end trapProfileTest
+	
+	@Test
+	/**
+	 * Testing time calculations for linear trajectories
+	 */
+	void linearTimeCalculationTest() {
+		double maxVel = 144; //inches
+		double accDist = 24; //inches
+		
+		double trajAcc = Math.pow(maxVel, 2) / (2 * accDist);
+		double t1 = Math.sqrt((2 * accDist) / trajAcc);
+		
+		double t2 = (2 * accDist) / maxVel;
+		
+		assertEquals(t1, t2, 0.05);
+	} //end linearTimeCalculationTest
 } //end class

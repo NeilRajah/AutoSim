@@ -7,17 +7,11 @@
 
 package util;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.BitmapEncoder.BitmapFormat;
@@ -36,20 +30,39 @@ public class PlotGenerator {
 	 */
 	public static void main(String[] args) {
 		TrapezoidalProfile trap = new TrapezoidalProfile(100, 20, 12);
-		displayChart(createLinearTrajChart(trap, "Trapezoidal Profile", 1024, 768));
+		displayChart(createLinearTrajChart(trap, "Trapezoidal Profile", 1024, 768, 1));
 	} //end main
 	
 	/**
 	 * Create a profile trajectory plot with position, velocity and acceleration
 	 * @param profile Profile to get data from
 	 * @param title Plot title
+	 * @param width Width in pixels
+	 * @param height Height in pixels
+	 * @param key 0,1,2 -> position, velocity, acceleration
 	 */
-	public static XYChart createLinearTrajChart(DriveProfile profile, String title, int width, int height) {		
-		double[][] xy = getXYFromProfile(profile, 1);
-//		xy[1] = Util.scaleArray(xy[1], 12); //convert from ft/s to in/s
+	public static XYChart createLinearTrajChart(DriveProfile profile, String title, int width, int height, int key) {		
+		double[][] xy = getXYFromProfile(profile, key);
 		
 		//create chart
-		XYChart chart = buildChart(width, height, title, "Time (s)", "Velocity (ft/s)");
+		//re-factor this to HashMap, separate method
+		String yAxis = "";
+		
+		switch (key) {
+			case 0: 
+				yAxis = "Position (\"";
+				break;
+				
+			case 1: 
+				yAxis = "Velocity (ft/s)";
+				break;
+				
+			case 2:
+				yAxis = "Acceleration (ft/s^2)";
+				break;
+		} //switch
+		
+		XYChart chart = buildChart(width, height, title, "Time (s)", yAxis);
 		chart.addSeries("Profile", xy[0], xy[1]);
 		
 		return chart;
@@ -69,13 +82,25 @@ public class PlotGenerator {
 	} //end buildChart
 	
 	/**
-	 * Display a chart in a separate window
+	 * Display a chart in a separate Swing windowe
 	 * @param c Chart to display
 	 */
 	public static void displayChart(XYChart c) {		
 		new SwingWrapper(c).displayChart();
-		//save to high-res and display
 	} //end displayChart
+	
+	/**
+	 * Display a chart in the default image viewing application
+	 * @param c Chart to display
+	 */
+	public static void displayChartWindow(XYChart c) {		
+		PlotGenerator.saveChartToFile(c, "displayChartWindow");
+		try {
+			Desktop.getDesktop().open(new File("src//util//displayChartWindow.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} //try-catch
+	} //end displayChartWindow
 	
 	/**
 	 * Save the chart to a file
@@ -96,7 +121,7 @@ public class PlotGenerator {
 	 * @param key Index in trajectory point array (0,1,2 -> position, velocity, acceleration)
 	 * @return Array containing the x and y arrays
 	 */
-	private static double[][] getXYFromProfile(DriveProfile profile, int key) {
+	public static double[][] getXYFromProfile(DriveProfile profile, int key) {
 		//get (x,y) points for profile
 		double[] x = new double[profile.getSize()];
 		double[] y = new double[profile.getSize()];

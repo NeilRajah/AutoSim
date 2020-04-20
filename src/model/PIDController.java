@@ -20,6 +20,7 @@ public class PIDController {
 	private double errorSum; //sum of all errors
 	private double lastError; //previous error
 	private boolean atTarget; //whether within epsilon bounds
+	private double initPos; //initial position value
 
 	/**
 	 * Create a PID controller with gains
@@ -35,8 +36,9 @@ public class PIDController {
 		kD = d;
 		this.topSpeed = topSpeed;
 		
-		errorSum = 0; // initialize errorSum to 0
-		lastError = 0; // initialize lastError to 0
+		errorSum = 0; //no error sum at beginning
+		lastError = 0; //zero previous error at beginning
+		initPos = 0; //initial position is zero
 	} //end constructor
 
 	//Attributes
@@ -81,6 +83,14 @@ public class PIDController {
 		lastError = 0;
 		atTarget = false;
 	} //end reset
+	
+	/**
+	 * Set the initial position of the controller
+	 * @param initPos Initial position
+	 */
+	public void setInitPos(double initPos) {
+		this.initPos = initPos;
+	} //end setInitPos
 	
 	//Calculations
 	
@@ -145,7 +155,7 @@ public class PIDController {
 		double error = setpoint - current;
 		
 		//update atTarget
-		atTarget = Math.abs(error) <= epsilon;
+		atTarget = Math.abs(current) - epsilon >= initPos + setpoint;
 		
 		//output based on distance error
 		double pOut = kP * error;
@@ -153,7 +163,7 @@ public class PIDController {
 		//output based on velocity difference from goal velocity
 		double errorVel = (error - lastError) / (Util.UPDATE_PERIOD * 12); // to FPS
 		double dOut = kD * (errorVel - goalVel);
-		
+						
 		//set lastError for next loop
 		lastError = error;
 		

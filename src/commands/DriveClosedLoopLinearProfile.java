@@ -34,13 +34,13 @@ public class DriveClosedLoopLinearProfile extends Command {
 	/**
 	 * Follow a simple, symmetric trapezoidal motion profile
 	 * @param loop Loop that controls robot
-	 * @param trap Trapezoidal motion profile
+	 * @param traj Trapezoidal motion profile
 	 * @param tolerance How close to be to the goal to be considered done
 	 */
-	public DriveClosedLoopLinearProfile(DriveLoop loop, TrapezoidalProfile trap, double tolerance) {
+	public DriveClosedLoopLinearProfile(DriveLoop loop, DriveProfile traj, double tolerance) {
 		//set attributes
 		this.loop = loop;
-		this.traj = trap;
+		this.traj = traj;
 		this.robot = loop.getRobot();
 		this.tolerance = tolerance;
 	} //end constructor
@@ -49,8 +49,10 @@ public class DriveClosedLoopLinearProfile extends Command {
 	 * Set the state of the loop and zero the index
 	 */
 	protected void initialize() {
-		loop.setClosedLoopLinearProfileState(tolerance, traj.getTotalDist());
-		index = 0;		
+		loop.setClosedLoopLinearProfileState(tolerance, traj.getTotalDist(), robot.getAveragePos());
+		index = 0;	
+		
+		this.setTimeout(3);
 	} //end initialize
 
 	/**
@@ -58,8 +60,10 @@ public class DriveClosedLoopLinearProfile extends Command {
 	 */
 	protected void execute() {
 		double time = index * Util.UPDATE_PERIOD; //would be getting actual time on real robot
+		
 		loop.updateClosedLoopLinearProfileState(traj.getLeftTrajPoint(time), traj.getRightTrajPoint(time));
 		loop.onLoop();
+		
 		index += 1;
 	} //end execute
 

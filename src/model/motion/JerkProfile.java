@@ -10,7 +10,7 @@ package model.motion;
 public class JerkProfile extends DriveProfile {
 	
 	public JerkProfile(double totalDist, double accDist, double maxVel) {
-//		super(createProfile(totalDist, accDist, maxVel));
+
 	}
 
 	/**

@@ -60,8 +60,8 @@ public class DriveToGoal extends Command {
 	 * Drive to a goal point given the x, y values of the point, tolerance to be within, maximum and minimum 
 	 * 	speeds, and whether the robot should drive in reverse
 	 * @param driveLoop drivetrain loop to update
-	 * @param x x value of the point
-	 * @param y y value of the point
+	 * @param x X value of the point
+	 * @param y Y value of the point
 	 * @param tolerance tolerance to be within in inches
 	 * @param topSpeed top speed of the robot in ft/s
 	 * @param minSpeed min speed of the robot in ft/s
@@ -96,7 +96,8 @@ public class DriveToGoal extends Command {
 	 * @return - true if within, false if not
 	 */
 	protected boolean isFinished() {
-		return FieldPositioning.isWithinBounds(goalPoint, loop.getRobot().getPoint(), tolerance);
+		return FieldPositioning.isWithinBounds(goalPoint, loop.getRobot().getPoint(), tolerance)
+				&& loop.isRobotSlowerThanVel(minSpeed);
 	} // end isFinished
 
 	/**
