@@ -92,6 +92,14 @@ public class PIDController {
 		this.initPos = initPos;
 	} //end setInitPos
 	
+	/**
+	 * Get the initial position of the controller
+	 * @return Initial position in inches
+	 */
+	public double getInitPos() {
+		return initPos;
+	} //end getInitPos
+	
 	//Calculations
 	
 	/**

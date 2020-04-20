@@ -361,7 +361,7 @@ public class DriveLoop {
 	 * Set the output based on the goal position, velocity and acceleration
 	 */
 	private void closedLoopLinearProfileLoop() {
-		double pos = leftPVA[0]; 
+		double pos = leftPVA[0] + this.drivePID.getInitPos(); //position robot needs to be at
 		double vel = leftPVA[1];
 		double acc = leftPVA[2];
 		

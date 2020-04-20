@@ -24,9 +24,9 @@ public class Util {
 	
 	//PID constants
 	//DrivePID constants
-	public static final double kP_DRIVE = 0.3; //0.3 P2P, 0.9 traj
+	public static final double kP_DRIVE = 0.9; //0.3 P2P, 0.9 traj
 	public static final double kI_DRIVE = 0.0;
-	public static final double kD_DRIVE = 1.25; //1.25 P2P, 0.13 traj
+	public static final double kD_DRIVE = 0.13; //1.25 P2P, 0.13 traj
 
 	//TurnPID constants
 	public static final double kP_TURN = 7.5;

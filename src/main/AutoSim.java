@@ -14,7 +14,8 @@ import java.awt.Toolkit;
 import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
-import commands.routines.DriveToGoalDemo;
+import commands.CommandList;
+import commands.DriveClosedLoopLinearProfile;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -26,7 +27,7 @@ import model.PIDController;
 import model.Point;
 import model.Robot;
 import model.motion.DriveProfile;
-import model.motion.TrapezoidalProfile;
+import model.motion.JerkProfile;
 import util.PlotGenerator;
 import util.Util;
 import util.Util.ROBOT_KEY;
@@ -119,10 +120,13 @@ public class AutoSim {
 		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR); //need better values
 		
 		//create the command group
-		profile = new TrapezoidalProfile(120, 24, 12);
-//		profile = new JerkProfile(200, 30, 12);
-//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
-		cg = new DriveToGoalDemo();
+//		profile = new TrapezoidalProfile(120, 24, 12);
+		profile = new JerkProfile(200, 30, 12);
+//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1),
+//							 new TurnAngle(driveLoop, 180, 0.5, 2, true),
+//							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
+		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
+//		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize
 	

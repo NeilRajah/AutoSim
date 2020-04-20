@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.BitmapEncoder.BitmapFormat;
@@ -20,7 +21,7 @@ import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 
 import model.motion.DriveProfile;
-import model.motion.TrapezoidalProfile;
+import model.motion.JerkProfile;
 import util.Util.ROBOT_KEY;
 
 public class PlotGenerator {
@@ -29,8 +30,15 @@ public class PlotGenerator {
 	 * Run tests and generate plots
 	 */
 	public static void main(String[] args) {
-		TrapezoidalProfile trap = new TrapezoidalProfile(100, 20, 12);
-		displayChart(createLinearTrajChart(trap, "Trapezoidal Profile", 1024, 768, 1));
+//		TrapezoidalProfile profile = new TrapezoidalProfile(100, 20, 12);
+		JerkProfile profile = new JerkProfile(100, 16, 12);	
+		
+//		for (int i = 0; i < 3; i++) {
+//			Util.println(i);
+//			displayChart(createLinearTrajChart(profile, "Jerk Profile", 1024, 768, i));
+//			new Scanner(System.in).nextLine();
+//		}
+		displayChart(createLinearTrajChart(profile, "Jerk Profile", 1024, 768, 1));
 	} //end main
 	
 	/**
