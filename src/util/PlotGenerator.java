@@ -31,7 +31,7 @@ public class PlotGenerator {
 	 */
 	public static void main(String[] args) {
 //		TrapezoidalProfile profile = new TrapezoidalProfile(100, 20, 12);
-		JerkProfile profile = new JerkProfile(100, 16, 12);	
+		JerkProfile profile = new JerkProfile(100, 24, 12);	
 		
 //		for (int i = 0; i < 3; i++) {
 //			Util.println(i);
@@ -66,7 +66,7 @@ public class PlotGenerator {
 				break;
 				
 			case 2:
-				yAxis = "Acceleration (ft/s^2)";
+				yAxis = "Acceleration (in/s^2)";
 				break;
 		} //switch
 		

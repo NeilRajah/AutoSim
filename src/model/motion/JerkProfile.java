@@ -57,15 +57,21 @@ public class JerkProfile extends DriveProfile {
 		this.tT = tA + tC + tD;
 		
 		//jerk constants
-		double s = 1;
+//		double s = 1;
 //		jA = (s * vM) / (tA * tA);
 //		jD = -(s * vM) / (tD * tD);
 //		jA = (4 * vM) / (tA * tA);
 //		jD = -(4 * vM) / (tD * tD);
-		double t = tA / 2;
-		jA = (6 / Math.pow(t, 3)) * (2.5 * vM * t - dA);
-		jD = -(6 / Math.pow(t, 3)) * (2.5 * vM * t - dD);
-
+//		double t = tA / 2;
+//		jA = (6 / Math.pow(t, 3)) * (2.5 * vM * t - dA);
+//		jD = -(6 / Math.pow(t, 3)) * (2.5 * vM * t - dD);
+		
+		//vel
+//		jA = (4 * vM) / (tA * tA);
+//		double s = 1.0;
+		jA = (4 * vM) / Math.pow(tA, 2); //4v / t^2
+		jD = -jA;
+		
 		//profile
 		this.totalTime = tT;
 	} //end computeConstants
@@ -78,39 +84,36 @@ public class JerkProfile extends DriveProfile {
 		double v = 0; //velocity
 		double a = 0; //acceleration
 		double dt = Util.UPDATE_PERIOD; //time interval
-		double dt2 = dt * dt;
-		double dt3 = dt * dt * dt;
+		
+		//time boundaries for each phase
+		double t1 = tA / 2;
+		double t2 = tA;
+		double t3 = tT - tD;
+		double t4 = tT - tD / 2;
+		
+		double prevV = 0;
 		
 		int loops = (int) Math.ceil(tT / dt); //number of timesteps
 		
-		for (int i = 0; i <= loops; i++) {
+		//calculate like piecewise function instead of numerically
+		for (int i = 1; i <= loops; i++) {
 			double t = i * dt;
 			
-			if (t <= tA / 2) { //increasing acceleration
-				a += jA * dt;
-				v += a * dt;
-				p += v * dt;
-				
-			} else if (t > tA / 2 && t <= tA) { //decreasing acceleration
-				a -= jA * dt;	
-				v += a * dt;
-				p += v * dt;	
-				
-			} else if (t > tA && t <= (tT - tD)) { //cruising
-				a = 0;
+			if (t <= t1) { //increasing acceleration
+				v = 0.5 * jA * Math.pow(t, 2);
+			} else if (t > t1 && t <= t2) { //decreasing acceleration
+				v = -0.5 * jA * Math.pow(t - t2, 2) + jA * Math.pow(t1, 2);
+			} else if (t > t2 && t <= t3) { //cruising
 				v = vM;
-				p += v * dt;
-				
-			} else if (t > (tT - tD) && t <= (tT - tD / 2)) { //increasing deceleration
-				a += jD * dt;
-				v += a * dt;
-				p += v * dt;
-				
+			} else if (t > t3 && t <= t4) { //increasing deceleration
+				v = vM + 0.5 * jD * Math.pow(t - t3, 2);
 			} else { //decreasing deceleration
-				a -= jD * dt;
-				v += a * dt;
-				p += v * dt;
+				v = -0.5 * jD * Math.pow(t - tT, 2);
 			} //if
+			
+			a = (v - prevV) / dt;
+			p += v * dt;
+			prevV = v;
 			
 			this.leftProfile.add(new double[] {p, v / 12, a}); //vel back to ft/s
 			this.rightProfile.add(new double[] {p, v / 12, a});

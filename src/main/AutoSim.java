@@ -70,7 +70,7 @@ public class AutoSim {
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
-//		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
+		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
 		//launch the application
 		w.launch();			

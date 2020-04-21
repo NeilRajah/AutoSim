@@ -104,10 +104,10 @@ public class PIDController {
 	
 	/**
 	 * Calculate the PID output based on the setpoint, current value and tolerance
-	 * @param setpoint - setpoint to reach
-	 * @param current - current value
-	 * @param epsilon - range the controller can be in to be considered "at goal"
-	 * @return - calculated PID output in volts
+	 * @param setpoint Setpoint to reach
+	 * @param current Current value
+	 * @param epsilon Range the controller can be in to be considered "at goal"
+	 * @return Calculated PID output in volts
 	 */
 	public double calcPID(double setpoint, double current, double epsilon) {		
 		//calculate error
@@ -140,7 +140,7 @@ public class PIDController {
 	 * @param epsilon range the controller can be in to be considered "at goal"
 	 * @param topSpeed magnitude of top of speed limit
 	 * @param minSpeed magnitude of bottom of speed limit
-	 * @return - regulated PID output in volts
+	 * @return Regulated PID output in volts
 	 */
 	public double calcRegulatedPID(double setpoint, double current, double epsilon, double topSpeed, double minSpeed) {
 		double output = calcPID(setpoint, current, epsilon);
@@ -156,20 +156,20 @@ public class PIDController {
 	 * @param current Current distance
 	 * @param goalVel Goal velocity
 	 * @param epsilon Distance range to be within to be considered done
-	 * @return Feedback output based on distance and velocity
+	 * @return Feedback output based on distance and velocity goals
 	 */
 	public double calcDVPID(double setpoint, double current, double goalVel, double epsilon) {
 		//distance error
 		double error = setpoint - current;
 		
 		//update atTarget
-		atTarget = Math.abs(current) - epsilon >= initPos + setpoint;
+		atTarget = Math.abs(current) >= initPos + setpoint - epsilon;
 		
 		//output based on distance error
 		double pOut = kP * error;
 		
 		//output based on velocity difference from goal velocity
-		double errorVel = (error - lastError) / (Util.UPDATE_PERIOD * 12); // to FPS
+		double errorVel = (error - lastError) / (Util.UPDATE_PERIOD * 12); //convert to FPS
 		double dOut = kD * (errorVel - goalVel);
 						
 		//set lastError for next loop

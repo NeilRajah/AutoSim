@@ -216,11 +216,7 @@ public class Robot {
 	 * @return - true if under, false if equal or over
 	 */
 	public boolean isSlowerThanPercent(double percent) {
-		if (Math.abs(linearVel) < percent * maxLinSpeed) {
-			return true;
-		} else {
-			return false;
-		} //if
+		return Math.abs(linearVel) < percent * maxLinSpeed;
 	} //end isSlowerThanPercent
 	
 	//Pose

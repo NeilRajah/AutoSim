@@ -42,7 +42,7 @@ public class DriveClosedLoopLinearProfile extends Command {
 		this.loop = loop;
 		this.traj = traj;
 		this.robot = loop.getRobot();
-		this.tolerance = tolerance;
+		this.tolerance = tolerance + 1;
 	} //end constructor
 
 	/**
@@ -50,9 +50,7 @@ public class DriveClosedLoopLinearProfile extends Command {
 	 */
 	protected void initialize() {
 		loop.setClosedLoopLinearProfileState(tolerance, traj.getTotalDist(), robot.getAveragePos());
-		index = 0;	
-		
-		this.setTimeout(3);
+		index = 0;			
 	} //end initialize
 
 	/**
@@ -72,10 +70,9 @@ public class DriveClosedLoopLinearProfile extends Command {
 	 */
 	protected boolean isFinished() {
 		//better is finished
-		return loop.isDrivePIDAtTarget() && loop.isRobotSlowerThanVel(traj.getLeftTrajPoint(traj.getSize() - 1)[1]);
-//		return (loop.isDrivePIDAtTarget() && 
-//				loop.isRobotSlowerThanPercent(Util.kP_DRIVE * tolerance)) &&
-//				(index * Util.UPDATE_PERIOD) > traj.getTotalTime();
+		return loop.isDrivePIDAtTarget() &&
+				loop.isRobotSlowerThanPercent(0.05) &&
+				(index * Util.UPDATE_PERIOD) > traj.getTotalTime();
 	} //end isFinished
 	
 	protected void end() {
