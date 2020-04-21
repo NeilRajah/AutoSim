@@ -16,6 +16,7 @@ import org.knowm.xchart.XYChart;
 import commands.CommandGroup;
 import commands.CommandList;
 import commands.DriveClosedLoopLinearProfile;
+import commands.TurnAngle;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.SpeedDisplay;
@@ -122,10 +123,10 @@ public class AutoSim {
 		//create the command group
 //		profile = new TrapezoidalProfile(120, 24, 12);
 		profile = new JerkProfile(200, 30, 12);
-//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1),
-//							 new TurnAngle(driveLoop, 180, 0.5, 2, true),
-//							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
-		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
+		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1),
+							 new TurnAngle(driveLoop, 180, 2, 12, true),
+							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
+//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize
