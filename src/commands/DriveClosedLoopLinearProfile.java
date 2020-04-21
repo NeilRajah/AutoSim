@@ -70,8 +70,8 @@ public class DriveClosedLoopLinearProfile extends Command {
 	 */
 	protected boolean isFinished() {
 		//better is finished
-		return loop.isDrivePIDAtTarget() &&
-				loop.isRobotSlowerThanPercent(0.05) &&
+		return (loop.isDrivePIDAtTarget() ||
+				loop.isRobotSlowerThanPercent(0.1)) &&
 				(index * Util.UPDATE_PERIOD) > traj.getTotalTime();
 	} //end isFinished
 	
