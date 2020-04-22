@@ -25,7 +25,7 @@ public class Util {
 	//PID constants
 	//DrivePID constants
 	public static final double kP_DRIVE = 0.9; //0.3 P2P, 0.9 traj
-	public static final double kI_DRIVE = 1E-6;
+	public static final double kI_DRIVE = 0;
 	public static final double kD_DRIVE = 0.13; //1.25 P2P, 0.13 traj
 
 	//TurnPID constants
@@ -432,4 +432,43 @@ public class Util {
 		
 		return d;
 	} //end scaleArray
+	
+	/**
+	 * Find the elements sandwiching value in list. Returns the values this number is between in ascending order,
+	 * or an array of just value if value is equivalent to another element in the list within tolerance. If value
+	 * is outside the range of the list, the closest boundary is returned.
+	 * @param list List of elements to search through
+	 * @param value Value to search with
+	 * @param tolerance Value to be within to be considered the same
+	 * @return Values surrounding value
+	 */
+	public static double[] findSandwichedElements(double[] list, double value, double tolerance) {
+		//if first value is equal
+		if (fuzzyEquals(list[0], value, tolerance)) 
+			return new double[] {value};
+		
+		for (int i = 1; i < list.length; i++) {
+			//if value is equal
+			if (fuzzyEquals(list[i], value, tolerance)) 
+				return new double[] {value};
+			
+			if (list[i-1] < value && list[i] > value) {
+				return new double[] {list[i-1], list[i]};
+			} //if
+		} //loop
+		
+		//didn't find any match, value is outside boundaries of the list
+		return new double[] {value < list[0] ? list[0] : list[list.length-1]};
+	} //end findSandwichedElements
+	
+	/**
+	 * Returns whether or not two doubles are close enough to one another to be equal
+	 * @param a First number
+	 * @param b Second number
+	 * @param eps Range they can be within
+	 * @return True if the difference of a and b is less than eps, false if not
+	 */
+	public static boolean fuzzyEquals(double a, double b, double eps) {
+		return Math.abs(a-b) <= eps;
+	} //end fuzzyEquals
 } //end Util

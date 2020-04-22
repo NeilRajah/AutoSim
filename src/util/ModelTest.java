@@ -391,4 +391,28 @@ class ModelTest {
 		
 		assertEquals(t1, t2, 0.05);
 	} //end linearTimeCalculationTest
+	
+	@Test
+	/**
+	 * Test the sandwiching elements function
+	 */
+	void findSandwichedElementsTest() {
+		double[] list = new double[] {0,2,5,9};
+		double value = 1;
+		double eps = 0.01;
+		
+		double[] correctElements = new double[] {0,2};
+		
+		Util.println(Util.findSandwichedElements(list, value, eps));
+		
+		assertEquals(correctElements, Util.findSandwichedElements(list, value, eps));
+	} //end findSandwichedElementsTest
+	
+	@Test
+	/**
+	 * Test the fuzzy equals function
+	 */
+	void fuzzyEqualsTest() {
+		assertEquals(false, Util.fuzzyEquals(10, 20, 0.1));
+	} //end fuzzyEqualsTest
 } //end class

@@ -37,7 +37,7 @@ public class BezierPath {
 	
 	/**
 	 * Create a quintic bezier path given an array of control points
-	 * @param controlPts - (x,y) control points
+	 * @param controlPts (x,y) control points
 	 * @param numSegments Number of segments the curve is split up into
 	 * @param trackWidth Half the width of robot for path ofsetting (inches)
 	 */
@@ -106,12 +106,6 @@ public class BezierPath {
 	 * Compute constants of the path
 	 */
 	private void computeConstants() {
-		/*
-		 * Length
-		 * (x,y) points for polyline (move to GraphicBezierPath?)
-		 * Headings
-		 * Curvature?
-		 */
 		computeLength();
 		fillHeadings();
 		computePolylines();
@@ -229,9 +223,7 @@ public class BezierPath {
 			//flip x and y because of field config
 			x[i] = (int) (p.getY() * (double) AutoSim.PPI); 
 			y[i] = (int) (p.getX() * (double) AutoSim.PPI);
-			
-//			/https://www.gamefromscratch.com/post/2012/11/24/GameDev-math-recipes-Rotating-one-point-around-another-point.aspx
-			
+						
 			//calc left and right sides
 			double thetaL, thetaR; //angle offsets for left and right
 			thetaL = headings[i] + 90;
@@ -243,9 +235,11 @@ public class BezierPath {
 				thetaR = buffer;
 			} //if
 			
+			//left side
 			xL[i] = (int) (x[i] + r * Math.cos(Math.toRadians(thetaL)));
 			yL[i] = (int) (y[i] + r * Math.sin(Math.toRadians(thetaL)));
 
+			//right side
 			xR[i] = (int) (x[i] + r * Math.cos(Math.toRadians(thetaR)));
 			yR[i] = (int) (y[i] + r * Math.sin(Math.toRadians(thetaR)));		
 			
