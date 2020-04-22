@@ -8,37 +8,43 @@
 package graphics;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
-import java.util.Scanner;
 
 import graphics.components.BoxButton.BUTTON_STATE;
 import graphics.widgets.Circle;
 import main.AutoSim;
+import model.FieldPositioning;
 import model.Point;
 import model.motion.BezierPath;
 import util.FieldPoints;
-import util.Util;
 
 public class GraphicBezierPath extends BezierPath {
 	//Attributes
 	private Circle[] circles; //control points
+	private int[][] poly;
+	private int[][] leftPoly;
+	private int[][] rightPoly;
+	private double[] headings;
+	private int numSegments;
+	private double trackWidth;
 	
 	/**
 	 * Create a bezier path with circles
 	 * @param circles Control points as circles
 	 */
 	public GraphicBezierPath(Circle[] circles) {
-		super(circles, BezierPath.FAST_RES, Painter.ROBOT_WIDTH / 2);
+		super(circles);
 		
+		this.numSegments = BezierPath.FAST_RES;
+		this.trackWidth = Painter.ROBOT_WIDTH / 2;
 		this.circles = circles;
 	} //end constructor
 	
 	/**
-	 * Create a blank path with high resolution
+	 * Create a blank path with fast resolution
 	 */
 	public GraphicBezierPath() {
-		super(BezierPath.FAST_RES, Painter.ROBOT_WIDTH / 2);
+		this(circlesFromPoints(FieldPositioning.pointsFromDoubles(FieldPoints.empty)));
 	} //end constructor
 	
 	/**
@@ -114,6 +120,7 @@ public class GraphicBezierPath extends BezierPath {
 	public void setCircles(Circle[] circles) {
 		this.circles = circles;
 		this.setControlPoints(circles);
+		updatePolylines();
 	} //end setCircles
 	
 	/**
@@ -210,4 +217,125 @@ public class GraphicBezierPath extends BezierPath {
 			circles[index].setState(BUTTON_STATE.DEFAULT);
 		} //if
 	} //end requestCircleLock
+	
+	//Polyline
+	
+	private void updatePolylines() {
+		updateCenterPolyline();		
+		updateHeadings();
+		updateSidePolylines();
+	}
+	
+	private void updateCenterPolyline() {
+		int[] x = new int[numSegments];
+		int[] y = new int[numSegments];
+		
+		double t = 0;
+		
+		for (int i = 0; i < numSegments; i++) {
+			Point p = this.calcPoint(t);
+			
+			//flip x and y because of field config
+			x[i] = (int) (p.getY() * (double) AutoSim.PPI); 
+			y[i] = (int) (p.getX() * (double) AutoSim.PPI);				
+			
+			t += 1.0 / numSegments;
+		} //loop
+		
+		poly = new int[][]{x, y};
+	} //end updateCenterPolyline
+	
+	/**
+	 * Update the heading values for path offsetting
+	 */
+	private void updateHeadings() {
+		headings = new double[numSegments];
+		
+		for (int i = 0; i < numSegments; i++) {
+			headings[i] = calcHeading(i);
+		} //loop
+	} //end updateHeadings
+	
+	/**
+	 * Calculate a heading at i knowing all the (x,y) values at regular t intervals
+	 * @param i Index in array
+	 * @return Heading at i in degrees
+	 */
+	private double calcHeading(int i) {
+		int[] x = poly[1];
+		int[] y = poly[0];
+		
+		if (i == 0) {
+			Point p1 = new Point(x[1], y[1]);
+			Point p2 = new Point(x[0], y[0]);
+			return FieldPositioning.calcGoalYaw(p1, p2);
+		} //if
+		
+		Point p1 = new Point(x[i-1], y[i-1]);
+		Point p2 = new Point(x[i], y[i]);
+		return FieldPositioning.calcGoalYaw(p1, p2);
+	} //end calcHeading
+	
+	/**
+	 * Calculate the polylines for the left and right sides of the drive
+	 */
+	private void updateSidePolylines() {
+		int[] x = poly[0];
+		int[] y = poly[1];
+		
+		int[] xL = new int[numSegments];
+		int[] yL = new int[numSegments];
+		int[] xR = new int[numSegments];
+		int[] yR = new int[numSegments];
+		
+		double r = this.trackWidth;
+		
+		for (int i = 0; i < numSegments; i++) {
+			//calc left and right sides
+			double thetaL, thetaR; //angle offsets for left and right
+			thetaL = Math.toRadians(headings[i] + 90);
+			thetaR = Math.toRadians(headings[i] - 90);
+			
+			if (i == 0) { //swap values for first point
+				double buffer = thetaL;
+				thetaL = thetaR;
+				thetaR = buffer;
+			} //if
+			
+			//left side
+			xL[i] = (int) (x[i] + r * Math.cos(thetaL)); 
+			yL[i] = (int) (y[i] + r * Math.sin(thetaL)); 
+
+			//right side
+			xR[i] = (int) (x[i] + r * Math.cos(thetaR)); 
+			yR[i] = (int) (y[i] + r * Math.sin(thetaR)); 
+		} //loop
+		
+		leftPoly = new int[][] {xL, yL};
+		rightPoly = new int[][] {xR, yR};
+	} //end updateSidePolylines
+	
+	/**
+	 * Get the polyline for animation purposes
+	 * @return X points and Y points of the curve
+	 */
+	public int[][] getPolyline() {
+		return poly;
+	} //end getPolyline
+	
+	/**
+	 * Get the left polyline for animation purposes
+	 * @return (x,y) points for the left side curve
+	 */
+	public int[][] getLeftPolyline() {
+		return leftPoly;
+	} //end getLeftPolyline
+	
+	/**
+	 * Get the right polyline for animation purposes
+	 * @return (x,y) points for the right side curve
+	 */
+	public int[][] getRightPolyline() {
+		return rightPoly;
+	} //end getRightPolyline
 } //end class

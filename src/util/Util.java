@@ -241,7 +241,7 @@ public class Util {
 	 * @return - corresponding linearly interpolated x value of y
 	 */
 	public static double interpolate(double y, double x1, double y1, double x2, double y2) {
-		return ((y - y1) * (x2 - x1)) / (y2 - y1) + x1;
+		return (y2 - y1) == 0 ? x1 : ((y - y1) * (x2 - x1)) / (y2 - y1) + x1;
 	} //end interpolate
 	
 	//Output
@@ -434,31 +434,32 @@ public class Util {
 	} //end scaleArray
 	
 	/**
-	 * Find the elements sandwiching value in list. Returns the values this number is between in ascending order,
-	 * or an array of just value if value is equivalent to another element in the list within tolerance. If value
-	 * is outside the range of the list, the closest boundary is returned.
+	 * Find the elements sandwiching value in list. Returns the index of the values this number is between in 
+	 * ascending order, or an array of just the index of the equivalent value in the list within tolerance. 
+	 * If value is outside the range of the list, the closest boundary index is returned.
 	 * @param list List of elements to search through
 	 * @param value Value to search with
 	 * @param tolerance Value to be within to be considered the same
 	 * @return Values surrounding value
 	 */
-	public static double[] findSandwichedElements(double[] list, double value, double tolerance) {
+	public static int[] findSandwichedElements(double[] list, double value, double tolerance) {
 		//if first value is equal
 		if (fuzzyEquals(list[0], value, tolerance)) 
-			return new double[] {value};
+			return new int[] {0, 0};
 		
 		for (int i = 1; i < list.length; i++) {
 			//if value is equal
 			if (fuzzyEquals(list[i], value, tolerance)) 
-				return new double[] {value};
+				return new int[] {i, i};
 			
 			if (list[i-1] < value && list[i] > value) {
-				return new double[] {list[i-1], list[i]};
+				return new int[] {i-1, i};
 			} //if
 		} //loop
 		
 		//didn't find any match, value is outside boundaries of the list
-		return new double[] {value < list[0] ? list[0] : list[list.length-1]};
+		int key = value < list[0] ? 0 : list.length-1;
+		return new int[] {key, key};
 	} //end findSandwichedElements
 	
 	/**

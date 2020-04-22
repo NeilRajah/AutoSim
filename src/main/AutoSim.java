@@ -29,8 +29,10 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import model.motion.BezierProfile;
 import model.motion.DriveProfile;
 import model.motion.JerkProfile;
+import util.FieldPoints;
 import util.PlotGenerator;
 import util.Util;
 import util.Util.ROBOT_KEY;
@@ -110,7 +112,7 @@ public class AutoSim {
 		//create robot
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
 		Robot r = new Robot(4, 120, 30, 30, gb); //120lb 4" wheel dia 30"x30" chassis
-		r.setXY(new Point(30,30));
+		r.setXY(new Point(90,30));
 		
 		//set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -128,6 +130,8 @@ public class AutoSim {
 		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1),
 							 new TurnAngle(driveLoop, 180, 2, 12, true),
 							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
+		
+		new BezierProfile(FieldPoints.niceLongCurve, r.getWidthInches()/2, 30, 8);
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));

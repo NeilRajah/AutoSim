@@ -10,6 +10,7 @@ public abstract class DriveProfile {
 	protected ArrayList<double[]> rightProfile = new ArrayList<double[]>();
 	protected ArrayList<Double> headings = new ArrayList<Double>();
 	protected double totalTime;
+	protected int size;
 	
 	/**
 	 * Compute all profile constants
@@ -90,7 +91,7 @@ public abstract class DriveProfile {
 	 * @return Size of the lists
 	 */
 	public int getSize() {
-		return leftProfile.size();
+		return size;
 	} //end getSize
 	
 	/**

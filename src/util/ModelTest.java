@@ -211,30 +211,13 @@ class ModelTest {
 		double correctSlope = 0.9908;
 		assertEquals(correctSlope, Util.kV_EMPIR, 1E-2);
 	} //end ConstantsTest
-	
-	@Test
-	/**
-	 * Check if the length of the path is correct
-	 */
-	void pathLengthTest() {
-		BezierPath testPath = new BezierPath(new Point[] {
-    		new Point(7.3, 3.3),
-    		new Point(4.7, 11.9),
-    		new Point(32.3, 3.5),
-    		new Point(16.4, 25.2),
-    		new Point(24.2, 37.6),
-    		new Point(38.3, 24.8)
-		}, BezierPath.FAST_RES, 15);
-		double correctLength = 46.5;
-		assertEquals(correctLength, testPath.getLength(), 1);
-	} //end pathLengthsTest
-	
+		
 	@Test
 	/**
 	 * Check if the path point calculated at a t value is correct
 	 */
 	void pathPointTest() {
-		BezierPath testPath = new BezierPath(FieldPoints.curve, BezierPath.FAST_RES, 15);
+		BezierPath testPath = new BezierPath(FieldPoints.curve);
 		Point correctPoint = new Point(5.4, 3.7);
 		assertEquals(0.0, FieldPositioning.calcDistance(correctPoint, testPath.calcPoint(0)), 0.1);
 	} //end pathPointTest
@@ -401,11 +384,11 @@ class ModelTest {
 		double value = 1;
 		double eps = 0.01;
 		
-		double[] correctElements = new double[] {0,2};
+		int[] expected = new int[] {0,1};
+		int[] output = Util.findSandwichedElements(list, value, eps);
 		
-		Util.println(Util.findSandwichedElements(list, value, eps));
-		
-		assertEquals(correctElements, Util.findSandwichedElements(list, value, eps));
+		assertEquals(true, Util.fuzzyEquals(expected[0], output[0], eps)
+					 && Util.fuzzyEquals(expected[1], output[1], eps));
 	} //end findSandwichedElementsTest
 	
 	@Test
@@ -415,4 +398,25 @@ class ModelTest {
 	void fuzzyEqualsTest() {
 		assertEquals(false, Util.fuzzyEquals(10, 20, 0.1));
 	} //end fuzzyEqualsTest
+	
+	@Test
+	/**
+	 * Test linear interpolation along with sandwiching
+	 */
+	void sandwichInterpolationTest() {
+		double[] x = new double[] {0, 0.1, 0.2, 0.3};
+		double[] y = new double[] {0, 2,   5,   9};
+		
+		double input = 3.5;
+		double expected = 0.15;
+		double tolerance = 1E-3;
+		
+		int[] limits = Util.findSandwichedElements(y, input, tolerance);
+		int bot = limits[0];
+		int top = limits[1];
+		
+		double output = Util.interpolate(input, x[bot], y[bot], x[top], y[top]);
+				
+		assertEquals(expected, output, tolerance);
+	} //end sandwichInterpolataionTest
 } //end class

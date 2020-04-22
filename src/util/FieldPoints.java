@@ -10,6 +10,16 @@ package util;
 import model.Point;
 
 public class FieldPoints {
+	//Default points
+	public static final double[][] empty = new double[][] {
+		{0,0},
+		{0,0},
+		{0,0},
+		{0,0},
+		{0,0},
+		{0,0}
+	};
+	
 	//Curves
 	public static final Point[] curve1 = new Point[] {
 		new Point(7.3, 3.3),
@@ -36,6 +46,15 @@ public class FieldPoints {
 		{63.7, 98},
 		{29, 255},
 		{28, 300}
+	};
+	
+	public static double[][] niceLongCurve = new double[][] {
+		{23.4, 25.7},
+		{23.0, 320.0},
+		{116.0, 297.2},
+		{205.7, 60.2},
+		{300.0, 11.0},
+		{301.4, 300.4}
 	};
 	
 	//Points
