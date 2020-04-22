@@ -94,6 +94,7 @@ public class JerkProfile extends DriveProfile {
 		double prevV = 0;
 		
 		int loops = (int) Math.ceil(tT / dt); //number of timesteps
+		this.size = loops;
 		
 		//calculate like piecewise function instead of numerically
 		for (int i = 1; i <= loops; i++) {

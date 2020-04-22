@@ -29,6 +29,8 @@ public class DriveLoop {
 	
 	private double[] leftPVA; //position, velocity and acceleration
 	private double[] rightPVA; 
+	private double leftInit; //initial left pos
+	private double rightInit; //initial right pos
 	
 	//States the robot can be in
 	public static enum STATE {
@@ -37,7 +39,8 @@ public class DriveLoop {
 		DRIVE_DISTANCE, //PID distance driving
 		TURN_ANGLE, 	//PID angle turning
 		OPEN_LOOP_PROFILE, //FF profile following
-		CLOSED_LOOP_LINEAR_PROFILE //FF + PID profile following
+		CLOSED_LOOP_LINEAR_PROFILE, //FF + PID profile following
+		CURVE_FOLLOWING //PIDFF curve following
 	} //end enum
 	
 	/**
@@ -129,6 +132,10 @@ public class DriveLoop {
 			case CLOSED_LOOP_LINEAR_PROFILE:
 				//PID + FF
 				closedLoopLinearProfileLoop();
+				break;
+				
+			case CURVE_FOLLOWING:
+				curveFollowingLoop();
 				break;
 		} //switch-case
 	} //end onLoop
@@ -373,6 +380,40 @@ public class DriveLoop {
 		
 		robot.update(output, output);
 	} //end closedLinearProfileLoop
+	
+	public void setCurveFollowingState(double leftInit, double rightInit) {
+		this.state = STATE.CURVE_FOLLOWING;
+		this.leftInit = leftInit;
+		this.rightInit = rightInit;
+	}
+	
+	/**
+	 * Update the left and right goals
+	 * @param left Left position, velocity and acceleration
+	 * @param right Right position, velocity and acceleration
+	 */
+	public void updateCurveFollowingState(double[] left, double[] right) {
+		this.leftPVA = left;
+		this.rightPVA = right;
+	} //end updateCurveFollowingState
+	
+	private void curveFollowingLoop() {
+		double posL = leftPVA[0] + this.drivePID.getInitPos(); //position robot needs to be at
+		double velL = leftPVA[1];
+		double accL = leftPVA[2];
+		
+		double leftOut = drivePID.calcDVPID(posL, robot.getAveragePos(), velL, tolerance) + calcFFOutput(velL, accL);
+		
+		double posR = rightPVA[0] + this.drivePID.getInitPos(); //position robot needs to be at
+		double velR = rightPVA[1];
+		double accR = rightPVA[2];
+		
+		double rightOut = drivePID.calcDVPID(posR, robot.getAveragePos(), velR, tolerance) + calcFFOutput(velR, accR);
+		
+		Util.println(velL, velR);
+		
+		robot.update(leftOut, rightOut);
+	}
 	
 	/**
 	 * Calculate the feedforward output based on velocity and acceleration

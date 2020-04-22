@@ -11,6 +11,7 @@ public abstract class DriveProfile {
 	protected ArrayList<Double> headings = new ArrayList<Double>();
 	protected double totalTime;
 	protected int size;
+	protected double length;
 	
 	/**
 	 * Compute all profile constants

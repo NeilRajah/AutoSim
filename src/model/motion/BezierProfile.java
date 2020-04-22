@@ -25,6 +25,7 @@ public class BezierProfile extends DriveProfile {
 		this.SIZE = BezierPath.HIGH_RES;
 		
 		computeConstants();
+		fillProfiles();
 	}
 	
 	public BezierProfile(double[][] controlPts, double trackWidth, double accDist, double maxVel) {
@@ -39,6 +40,7 @@ public class BezierProfile extends DriveProfile {
 		double length = distances[distances.length - 1];
 		linTraj = new JerkProfile(length, accDist, maxVel);
 		this.size = linTraj.getSize();
+		this.totalTime = linTraj.getTotalTime();
 		
 		//time parameterize
 		tVals = parameterizeByD(distances);
@@ -82,7 +84,6 @@ public class BezierProfile extends DriveProfile {
 			double distHi = distances[limits[1]];
 			
 			tVals[i] = Util.interpolate(dist, tLo, distLo, tHi, distHi);
-			Util.println(tVals[i], dist, tLo, distLo, tHi, distHi);
 		} //loop
 		
 		return tVals;
@@ -129,13 +130,26 @@ public class BezierProfile extends DriveProfile {
 		//calculate left and right side PVAs (A = 0)
 		ArrayList<double[]> left = this.leftProfile;
 		ArrayList<double[]> right = this.rightProfile;
-		
-		left.add(new double[] {0,0,0});
-		right.add(new double[] {0,0,0});
+
+		double leftPos = 0, rightPos = 0;
+		left.add(new double[] {leftPos,0,0});
+		right.add(new double[] {rightPos,0,0});
 		double dt = Util.UPDATE_PERIOD;
 		
 		for (int i = 1; i < size; i++) {
+			double[] leftPVA = new double[3];
+			leftPVA[2] = 0;
+			double leftDist = FieldPositioning.calcDistance(leftPts[i-1], leftPts[i]);
+			leftPos += leftDist;
+			double leftVel = leftDist / (dt * 12);
+			this.leftProfile.add(new double[] {leftPos, leftVel, 0});
 			
-		}
+			double[] rightPVA = new double[3];
+			rightPVA[2] = 0;
+			double rightDist = FieldPositioning.calcDistance(rightPts[i-1], rightPts[i]);
+			rightPos += rightDist;
+			double rightVel = rightDist / (dt * 12);
+			this.rightProfile.add(new double[] {rightPos, rightVel, 0});
+		} //loop
 	} //end fillProfiles
-}
+} //end class
