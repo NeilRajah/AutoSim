@@ -7,14 +7,9 @@
 
 package graphics.widgets;
 
-import java.io.File;
-import java.util.Scanner;
-
 import graphics.Environment;
 import graphics.GraphicBezierPath;
 import model.Point;
-import util.FieldPoints;
-import util.Util;
 
 public class BezierPathCreatorWidget extends Widget {
 	//Attributes

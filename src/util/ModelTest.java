@@ -224,7 +224,7 @@ class ModelTest {
     		new Point(16.4, 25.2),
     		new Point(24.2, 37.6),
     		new Point(38.3, 24.8)
-		}, BezierPath.FAST_RES);
+		}, BezierPath.FAST_RES, 15);
 		double correctLength = 46.5;
 		assertEquals(correctLength, testPath.getLength(), 1);
 	} //end pathLengthsTest
@@ -234,7 +234,7 @@ class ModelTest {
 	 * Check if the path point calculated at a t value is correct
 	 */
 	void pathPointTest() {
-		BezierPath testPath = new BezierPath(FieldPoints.curve, BezierPath.FAST_RES);
+		BezierPath testPath = new BezierPath(FieldPoints.curve, BezierPath.FAST_RES, 15);
 		Point correctPoint = new Point(5.4, 3.7);
 		assertEquals(0.0, FieldPositioning.calcDistance(correctPoint, testPath.calcPoint(0)), 0.1);
 	} //end pathPointTest

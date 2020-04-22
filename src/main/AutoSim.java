@@ -19,6 +19,8 @@ import commands.DriveClosedLoopLinearProfile;
 import commands.TurnAngle;
 import graphics.Painter;
 import graphics.Window;
+import graphics.widgets.BezierPathCreator;
+import graphics.widgets.BezierPathCreatorWidget;
 import graphics.widgets.SpeedDisplay;
 import graphics.widgets.SpeedDisplayWidget;
 import model.DriveLoop;
@@ -71,7 +73,7 @@ public class AutoSim {
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
-		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
+//		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
 		//launch the application
 		w.launch();			
@@ -148,9 +150,9 @@ public class AutoSim {
 		w.addWidget(angSpd);
 		
 		//bezier path creator widget
-//		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
-//		bezWidg.setControlPoints("src//main//niceLongCurve.crv");
-//		w.addWidget(bezWidg);
+		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
+		bezWidg.setControlPoints("src//main//niceLongCurve.crv");
+		w.addWidget(bezWidg);
 	} //end addWidgets
 
 	/**

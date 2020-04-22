@@ -54,6 +54,7 @@ public class Environment extends JComponent {
 	
 	//Curves
 	private ArrayList<int[][]> curves; //points for the bezier path
+	private BezierPath curve; //curve from the BPC widget
 	private Circle[] controlPoints; //control points for path	
 	
 	/**
@@ -196,6 +197,8 @@ public class Environment extends JComponent {
 		
 		//add the points and update the environment
 		curves.add(path.getPolyline());
+		curves.add(path.getLeftPolyline());
+		curves.add(path.getRightPolyline());
 		this.controlPoints = path.getCircles();
 		update();
 	} //end setCurve
@@ -346,10 +349,16 @@ public class Environment extends JComponent {
 			g2.setColor(Color.WHITE);
 			
 			//draw the curve
-			g2.drawPolyline(curves.get(curveIndex)[0], curves.get(curveIndex)[1], curves.get(curveIndex)[0].length);
+			g2.drawPolyline(curves.get(0)[0], curves.get(0)[1], curves.get(0)[0].length);
 			
+			g2.setColor(Color.RED);
+			g2.drawPolyline(curves.get(1)[0], curves.get(1)[1], curves.get(1)[0].length);
+			
+			g2.setColor(Color.BLUE);
+			g2.drawPolyline(curves.get(2)[0], curves.get(2)[1], curves.get(1)[0].length);
+						
 			//draw the control points
-			if (curves.size() == 1) {					
+			if (curves.size() == 3) {					
 				//control points
 				for (int i = 0; i < 6; i++) {
 					Painter.drawCircle(g2, controlPoints[i]);

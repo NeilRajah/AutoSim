@@ -36,7 +36,7 @@ public class MoveQuintic extends Command {
 	public MoveQuintic(DriveLoop loop, Point[] curvePts) {
 		//set attributes
 		this.loop = loop; //state machine to control the robot
-		this.curve = new BezierPath(curvePts, BezierPath.HIGH_RES); //quintic bezier path
+		this.curve = new BezierPath(curvePts, BezierPath.HIGH_RES, loop.getRobot().getWidthInches()/2); //quintic bezier path
 		
 		//update t value
 		t = start;

@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 import graphics.components.BoxButton.BUTTON_STATE;
 import graphics.widgets.Circle;
+import main.AutoSim;
 import model.Point;
 import model.motion.BezierPath;
 import util.FieldPoints;
@@ -28,7 +29,7 @@ public class GraphicBezierPath extends BezierPath {
 	 * @param circles Control points as circles
 	 */
 	public GraphicBezierPath(Circle[] circles) {
-		super(circles, BezierPath.FAST_RES);
+		super(circles, BezierPath.FAST_RES, Painter.ROBOT_WIDTH / 2);
 		
 		this.circles = circles;
 	} //end constructor
@@ -37,7 +38,7 @@ public class GraphicBezierPath extends BezierPath {
 	 * Create a blank path with high resolution
 	 */
 	public GraphicBezierPath() {
-		super(BezierPath.FAST_RES);
+		super(BezierPath.FAST_RES, Painter.ROBOT_WIDTH / 2);
 	} //end constructor
 	
 	/**
