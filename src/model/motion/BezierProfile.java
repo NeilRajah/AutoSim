@@ -17,6 +17,8 @@ public class BezierProfile extends DriveProfile {
 	private JerkProfile linTraj; //linear velocity trajectory
 	private double[] tVals; //t values for the profile points
 	
+	private int[] center;
+	
 	public BezierProfile(Point[] controlPts, double trackWidth, double accDist, double maxVel) {
 		path = new BezierPath(controlPts);
 		this.trackWidth = trackWidth;
@@ -90,66 +92,6 @@ public class BezierProfile extends DriveProfile {
 	} //end paramaterizeByD
 	
 	protected void fillProfiles() {
-		//center path and headings
-		Point[] center = new Point[this.size];
-		double[] headings = new double[this.size];
 		
-		for (int i = 0; i < this.size; i++) {
-			center[i] = path.calcPoint(tVals[i]);
-			headings[i] = path.calcHeading(tVals[i]);
-		} //loop
-		
-		//left and right paths
-		Point[] leftPts = new Point[center.length];
-		Point[] rightPts = new Point[center.length];
-		double r = trackWidth;
-		
-		for (int i = 0; i < size; i++) {
-			//calc left and right sides
-			double thetaL, thetaR; //angle offsets for left and right
-			thetaL = Math.toRadians(headings[i] + 90);
-			thetaR = Math.toRadians(headings[i] - 90);
-			
-			if (i == 0) { //swap values for first point
-				double buffer = thetaL;
-				thetaL = thetaR;
-				thetaR = buffer;
-			} //if			
-			
-			//left side
-			double xL = center[i].getX() + r * Math.cos(thetaL); 
-			double yL = center[i].getY() + r * Math.sin(thetaL); 
-			leftPts[i] = new Point(xL, yL);
-
-			//right side
-			double xR = center[i].getX() + r * Math.cos(thetaR); 
-			double yR = center[i].getY() + r * Math.sin(thetaR); 
-			rightPts[i] = new Point(xR, yR);
-		} //loop
-		
-		//calculate left and right side PVAs (A = 0)
-		ArrayList<double[]> left = this.leftProfile;
-		ArrayList<double[]> right = this.rightProfile;
-
-		double leftPos = 0, rightPos = 0;
-		left.add(new double[] {leftPos,0,0});
-		right.add(new double[] {rightPos,0,0});
-		double dt = Util.UPDATE_PERIOD;
-		
-		for (int i = 1; i < size; i++) {
-			double[] leftPVA = new double[3];
-			leftPVA[2] = 0;
-			double leftDist = FieldPositioning.calcDistance(leftPts[i-1], leftPts[i]);
-			leftPos += leftDist;
-			double leftVel = leftDist / (dt * 12);
-			this.leftProfile.add(new double[] {leftPos, leftVel, 0});
-			
-			double[] rightPVA = new double[3];
-			rightPVA[2] = 0;
-			double rightDist = FieldPositioning.calcDistance(rightPts[i-1], rightPts[i]);
-			rightPos += rightDist;
-			double rightVel = rightDist / (dt * 12);
-			this.rightProfile.add(new double[] {rightPos, rightVel, 0});
-		} //loop
 	} //end fillProfiles
 } //end class

@@ -59,6 +59,7 @@ public class AutoSim {
 	//Trajectory to follow
 //	private static TrapezoidalProfile trap;
 	private static DriveProfile profile;
+	private static double[][] curve;
 	
 	/**
 	 * Create a Window and launch the program
@@ -74,7 +75,7 @@ public class AutoSim {
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
-//		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
+		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
 		//launch the application
 		w.launch();			
@@ -108,11 +109,13 @@ public class AutoSim {
 	 * Initialize the program by creating the robot and the command group
 	 */
 	private static void initializeSimulation() {
+		curve = FieldPoints.niceLongCurve;
+		
 		//create robot
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
 		Robot r = new Robot(4, 120, 30, 30, gb); //120lb 4" wheel dia 30"x30" chassis
-		r.setXY(FieldPoints.curve1[0]);
-		r.setHeadingDegrees(85);
+		r.setXY(new Point(curve[0]));
+		r.setHeadingDegrees(0);
 		
 		//set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -131,7 +134,7 @@ public class AutoSim {
 //							 new TurnAngle(driveLoop, 180, 2, 12, true),
 //							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
 		
-		profile = new BezierProfile(FieldPoints.curve2, r.getWidthInches()/2, 32, 8);
+		profile = new BezierProfile(curve, r.getWidthInches()/2, 32, 8);
 		cg = new CommandList(new DriveCurveFollow(driveLoop, profile, 1));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
@@ -156,7 +159,7 @@ public class AutoSim {
 		
 		//bezier path creator widget
 		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
-		bezWidg.setControlPoints(FieldPoints.curve2);
+		bezWidg.setControlPoints(curve);
 		w.addWidget(bezWidg);
 	} //end addWidgets
 

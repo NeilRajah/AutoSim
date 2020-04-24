@@ -399,13 +399,13 @@ public class DriveLoop {
 	
 	private void curveFollowingLoop() {
 		double posL = leftPVA[0] + this.drivePID.getInitPos(); //position robot needs to be at
-		double velL = leftPVA[1];
+		double velL = leftPVA[1] > robot.getMaxLinSpeed() ? 0 : leftPVA[1];
 		double accL = leftPVA[2];
 		
 		double leftOut = drivePID.calcDVPID(posL, robot.getAveragePos(), velL, tolerance) + calcFFOutput(velL, accL);
 		
 		double posR = rightPVA[0] + this.drivePID.getInitPos(); //position robot needs to be at
-		double velR = rightPVA[1];
+		double velR = rightPVA[1] > robot.getMaxLinSpeed() ? 0 : rightPVA[1];
 		double accR = rightPVA[2];
 		
 		double rightOut = drivePID.calcDVPID(posR, robot.getAveragePos(), velR, tolerance) + calcFFOutput(velR, accR);
