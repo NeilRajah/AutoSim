@@ -15,7 +15,8 @@ import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.DriveCurveFollow;
+import commands.DriveClosedLoopLinearProfile;
+import commands.TurnAngle;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.BezierPathCreator;
@@ -23,14 +24,13 @@ import graphics.widgets.BezierPathCreatorWidget;
 import graphics.widgets.SpeedDisplay;
 import graphics.widgets.SpeedDisplayWidget;
 import model.DriveLoop;
-import model.FieldPositioning;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
-import model.motion.BezierProfile;
 import model.motion.DriveProfile;
+import model.motion.JerkProfile;
 import util.FieldPoints;
 import util.PlotGenerator;
 import util.Util;
@@ -129,13 +129,13 @@ public class AutoSim {
 		
 		//create the command group
 //		profile = new TrapezoidalProfile(120, 24, 12);
-//		profile = new JerkProfile(200, 30, 12);
-//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1),
+		profile = new JerkProfile(200, 30, 12);
+		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //							 new TurnAngle(driveLoop, 180, 2, 12, true),
 //							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
 		
-		profile = new BezierProfile(curve, r.getWidthInches()/2, 32, 8);
-		cg = new CommandList(new DriveCurveFollow(driveLoop, profile, 1));
+//		profile = new BezierProfile(curve, r.getWidthInches()/2, 32, 8);
+//		cg = new CommandList(new DriveCurveFollow(driveLoop, profile, 1));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
@@ -158,9 +158,9 @@ public class AutoSim {
 		w.addWidget(angSpd);
 		
 		//bezier path creator widget
-		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
-		bezWidg.setControlPoints(curve);
-		w.addWidget(bezWidg);
+//		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
+//		bezWidg.setControlPoints(curve);
+//		w.addWidget(bezWidg);
 	} //end addWidgets
 
 	/**

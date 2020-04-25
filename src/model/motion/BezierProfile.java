@@ -9,60 +9,99 @@ import util.Util;
 public class BezierProfile extends DriveProfile {
 	//Attributes
 	private BezierPath path; //path to follow
-	private double trackWidth; //Half the width of robot base for offsetting paths in inches
-	private double accDist; //distance to accelerate over in inches
-	private double maxVel; //top linear speed in feet per second
-	private int SIZE; //size of the first pass
+	private double maxVel; //maximum velocity robot can reach in in/s
+	private double maxAcc; //maximum acceleration robot can reach in in/s^2
+	private double maxDec; //maximum deceleration robot can reach in in/s^2
 	
-	private JerkProfile linTraj; //linear velocity trajectory
-	private double[] tVals; //t values for the profile points
+	private final int SIZE = 500;; //number of pieces the path is split into
+	private final double STEP = 1.0 / SIZE; //inverse of size
 	
-	private int[] center;
+	private double totalLength; //arclength of the entire path
+	private Point[] evenPoints; //list of points in the path evenly spaced by distance
 	
-	public BezierProfile(Point[] controlPts, double trackWidth, double accDist, double maxVel) {
+	private double[] centerVel; //center velocity of the robot
+	
+	/**
+	 * Create a profile to follow a Bezier curve while respecting kinematic robot constraints
+	 * @param controlPts Control points of the Bezier curve
+	 * @param maxVel Maximum reachable robot velocity in in/s
+	 * @param maxAcc Maximum reachable robot acceleration in in/s^2
+	 * @param maxDec Maximum reachable robot deceleration in in/s^2
+	 */
+	public BezierProfile(Point[] controlPts, double maxVel, double maxAcc, double maxDec) {
 		path = new BezierPath(controlPts);
-		this.trackWidth = trackWidth;
-		this.accDist = accDist;
 		this.maxVel = maxVel;
-		this.SIZE = BezierPath.HIGH_RES;
+		this.maxAcc = maxAcc;
+		this.maxDec = maxDec;
 		
 		computeConstants();
 		fillProfiles();
-	}
-	
-	public BezierProfile(double[][] controlPts, double trackWidth, double accDist, double maxVel) {
-		this(FieldPositioning.pointsFromDoubles(controlPts), trackWidth, accDist, maxVel);
-	}
+	} //end constructor
 
+	/**
+	 * Compute the center path trajectory
+	 */
 	protected void computeConstants() {
-		//first pass
-		double[] distances = parameterizeByT();
+		/*
+		 * DONE:
+		 * Parametrically space
+		 * Space by distance
+		 * 
+		 * TO-DO:
+		 * Curvature constraint
+		 * Acceleration constraint
+		 * Deceleration constraint
+		 */
 		
-		//trajectory
-		double length = distances[distances.length - 1];
-		linTraj = new JerkProfile(length, accDist, maxVel);
-		this.size = linTraj.getSize();
-		this.totalTime = linTraj.getTotalTime();
+		/*
+		 * Create a list of points with even t value spacing. This is later used to split the
+		 * curve up into segments of equal length.
+		 */
+		double[] tDistances = parameterizeByT();
+		this.totalLength = tDistances[tDistances.length - 1]; //last distance is length of curve
+		//t value is index/size, tDistances[index] is distance along path at that t value
 		
-		//time parameterize
-		tVals = parameterizeByD(distances);
-	} 
+		/*
+		 * Create the evenly spaced points list by linearly interpolating between the points based on the
+		 * distance along the curve.
+		 */
+		parameterizeByD(tDistances);
+		
+		/*
+		 * Constrain the center velocity of the robot by the path's curvature. 
+		 */
+		applyCurvatureConstraint();
+		
+		/*
+		 * Constrain the center velocity of the robot by the maximum acceleration with a forward pass
+		 * of the center velocity list.
+		 */
+		applyAccelerationConstraint();
+		
+		/*
+		 * Constrain the center velocity of the robot by the maximum deceleration with a backward pass
+		 * of the center velocity list.
+		 */
+		applyDecelerationConstraint();
+	} //end computeConstants
 	
 	/**
 	 * Split the curve up with evenly spaced t values
 	 * @return Distance along the curve at each t value
 	 */
 	private double[] parameterizeByT() {
+		double t = 0; //parametric value
+		double dist = 0; 
 		double[] distances = new double[SIZE];
-		double dist = 0;
 		
-		distances[0] = dist;
+		distances[0] = 0; //start with zero distance
 		
 		for (int i = 1; i < SIZE; i++) {
-			double t1 = (double) i / (double) SIZE;
-			double t2 = (double) (i - 1) / (double) SIZE;
-			dist += FieldPositioning.calcDistance(path.calcPoint(t1), path.calcPoint(t2));
+			//cumulatively sum the distance
+			dist += FieldPositioning.calcDistance(path.calcPoint(t), path.calcPoint(t - STEP));
 			distances[i] = dist;
+			
+			t += 1.0 / SIZE;
 		} //loop
 		
 		return distances;
@@ -70,28 +109,51 @@ public class BezierProfile extends DriveProfile {
 
 	/**
 	 * Parameterize the curve by distance values
-	 * @param distances Distance values from t parameterization
+	 * @param tDistances Distance values from t parameterization
 	 * @return Array of t values parameterized by distance
 	 */
-	private double[] parameterizeByD(double[] distances) {
-		double[] tVals = new double[size];
+	private void parameterizeByD(double[] tDistances) {
+		double dist = 0;
+		double distStep = 1.0 / this.totalLength;
+				
+		//initialize the points array
+		this.evenPoints = new Point[SIZE];
+		this.evenPoints[0] = path.getControlPoints()[0];
 		
-		for (int i = 0; i < size; i++) {
-			double dist = linTraj.getLeftTrajPoint(i)[0];
-			int[] limits = Util.findSandwichedElements(distances, dist, 1E-6);
+		for (int i = 1; i < SIZE; i++) {
+			dist += distStep; //increase the distance
 			
-			double tLo = (double) limits[0] / SIZE;
-			double tHi = (double) limits[1] / SIZE;
-			double distLo = distances[limits[0]];
-			double distHi = distances[limits[1]];
+			//index of the distance in tDistances just below dist (bottom of the sandwich)
+			int k = Util.findSandwichedElements(tDistances, dist, 1E-3)[0];
 			
-			tVals[i] = Util.interpolate(dist, tLo, distLo, tHi, distHi);
+			//linear interpolation
+			double t2 = (k+1) * STEP;
+			double t1 = k * STEP;
+			double d2 = tDistances[k+1];
+			double d1 = tDistances[k];
+			
+			//add the point at the interpolated t value to the curve
+			evenPoints[i] = path.calcPoint(Util.interpolate(distStep, t1, d1, t2, d2));
 		} //loop
-		
-		return tVals;
 	} //end paramaterizeByD
 	
-	protected void fillProfiles() {
+	private void applyCurvatureConstraint() {
 		
+	}
+	
+	private void applyAccelerationConstraint() {
+		
+	}
+	
+	private void applyDecelerationConstraint() {
+		
+	}
+		
+	protected void fillProfiles() {
+		/*
+		 * Offset path
+		 * Offset velocities
+		 * Time
+		 */
 	} //end fillProfiles
 } //end class

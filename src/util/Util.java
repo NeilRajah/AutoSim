@@ -439,17 +439,17 @@ public class Util {
 	 * If value is outside the range of the list, the closest boundary index is returned.
 	 * @param list List of elements to search through
 	 * @param value Value to search with
-	 * @param tolerance Value to be within to be considered the same
-	 * @return Values surrounding value
+	 * @param eps Value to be within to be considered the same
+	 * @return Index of the elements in list surrounding value
 	 */
-	public static int[] findSandwichedElements(double[] list, double value, double tolerance) {
+	public static int[] findSandwichedElements(double[] list, double value, double eps) {
 		//if first value is equal
-		if (fuzzyEquals(list[0], value, tolerance)) 
+		if (fuzzyEquals(list[0], value, eps)) 
 			return new int[] {0, 0};
 		
 		for (int i = 1; i < list.length; i++) {
 			//if value is equal
-			if (fuzzyEquals(list[i], value, tolerance)) 
+			if (fuzzyEquals(list[i], value, eps)) 
 				return new int[] {i, i};
 			
 			if (list[i-1] < value && list[i] > value) {
