@@ -79,7 +79,7 @@ public class PlotGenerator {
 	 * @param y Y axis title
 	 * @return Chart configured with above parameters
 	 */
-	private static XYChart buildChart(int w, int h, String t, String x, String y) {
+	public static XYChart buildChart(int w, int h, String t, String x, String y) {
 		return new XYChartBuilder().width(w).height(h).title(t).xAxisTitle(x).yAxisTitle(y).build();
 	} //end buildChart
 	

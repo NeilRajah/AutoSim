@@ -475,7 +475,7 @@ public class Robot {
 		data.put(ROBOT_KEY.RIGHT_VEL, rightGearbox.getVel());
 		data.put(ROBOT_KEY.LEFT_ACC, leftGearbox.getAcc());
 		data.put(ROBOT_KEY.RIGHT_ACC, rightGearbox.getAcc());
-		data.put(ROBOT_KEY.LIN_ACC, (leftGearbox.getAcc() + rightGearbox.getAcc()) / 2);
+		data.put(ROBOT_KEY.LIN_ACC, ((leftGearbox.getAcc() + rightGearbox.getAcc()) / 2) * kWheelRad / Util.INCHES_TO_METERS);
 		data.put(ROBOT_KEY.ANG_ACC, (kWheelRad / (2 * kPivotArm)) * (rightGearbox.getAcc() - leftGearbox.getAcc()));
 		data.put(ROBOT_KEY.CURRENT_COMMAND, commandName);
 		data.put(ROBOT_KEY.GOAL_POINT, goalPoint);
