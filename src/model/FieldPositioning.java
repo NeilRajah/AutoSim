@@ -53,15 +53,16 @@ public class FieldPositioning {
 	 */
 	public static double calcAngleRad(Point p1, Point p2) {
 		//calculate deltas
-		double deltaX = p2.getX() - p1.getX();
-		double deltaY = p2.getY() - p1.getY();
+		double dx = p2.getX() - p1.getX();
+		double dy = p2.getY() - p1.getY();
 		
-		if (deltaX == 0) {
-			return deltaY > 0 ? 0 : Math.PI;
-		} else if (deltaY == 0) {
-			return deltaX > 0 ? Math.PI/2 : -Math.PI/2;
-		} //if
-		return Math.atan(deltaY/deltaX); //anywhere else 
+//		if (deltaX == 0) {
+//			return deltaY > 0 ? 0 : Math.PI;
+//		} else if (deltaY == 0) {
+//			return deltaX > 0 ? Math.PI/2 : -Math.PI/2;
+//		} //if
+//		return Math.atan(deltaY/deltaX); //anywhere else 
+		return Math.atan2(dy, dx);
 	} //end calcAngleRad
 	
 	/**

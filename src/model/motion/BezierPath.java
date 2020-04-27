@@ -16,7 +16,8 @@ public class BezierPath {
 	//Constants
 	public static final int HIGH_RES = 1000;
 	public static final int FAST_RES = 100;
-	private final double EPSILON = 5E-4;
+	private final double EPSILON = 1E-5;
+	private final double MAX_RADIUS = 1E6;
 	
 	//Attributes
 	//Configured
@@ -118,13 +119,27 @@ public class BezierPath {
 	 * @param t Parametric t value to calculate the curvature
 	 * @return curvature at the t value
 	 */
-	public double calcCurvature(double t) {
+	public double calcRadius(double t) {
+		//normalize t value
 		t = t <= EPSILON ? EPSILON : t >= (1 - EPSILON) ? 1 - EPSILON : t;
+		
+		//three points for triangle
 		Point p1 = calcPoint(t - EPSILON);
 		Point p2 = calcPoint(t + EPSILON);
+		Point p3 = calcPoint(t);
 		
-		return Math.toRadians(calcHeading(t)) / 
-				(FieldPositioning.calcDistance(p1, p2));
+		//three triangle side lengths
+		double a = FieldPositioning.calcDistance(p1, p2);
+		double b = FieldPositioning.calcDistance(p2, p3);
+		double c = FieldPositioning.calcDistance(p1, p3);
+		
+		//Heron's formula for area
+		double s = (a + b + c) / 2;
+		double k = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+		
+		//radius based on triangle formed by three points on curve
+		double rad = (a * b * c) / (4 * k);
+		return Util.clampNum(rad, -MAX_RADIUS, MAX_RADIUS);
 	} //end calcCurvature
 	
 	//Heading

@@ -29,6 +29,7 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import model.motion.BezierProfile;
 import model.motion.DriveProfile;
 import model.motion.JerkProfile;
 import util.FieldPoints;
@@ -74,11 +75,11 @@ public class AutoSim {
 		addWidgets(); //add widgets to the widget hub
 		
 		//add the command group and plot data
-		w.addCommandGroup(cg);
-		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
+//		w.addCommandGroup(cg);
+//		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
 		//launch the application
-		w.launch();			
+//		w.launch();			
 	} //end main
 	
 	/**
@@ -134,7 +135,7 @@ public class AutoSim {
 //							 new TurnAngle(driveLoop, 180, 2, 12, true),
 //							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
 		
-//		profile = new BezierProfile(curve, r.getWidthInches()/2, 32, 8);
+		new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 120, 120);
 //		cg = new CommandList(new DriveCurveFollow(driveLoop, profile, 1));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
@@ -158,9 +159,9 @@ public class AutoSim {
 		w.addWidget(angSpd);
 		
 		//bezier path creator widget
-//		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
-//		bezWidg.setControlPoints(curve);
-//		w.addWidget(bezWidg);
+		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
+		bezWidg.setControlPoints(curve);
+		w.addWidget(bezWidg);
 	} //end addWidgets
 
 	/**

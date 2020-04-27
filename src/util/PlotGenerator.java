@@ -30,14 +30,8 @@ public class PlotGenerator {
 	 * Run tests and generate plots
 	 */
 	public static void main(String[] args) {
-//		TrapezoidalProfile profile = new TrapezoidalProfile(100, 20, 12);
 		JerkProfile profile = new JerkProfile(100, 24, 12);	
 		
-//		for (int i = 0; i < 3; i++) {
-//			Util.println(i);
-//			displayChart(createLinearTrajChart(profile, "Jerk Profile", 1024, 768, i));
-//			new Scanner(System.in).nextLine();
-//		}
 		displayChart(createLinearTrajChart(profile, "Jerk Profile", 1024, 768, 1));
 	} //end main
 	
@@ -160,4 +154,29 @@ public class PlotGenerator {
 		
 		return new double[][] {x, y};
 	} //end getXYFromRobotData
+	
+	/**
+	 * Create a chart from data points in a list
+	 * @param w Width in pixels
+	 * @param h Height in pixels
+	 * @param t Title of chart
+	 * @param x X-axis title
+	 * @param y Y-axis title
+	 * @param data Data points in list to be parsed
+	 * @return Chart object
+	 */
+	public static XYChart createChartFromList(int w, int h, String t, String x, String y, ArrayList<String> data) {
+		XYChart chart = buildChart(w, h, t, x, y);
+		double[] xVals = new double[data.size()];
+		double[] yVals = new double[data.size()];
+		
+		for (int i = 0; i < data.size(); i++) {
+			xVals[i] = i;
+			yVals[i] = Double.parseDouble(data.get(i));
+		} //loop
+		
+		chart.addSeries("t", xVals, yVals);
+		
+		return chart;
+	} //end createChartFromList
 } //end class

@@ -8,6 +8,8 @@ package util;
 
 import java.awt.Font;
 import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import main.AutoSim;
 
@@ -260,11 +262,20 @@ public class Util {
 	
 	/**
 	 * Print a single string to the console 
-	 * @param s message to be printed
+	 * @param s Message to be printed
 	 */
 	public static void println(String s) {
 		printCallerInfo(DEFAULT_STACK_INDEX);
 		System.out.println(s);
+	} //end println
+	
+	/**
+	 * Print a single boolean to the console
+	 * @param b Boolean to be printed
+	 */
+	public static void println(boolean b) {
+		printCallerInfo(DEFAULT_STACK_INDEX);
+		System.out.println(b);
 	} //end println
 	
 	/**
@@ -432,6 +443,27 @@ public class Util {
 		
 		return d;
 	} //end scaleArray
+	
+	/**
+	 * Save a list of data to a text file
+	 * @param data List of data points to be printed line by line
+	 * @return True if writing was successful, false if not
+	 */
+	public static boolean saveListToFile(ArrayList<String> data, String name) {
+		try {
+			//print every line to the file, return true if no errors
+			PrintWriter pw = new PrintWriter(new File(Util.UTIL_DIR + name + ".txt"));
+			for (String line : data)
+				pw.print(line);
+			pw.close();
+			
+			return true;
+			
+		} catch (Exception e) {
+			//return false because of errors
+			return false;
+		} //try-catch
+	} //end saveListToFile
 	
 	/**
 	 * Find the elements sandwiching value in list. Returns the index of the values this number is between in 
