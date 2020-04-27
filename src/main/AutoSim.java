@@ -73,7 +73,7 @@ public class AutoSim {
 		
 		//create the window 
 		w = new Window(true); //true for debug, false for not
-//		addWidgets(); //add widgets to the widget hub
+		addWidgets(); //add widgets to the widget hub
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
@@ -131,11 +131,11 @@ public class AutoSim {
 		
 		//create the command group
 //		profile = new TrapezoidalProfile(120, 24, 12);
-//		profile = new JerkProfile(200, 30, 12);
-//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
+		profile = new JerkProfile(200, 30, 12);
+		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //							 new TurnAngle(driveLoop, 180, 2, 12, true),
 //							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
-		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
+//		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
 		
 		new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
 //		cg = new CommandList(new DriveCurveFollow(driveLoop, profile, 1));
@@ -148,6 +148,9 @@ public class AutoSim {
 	 * Add Widgets to the Widget Hub
 	 */
 	private static void addWidgets() {
+		//add the widget hub
+		w.setUpWidgetHub();
+		
 		//Linear speed display
 		SpeedDisplayWidget linSpd = new SpeedDisplayWidget(new SpeedDisplay(w.getHubWidth(), 
 			w.getHubHeight() * 1/8, driveLoop.getRobot().getMaxLinSpeed()), ROBOT_KEY.LIN_VEL);
@@ -170,7 +173,7 @@ public class AutoSim {
 	 * Plot the robot data to a separate window
 	 */
 	private static void plotData() {
-//		XYChart chart = PlotGenerator.createLinearTrajChart(profile, "Profile vs. Robot", 1920, 1080, 1);
+		XYChart chart = PlotGenerator.createLinearTrajChart(profile, "Profile vs. Robot", 1920, 1080, 1);
 		
 		/* Position and acc
 		double[][] posSeries = PlotGenerator.getXYFromProfile(profile, 0);
@@ -180,10 +183,10 @@ public class AutoSim {
 		chart.addSeries("Acceleration (\")", accSeries[0], accSeries[1]);
 		*/
 		
-		XYChart chart = PlotGenerator.buildChart(1920, 1080, "Voltage Test", "Time", "Acceleration");
+//		XYChart chart = PlotGenerator.buildChart(1920, 1080, "Voltage Test", "Time", "Acceleration");
 		
 		//robot data
-		double[][] robotSeries = PlotGenerator.getXYFromRobotData(cg.getData(), ROBOT_KEY.LIN_ACC);
+		double[][] robotSeries = PlotGenerator.getXYFromRobotData(cg.getData(), ROBOT_KEY.LIN_VEL);
 		chart.addSeries("Robot", robotSeries[0], robotSeries[1]);
 		
 		//show the chart

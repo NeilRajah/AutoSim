@@ -55,7 +55,6 @@ public class Window extends JFrame {
 		
 		//set up respective components
 		setUpEnvironment();
-		setUpWidgetHub();
 		setUpUIBar();
 		setUpStartButton();
 	} //end layoutView
@@ -94,7 +93,7 @@ public class Window extends JFrame {
 	/**
 	 * Set up the Widget Hub
 	 */
-	private void setUpWidgetHub() {
+	public void setUpWidgetHub() {
 		//add Widget Hub
 		widgetHub = new WidgetHub(width * 1/6, env.height() + height/15);
 		GridBagConstraints widgGridBag = JComponentUtil.createGBC(2, 0);
@@ -156,7 +155,7 @@ public class Window extends JFrame {
 	
 	/**
 	 * Add a Command to be animated
-	 * @param c - Command to be animated
+	 * @param c Command to be animated
 	 */
 	public void addCommand(Command c) {
 		c.run();
@@ -167,7 +166,7 @@ public class Window extends JFrame {
 	
 	/**
 	 * Add a CommandGroup to be animated
-	 * @param cg - CommandGroup to be animated
+	 * @param cg CommandGroup to be animated
 	 */
 	public void addCommandGroup(CommandGroup cg) {
 		cg.run();
@@ -200,7 +199,8 @@ public class Window extends JFrame {
 				HashMap<ROBOT_KEY, Object> data = env.getDataPoint(i);
 				
 				env.incrementPoseIndex(); //draw the next pose
-				widgetHub.update(data); //update all widgets
+				if (widgetHub != null)
+					widgetHub.update(data); //update all widgets
 				bar.setCommandName((String) data.get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
 				
 				Util.pause(Util.ANIMATION_PERIOD);
