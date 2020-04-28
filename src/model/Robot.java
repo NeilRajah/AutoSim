@@ -195,19 +195,19 @@ public class Robot {
 	} //end getLengthInches
 	
 	/**
-	 * Get the position of the left gearbox
-	 * @return - left gearbox position in radians
+	 * Get the position of the left side of the drive
+	 * @return Left wheel position in inches
 	 */
 	public double getLeftPos() {
-		return leftGearbox.getPos();
+		return leftGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS;
 	} //end getLeftPos
 	
 	/**
-	 * Get the position of the right gearbox
-	 * @return - right gearbox position in radians
+	 * Get the position of the right side of the drive
+	 * @return Right gearbox position in inches
 	 */
 	public double getRightPos() {
-		return rightGearbox.getPos();
+		return rightGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS;
 	} //end getRightPos
 	
 	/**

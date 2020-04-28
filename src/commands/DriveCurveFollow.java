@@ -1,17 +1,17 @@
 package commands;
 
 import model.DriveLoop;
-import model.motion.DriveProfile;
+import model.motion.BezierProfile;
 import util.Util;
 
 public class DriveCurveFollow extends Command {
 	//Attributes
 	private DriveLoop loop;
-	private DriveProfile profile;
+	private BezierProfile profile;
 	private double tolerance;
-	private int index = 0;
+	private int index;
 	
-	public DriveCurveFollow(DriveLoop loop, DriveProfile profile, double tolerance) {
+	public DriveCurveFollow(DriveLoop loop, BezierProfile profile, double tolerance) {
 		this.loop = loop;
 		this.profile = profile;
 		this.tolerance = tolerance;
@@ -22,6 +22,7 @@ public class DriveCurveFollow extends Command {
 	@Override
 	protected void initialize() {
 		this.loop.setCurveFollowingState(robot.getLeftPos(), robot.getRightPos());
+		index = 0;
 	}
 
 	@Override
@@ -39,8 +40,6 @@ public class DriveCurveFollow extends Command {
 
 	@Override
 	protected void end() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

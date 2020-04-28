@@ -445,27 +445,6 @@ public class Util {
 	} //end scaleArray
 	
 	/**
-	 * Save a list of data to a text file
-	 * @param data List of data points to be printed line by line
-	 * @return True if writing was successful, false if not
-	 */
-	public static boolean saveListToFile(ArrayList<String> data, String name) {
-		try {
-			//print every line to the file, return true if no errors
-			PrintWriter pw = new PrintWriter(new File(Util.UTIL_DIR + name + ".txt"));
-			for (String line : data)
-				pw.print(line);
-			pw.close();
-			
-			return true;
-			
-		} catch (Exception e) {
-			//return false because of errors
-			return false;
-		} //try-catch
-	} //end saveListToFile
-	
-	/**
 	 * Find the elements sandwiching value in list. Returns the index of the values this number is between in 
 	 * ascending order, or an array of just the index of the equivalent value in the list within tolerance. 
 	 * If value is outside the range of the list, the closest boundary index is returned.
@@ -504,4 +483,61 @@ public class Util {
 	public static boolean fuzzyEquals(double a, double b, double eps) {
 		return Math.abs(a-b) <= eps;
 	} //end fuzzyEquals
+	
+	/**
+	 * Create an integer array with values from zero to n-1 inclusive
+	 * @param n End value of array
+	 * @return Array of indices
+	 */
+	public static double[] indexArray(int n) {
+		double[] range = new double[n];
+		
+		for (int i = 0; i < n; i++)
+			range[i] = i;
+		
+		return range;
+	} //end indexArray
+	
+	/**
+	 * Save a list of data to a text file
+	 * @param data List of data points to be printed line by line
+	 * @return True if writing was successful, false if not
+	 */
+	public static boolean saveListToFile(ArrayList<String> data, String filename) {
+		try {
+			//print every line to the file, return true if no errors
+			PrintWriter pw = new PrintWriter(new File(Util.UTIL_DIR + filename + ".txt"));
+			for (String line : data)
+				pw.print(line);
+			pw.close();
+			
+			return true;
+			
+		} catch (Exception e) {
+			//return false because of errors
+			return false;
+		} //try-catch
+	} //end saveListToFile
+	
+	/**
+	 * Save the elements of a double array line by line to a text file
+	 * @param data Double array with data points
+	 * @param filename Name of the file to write to
+	 * @return True if writing was successful, false if not
+	 */
+	public static boolean saveDoubleArrayToFile(double[] data, String filename) {
+		try {
+			//print every line to the file, return true if no errors
+			PrintWriter pw = new PrintWriter(new File(Util.UTIL_DIR + filename + ".txt"));
+			for (int i = 0; i < data.length; i++)
+				pw.print(data[i] + "\n");
+			pw.close();
+			
+			return true;
+			
+		} catch (Exception e) {
+			//return false because of errors
+			return false;
+		} //try-catch
+	} //end saveDoubleArrayToFile
 } //end Util

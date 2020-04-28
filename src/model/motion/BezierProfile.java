@@ -1,6 +1,9 @@
 package model.motion;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import org.knowm.xchart.XYChart;
 
 import model.FieldPositioning;
 import model.Point;
@@ -18,12 +21,24 @@ public class BezierProfile extends DriveProfile {
 	private final int SIZE = 500;; //number of pieces the path is split into
 	private final double STEP = 1.0 / SIZE; //inverse of size
 	
-	private double totalLength; //arclength of the entire path
+	private double totalLength; //arclength of the entire path in inches
 	private double[] tVals; //t values for the points evenly spaced along the path
 	private Point[] evenPoints; //list of points in the path evenly spaced by distance
 	
 	private double[] centerRadius; //radius the center of the robot drives at in inches
 	private double[] centerVel; //center velocity of the robot in inches per second
+	
+	private double[] headings; //headings at the evenly spaced points in the path in degrees
+	private double[] leftRadius; //radius of left side of path in inches
+	private double[] rightRadius; //radius of right side of path in inches
+	
+	private double[] times; //time at each point in curve
+	private double[] leftVel; //left wheel velocities in inches per second
+	private double[] rightVel; //right wheel velocities in inches per second
+	private double[] leftPos; //left wheel position in inches
+	private double[] rightPos; //right wheel position in inches
+	private double[] leftAcc; //left wheel acceleration in in/s^2
+	private double[] rightAcc; //right wheel acceleration in in/s^2
 	
 	/**
 	 * Create a profile to follow a Bezier curve while respecting kinematic robot constraints
@@ -40,6 +55,7 @@ public class BezierProfile extends DriveProfile {
 		this.maxVel = maxVel;
 		this.maxAcc = maxAcc;
 		this.maxDec = maxDec;
+		this.size = SIZE;
 		
 		//create profile
 		computeConstants();
@@ -70,43 +86,19 @@ public class BezierProfile extends DriveProfile {
 		this.totalLength = tDistances[tDistances.length - 1]; //last distance is length of curve
 		//t value is index/size, tDistances[index] is distance along path at that t value
 		
-		//parameterize by T test
-		ArrayList<String> tDistanceData = new ArrayList<String>();
-		for (int i = 0; i < tDistances.length; i++) {
-			double a = i * STEP;
-			double b = tDistances[i];
-			double c = i == 0 ? 0 : tDistances[i] - tDistances[i-1];
-			String line = String.format("%.3f %.3f %.3f%n", a, b, c);
-			tDistanceData.add(line);
-		} 
-		Util.println("tDistanceData " + Util.saveListToFile(tDistanceData, "tDistanceData"));
-		
 		/*
 		 * Create the evenly spaced points list by linearly interpolating between the points based on the
-		 * distance along the curve.
+		 * distance along the curve. The curve radius (inverse of curvature) and heading (degrees) is
+		 * also calculated at this point.
 		 */
 		parameterizeByD(tDistances);
-		
-		//parameterize by d test
-		ArrayList<String> dDistanceData = new ArrayList<String>();
-		for (int i = 0; i < SIZE; i++) {
-			double a = tVals[i];
-			double b = i == 0 ? 0 : FieldPositioning.calcDistance(evenPoints[i], evenPoints[i-1]);
-			dDistanceData.add(String.format("%.3f %.3f\n", a, b));
-		}
-		Util.println("dDistanceData " + Util.saveListToFile(dDistanceData, "dDistanceData"));
+		calcRadii();
+		calcHeadings();
 		
 		/*
 		 * Constrain the center velocity of the robot by the path's curvature. 
 		 */
 		applyCurvatureConstraint();
-		
-		//curvate constraint test
-		ArrayList<String> curvatureData = new ArrayList<String>();
-		for (int i = 0; i < centerVel.length; i++) {
-			curvatureData.add(String.format("%.3f\n", centerVel[i]));
-		} 
-		Util.println("curvatureData " + Util.saveListToFile(curvatureData, "curvatureData"));
 		
 		/*
 		 * Constrain the center velocity of the robot by the maximum acceleration with a forward pass
@@ -114,19 +106,12 @@ public class BezierProfile extends DriveProfile {
 		 */
 		applyAccelerationConstraint();
 		
-		//acceleration constraint test
-		ArrayList<String> accelerationData = new ArrayList<String>();
-		for (int i = 0; i < centerVel.length; i++) {
-			accelerationData.add(String.format("%.3f\n", centerVel[i]));
-		} 
-		Util.println("accelerationData " + Util.saveListToFile(accelerationData, "accelerationData"));
-		
 		/*
 		 * Constrain the center velocity of the robot by the maximum deceleration with a backward pass
 		 * of the center velocity list.
 		 */
 		applyDecelerationConstraint();
-		
+		/*
 		//deceleration constraint test
 		ArrayList<String> decelerationData = new ArrayList<String>();
 		for (int i = 0; i < centerVel.length; i++) {
@@ -137,10 +122,7 @@ public class BezierProfile extends DriveProfile {
 		//display charts
 		PlotGenerator.displayChart(PlotGenerator.createChartFromList(1920, 1080, "decelerationData", 
 									"i", "Velocity (ft/s)", decelerationData));
-		PlotGenerator.displayChart(PlotGenerator.createChartFromList(1920, 1080, "accelerationData", 
-									"i", "Velocity (ft/s)", accelerationData));
-		PlotGenerator.displayChart(PlotGenerator.createChartFromList(1920, 1080, "curvatureData", 
-									"i", "Velocity (ft/s)", curvatureData));
+		*/
 	} //end computeConstants
 	
 	/**
@@ -207,9 +189,6 @@ public class BezierProfile extends DriveProfile {
 		//initialize the center velocity list
 		centerVel = new double[SIZE];
 		
-		//get the center path radii
-		calcRadii();
-		
 		//fill the center velocities
 		for (int i = 0; i < SIZE; i++) {
 			centerVel[i] = (maxVel * centerRadius[i]) / (centerRadius[i] + trackWidth / 2);
@@ -227,7 +206,7 @@ public class BezierProfile extends DriveProfile {
 		 */
 		centerRadius = new double[SIZE];
 		
-		for (int i = 0; i < SIZE; i++) {
+		for (int i = 0; i < centerRadius.length; i++) {
 			//radius is inverse of curvature
 			centerRadius[i] = path.calcRadius(tVals[i]);
 		} //loop		
@@ -246,7 +225,7 @@ public class BezierProfile extends DriveProfile {
 		//calculate the new center velocity at each point, skipping the first one
 		for (int i = 1; i < centerVel.length; i++) {
 			double velFromAcc = Math.sqrt(Math.pow(centerVel[i-1], 2) + 2 * maxAcc * distStep); //sqrt(v^2 + 2ad)
-			centerVel[i] = Math.min(velFromAcc, centerVel[i]);
+			centerVel[i] = Math.min(velFromAcc, centerVel[i]); //minimum of this new constraint and old value
 		} //loop
 	} //end applyAccelerationConstraints
 	
@@ -263,16 +242,206 @@ public class BezierProfile extends DriveProfile {
 		//calculate the new center velocity looping backwards, skipping the first one
 		for (int i = SIZE - 2; i >= 0; i--) {
 			double velFromAcc = Math.sqrt(Math.pow(centerVel[i+1], 2) + 2 * maxDec * distStep); //sqrt(v^2 + 2ad)
-			centerVel[i] = Math.min(velFromAcc, centerVel[i]);
+			centerVel[i] = Math.min(velFromAcc, centerVel[i]); //minimum of this new constraint and old value
 		} //loop
 	} //end applyDecelerationConstraint
 		
+	/**
+	 * Fill the trajectory points for the left and right side of the profile
+	 */
 	protected void fillProfiles() {
-		/*
-		 * TO-DO:
-		 * Offset path
-		 * Offset velocities
-		 * Time
-		 */
+		//calculate outer radii for left and right velocity offsetting
+		calcOuterRadii();
+		
+		//calculate left and right velocities
+		calcWheelVelocities();
+		
+		//calculate the time at each step of the trajectory
+		fillTimes();
+		
+		//calculate left and right wheel positions
+		calcWheelPositions();
+		
+		//calculate left and right wheel accelerations
+		calcWheelAccelerations();
+		
+		//fill the left and right side trajectory points (just velocity setpoints)
+		for (int i = 0; i < SIZE; i++) {
+			this.leftProfile.add(new double[] {leftPos[i], leftVel[i] / 12, leftAcc[i]});
+			this.rightProfile.add(new double[] {rightPos[i], rightVel[i] / 12, rightAcc[i]});
+		} //loop
+		
+		Util.println(this.totalTime);
 	} //end fillProfiles
+	
+	/**
+	 * Fill the array of headings for the robot to follow
+	 */
+	private void calcHeadings() {
+		//first calc 
+		headings = new double[SIZE];
+		
+		for (int i = 0; i < headings.length; i++) {
+			headings[i] = path.calcHeading(tVals[i]);
+		} //loop
+	} //end calcHeadings
+	
+	/**
+	 * Represent the change in heading as an int (1 if negative, -1 if positive, 0 if none)
+	 * @return Array of values for deciding which wheel is outer
+	 */
+	private int[] calcDeltaHeadings() {
+		int[] dTheta = new int[SIZE];
+		
+		dTheta[0] = 0; //no change at first point
+		
+		for (int i = 1; i < dTheta.length; i++) {
+			double dHeading = headings[i] - headings[i-1];
+			dTheta[i] = dHeading > 0 ? -1 : dHeading < 0 ? 1 : 0;
+		} //loop
+		
+		return dTheta;
+	} //end calcDeltaHeadings
+	
+	/**
+	 * Calculate the radius of the left and right paths
+	 */
+	private void calcOuterRadii() {
+		int[] dTheta = calcDeltaHeadings();
+		double offset = trackWidth / 2;
+		leftRadius = new double[SIZE];
+		rightRadius = new double[SIZE];
+		
+		for (int i = 0; i < SIZE; i++) {
+			if (dTheta[i] == 1) { //turning right, left is outer
+				leftRadius[i] = centerRadius[i] + offset;
+				rightRadius[i] = centerRadius[i] - offset;
+				
+			} else if (dTheta[i] == -1) { //turning left, right is outer
+				leftRadius[i] = centerRadius[i] - offset;
+				rightRadius[i] = centerRadius[i] + offset;
+				
+			} else { //zero, no change in heading
+				leftRadius[i] = centerRadius[i];
+				rightRadius[i] = centerRadius[i];
+			} //if
+		} //loop
+	} //end calcOuterRadii
+	
+	/**
+	 * Calculate the wheel velocities in inches per second
+	 */
+	private void calcWheelVelocities() {
+		leftVel = new double[SIZE];
+		rightVel = new double[SIZE];
+		
+		for (int i = 0; i < SIZE; i++) {
+			leftVel[i] = (centerVel[i] / centerRadius[i]) * leftRadius[i];
+			rightVel[i] = (centerVel[i] / centerRadius[i]) * rightRadius[i];
+		} //loop
+		
+		/*
+		Util.println("created chart");
+		XYChart c = PlotGenerator.buildChart(1920, 1080, "Wheel Velocities", "index", "Velocity (ft/s)");
+		c.addSeries("left", leftVel);
+		c.addSeries("right", rightVel);
+		PlotGenerator.displayChart(c);
+		*/
+	} //end calcWheelVelocities
+	
+	/**
+	 * Calculate the time at each step and set the total time
+	 */
+	private void fillTimes() {
+		times = new double[SIZE];
+		double distStep = this.totalLength / SIZE;
+		double time = 0;
+		times[0] = 0;
+		
+		for (int i = 1; i < times.length; i++) {
+			time += centerVel[i] == 0 ? 0 : distStep / centerVel[i]; //don't step forward in time if not moving
+			times[i] = time;
+		} //loop
+		
+		this.totalTime = time;
+		
+		/*
+		Util.println("created chart");
+		XYChart c = PlotGenerator.buildChart("Times", "Index", "Time (s)");
+		c.addSeries("times", times);
+		PlotGenerator.displayChart(c);
+		*/
+	} //end fillTimes
+	
+	/**
+	 * Calculate the wheel positions in inches
+	 */
+	private void calcWheelPositions() {
+		leftPos = new double[SIZE];
+		rightPos = new double[SIZE];
+		double left = 0;
+		double right = 0;
+		
+		leftPos[0] = 0;
+		rightPos[0] = 0;
+		
+		for (int i = 1; i < SIZE; i++) {
+			double dt = times[i] - times[i-1];
+			left += leftVel[i] * dt;
+			leftPos[i] = left;
+			
+			right += rightVel[i] * dt;
+			rightPos[i] = right;
+		} //loop
+		
+		Util.saveDoubleArrayToFile(leftPos, "leftPos");
+		Util.saveDoubleArrayToFile(rightPos, "rightPos");
+	} //end calcWheelPositions
+	
+	/**
+	 * Calculate the wheel accelerations in in/s^2
+	 */
+	public void calcWheelAccelerations() {
+		leftAcc = new double[SIZE];
+		rightAcc = new double[SIZE];
+		
+		leftAcc[0] = 0;
+		rightAcc[0] = 0;
+		
+		for (int i = 1; i < SIZE; i++) {
+			double dt = times[i] - times[i-1];
+			leftAcc[i] = (leftVel[i] - leftVel[i-1]) / dt;
+			rightAcc[i] = (rightVel[i] - rightVel[i-1]) / dt;
+		} //loop
+	} //end calcWheelAccelerations
+	
+	//Getters
+
+	/**
+	 * Get the left trajectory point at this time
+	 * @param time Time in seconds to get trajectory point
+	 * @return Left position, velocity, and acceleration at that time
+	 */
+	public double[] getLeftTrajPoint(double time) {
+		int i = Util.findSandwichedElements(times, time, 1E-3)[0];
+		return leftProfile.get(i);
+	} //end getLeftTrajPoint
+	
+	/**
+	 * Get the right trajectory point at this time
+	 * @param time Time in seconds to get trajectory point
+	 * @return Right position, velocity, and acceleration at that time
+	 */
+	public double[] getRightTrajPoint(double time) {
+		int i = Util.findSandwichedElements(times, time, 1E-3)[0];
+		return rightProfile.get(i);
+	} //end getRightTrajPoint
+	
+	/**
+	 * Get the size of the profile
+	 * @return Number of steps in the profile
+	 */
+	public int getSize() {
+		return SIZE;
+	} //end getSize
 } //end class

@@ -1,6 +1,7 @@
 package model.motion;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import util.Util;
 
@@ -111,4 +112,26 @@ public abstract class DriveProfile {
 	public double getTotalDist() {
 		return leftProfile.get(leftProfile.size() - 1)[0];
 	} //end getTotalDist
+	
+	public double[] getLeftVelocities() {
+		double[] leftVel = new double[this.size];
+		
+		for (int i = 0; i < this.size; i++) 
+			leftVel[i] = leftProfile.get(i)[1];
+		
+		return leftVel;
+	} 
+	
+	public double[] getRightVelocities() {
+		double[] rightVel = new double[this.size];
+		
+		for (int i = 0; i < this.size; i++) 
+			rightVel[i] = rightProfile.get(i)[1];
+		
+		return rightVel;
+	} 
+	
+	public List<?> getRightProfile() {
+		return rightProfile;
+	}
 } //end class

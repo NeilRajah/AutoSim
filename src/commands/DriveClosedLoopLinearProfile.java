@@ -62,7 +62,7 @@ public class DriveClosedLoopLinearProfile extends Command {
 		loop.updateClosedLoopLinearProfileState(traj.getLeftTrajPoint(time), traj.getRightTrajPoint(time));
 		loop.onLoop();
 		
-		index += 1;
+		index++;
 	} //end execute
 
 	/**

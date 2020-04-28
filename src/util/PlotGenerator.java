@@ -84,6 +84,17 @@ public class PlotGenerator {
 	} //end buildChart
 	
 	/**
+	 * Build a chart with the XYChartBuilder at a defualt 1920x1080 size
+	 * @param t Title
+	 * @param x X axis title
+	 * @param y Y axis title
+	 * @return Chart configured with above parameters
+	 */
+	public static XYChart buildChart(String t, String x, String y) {
+		return buildChart(1920, 1080, t, x, y);
+	} //end buildChart
+	
+	/**
 	 * Display a chart in a separate Swing windowe
 	 * @param c Chart to display
 	 */
@@ -179,4 +190,22 @@ public class PlotGenerator {
 		
 		return chart;
 	} //end createChartFromList
+	
+	/**
+	 * Create a chart from data points in a list
+	 * @param w Width in pixels
+	 * @param h Height in pixels
+	 * @param t Title of chart
+	 * @param x X-axis title
+	 * @param y Y-axis title
+	 * @param data Data points in array
+	 * @return Chart object
+	 */
+	public static XYChart createChartFromArray(int w, int h, String t, String x, String y, double[] data) {
+		XYChart chart = buildChart(w, h, t, x, y);
+		
+		chart.addSeries("rightVel", data);
+		
+		return chart;
+	} //end createChartFromArray
 } //end class
