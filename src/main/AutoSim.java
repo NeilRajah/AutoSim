@@ -15,9 +15,7 @@ import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.DriveClosedLoopLinearProfile;
-import commands.TimedVoltage;
-import commands.TurnAngle;
+import commands.DriveCurveFollow;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.BezierPathCreator;
@@ -30,9 +28,9 @@ import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
+import model.motion.BezierPath;
 import model.motion.BezierProfile;
 import model.motion.DriveProfile;
-import model.motion.JerkProfile;
 import util.FieldPoints;
 import util.PlotGenerator;
 import util.Util;
@@ -117,7 +115,7 @@ public class AutoSim {
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
 		Robot r = new Robot(4, 120, 30, 30, gb); //120lb 4" wheel dia 30"x30" chassis
 		r.setXY(new Point(curve[0]));
-		r.setHeadingDegrees(0);
+		r.setHeadingDegrees(new BezierPath(curve).calcHeading(0) - 180);
 		
 		//set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -131,14 +129,15 @@ public class AutoSim {
 		
 		//create the command group
 //		profile = new TrapezoidalProfile(120, 24, 12);
-		profile = new JerkProfile(200, 30, 12);
-		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
+//		profile = new JerkProfile(200, 30, 12);
+//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //							 new TurnAngle(driveLoop, 180, 2, 12, true),
 //							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
 //		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
 		
-		new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
-//		cg = new CommandList(new DriveCurveFollow(driveLoop, profile, 1));
+		BezierProfile bezProfile = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
+		profile = bezProfile;
+		cg = new CommandList(new DriveCurveFollow(driveLoop, bezProfile, 1));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
@@ -173,7 +172,10 @@ public class AutoSim {
 	 * Plot the robot data to a separate window
 	 */
 	private static void plotData() {
-		XYChart chart = PlotGenerator.createLinearTrajChart(profile, "Profile vs. Robot", 1920, 1080, 1);
+//		XYChart chart = PlotGenerator.createLinearTrajChart(profile, "Profile vs. Robot", 1920, 1080, 1);
+		XYChart chart = PlotGenerator.buildChart("Bezier Profile", "Time (s)", "Velocity (ft/s)");
+//		chart.addSeries("Profile Left", profile.getLeftVelocities());
+//		chart.addSeries("Profile Right", profile.getRightVelocities());
 		
 		/* Position and acc
 		double[][] posSeries = PlotGenerator.getXYFromProfile(profile, 0);
@@ -186,7 +188,7 @@ public class AutoSim {
 //		XYChart chart = PlotGenerator.buildChart(1920, 1080, "Voltage Test", "Time", "Acceleration");
 		
 		//robot data
-		double[][] robotSeries = PlotGenerator.getXYFromRobotData(cg.getData(), ROBOT_KEY.LIN_VEL);
+		double[][] robotSeries = PlotGenerator.getXYFromRobotData(cg.getData(), ROBOT_KEY.LEFT_VEL);
 		chart.addSeries("Robot", robotSeries[0], robotSeries[1]);
 		
 		//show the chart
