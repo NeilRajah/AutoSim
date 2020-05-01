@@ -59,6 +59,7 @@ public class AutoSim {
 	//Trajectory to follow
 //	private static TrapezoidalProfile trap;
 	private static DriveProfile profile;
+	private static BezierProfile bezTraj;
 	private static double[][] curve;
 	
 	/**
@@ -135,9 +136,9 @@ public class AutoSim {
 //							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
 //		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
 		
-		BezierProfile bezProfile = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
-		profile = bezProfile;
-		cg = new CommandList(new DriveCurveFollow(driveLoop, bezProfile, 1));
+		bezTraj = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
+		Util.println("Width: " + r.getWidthInches(), "Max Lin Speed: " + r.getMaxLinSpeed());
+		cg = new CommandList(new DriveCurveFollow(driveLoop, bezTraj, 1));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
@@ -172,24 +173,16 @@ public class AutoSim {
 	 * Plot the robot data to a separate window
 	 */
 	private static void plotData() {
-//		XYChart chart = PlotGenerator.createLinearTrajChart(profile, "Profile vs. Robot", 1920, 1080, 1);
 		XYChart chart = PlotGenerator.buildChart("Bezier Profile", "Time (s)", "Velocity (ft/s)");
-//		chart.addSeries("Profile Left", profile.getLeftVelocities());
-//		chart.addSeries("Profile Right", profile.getRightVelocities());
-		
-		/* Position and acc
-		double[][] posSeries = PlotGenerator.getXYFromProfile(profile, 0);
-		chart.addSeries("Position (\")", posSeries[0], posSeries[1]);
-
-		double[][] accSeries = PlotGenerator.getXYFromProfile(profile, 2);
-		chart.addSeries("Acceleration (\")", accSeries[0], accSeries[1]);
-		*/
-		
-//		XYChart chart = PlotGenerator.buildChart(1920, 1080, "Voltage Test", "Time", "Acceleration");
 		
 		//robot data
 		double[][] robotSeries = PlotGenerator.getXYFromRobotData(cg.getData(), ROBOT_KEY.LEFT_VEL);
-		chart.addSeries("Robot", robotSeries[0], robotSeries[1]);
+		chart.addSeries("Robot Left Vel", robotSeries[0], robotSeries[1]);
+		robotSeries = PlotGenerator.getXYFromRobotData(cg.getData(), ROBOT_KEY.RIGHT_VEL);
+		chart.addSeries("Robot Right Vel", robotSeries[0], robotSeries[1]);
+		
+		//profile data
+		
 		
 		//show the chart
 		PlotGenerator.displayChart(chart);
