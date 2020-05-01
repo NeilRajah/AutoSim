@@ -113,6 +113,10 @@ public abstract class DriveProfile {
 		return leftProfile.get(leftProfile.size() - 1)[0];
 	} //end getTotalDist
 	
+	/**
+	 * Get the left velocities (ft/s)
+	 * @return Left wheel velocities as an array
+	 */
 	public double[] getLeftVelocities() {
 		double[] leftVel = new double[this.size];
 		
@@ -120,8 +124,12 @@ public abstract class DriveProfile {
 			leftVel[i] = leftProfile.get(i)[1];
 		
 		return leftVel;
-	} 
+	} //end getLeftVelocities
 	
+	/**
+	 * Get the right velocities (ft/s)
+	 * @return Right wheel velocities as an array
+	 */
 	public double[] getRightVelocities() {
 		double[] rightVel = new double[this.size];
 		
@@ -129,7 +137,7 @@ public abstract class DriveProfile {
 			rightVel[i] = rightProfile.get(i)[1];
 		
 		return rightVel;
-	} 
+	} //end getRightVelocities
 	
 	public List<?> getRightProfile() {
 		return rightProfile;

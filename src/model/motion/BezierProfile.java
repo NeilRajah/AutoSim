@@ -1,13 +1,11 @@
 package model.motion;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import org.knowm.xchart.XYChart;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import model.FieldPositioning;
 import model.Point;
-import util.PlotGenerator;
 import util.Util;
 
 public class BezierProfile extends DriveProfile {
@@ -111,18 +109,6 @@ public class BezierProfile extends DriveProfile {
 		 * of the center velocity list.
 		 */
 		applyDecelerationConstraint();
-		/*
-		//deceleration constraint test
-		ArrayList<String> decelerationData = new ArrayList<String>();
-		for (int i = 0; i < centerVel.length; i++) {
-			decelerationData.add(String.format("%.3f\n", centerVel[i]));
-		} 
-		Util.println("decelerationData " + Util.saveListToFile(decelerationData, "decelerationData"));
-		
-		//display charts
-		PlotGenerator.displayChart(PlotGenerator.createChartFromList(1920, 1080, "decelerationData", 
-									"i", "Velocity (ft/s)", decelerationData));
-		*/
 	} //end computeConstants
 	
 	/**
@@ -322,8 +308,8 @@ public class BezierProfile extends DriveProfile {
 				rightRadius[i] = centerRadius[i] + offset;
 				
 			} else { //zero, no change in heading
-				leftRadius[i] = centerRadius[i];
-				rightRadius[i] = centerRadius[i];
+				leftRadius[i] = 1E6;
+				rightRadius[i] = 1E6;
 			} //if
 		} //loop
 	} //end calcOuterRadii
@@ -339,14 +325,6 @@ public class BezierProfile extends DriveProfile {
 			leftVel[i] = (centerVel[i] / centerRadius[i]) * leftRadius[i];
 			rightVel[i] = (centerVel[i] / centerRadius[i]) * rightRadius[i];
 		} //loop
-		
-		/*
-		Util.println("created chart");
-		XYChart c = PlotGenerator.buildChart(1920, 1080, "Wheel Velocities", "index", "Velocity (ft/s)");
-		c.addSeries("left", leftVel);
-		c.addSeries("right", rightVel);
-		PlotGenerator.displayChart(c);
-		*/
 	} //end calcWheelVelocities
 	
 	/**
@@ -364,13 +342,6 @@ public class BezierProfile extends DriveProfile {
 		} //loop
 		
 		this.totalTime = time;
-		
-		/*
-		Util.println("created chart");
-		XYChart c = PlotGenerator.buildChart("Times", "Index", "Time (s)");
-		c.addSeries("times", times);
-		PlotGenerator.displayChart(c);
-		*/
 	} //end fillTimes
 	
 	/**
@@ -393,9 +364,6 @@ public class BezierProfile extends DriveProfile {
 			right += rightVel[i] * dt;
 			rightPos[i] = right;
 		} //loop
-		
-		Util.saveDoubleArrayToFile(leftPos, "leftPos");
-		Util.saveDoubleArrayToFile(rightPos, "rightPos");
 	} //end calcWheelPositions
 	
 	/**
@@ -423,8 +391,7 @@ public class BezierProfile extends DriveProfile {
 	 * @return Left position, velocity, and acceleration at that time
 	 */
 	public double[] getLeftTrajPoint(double time) {
-		int i = Util.findSandwichedElements(times, time, 1E-3)[0];
-		return leftProfile.get(i);
+		return leftProfile.get(getIndex(time));
 	} //end getLeftTrajPoint
 	
 	/**
@@ -433,8 +400,7 @@ public class BezierProfile extends DriveProfile {
 	 * @return Right position, velocity, and acceleration at that time
 	 */
 	public double[] getRightTrajPoint(double time) {
-		int i = Util.findSandwichedElements(times, time, 1E-3)[0];
-		return rightProfile.get(i);
+		return rightProfile.get(getIndex(time));
 	} //end getRightTrajPoint
 	
 	/**
@@ -444,4 +410,37 @@ public class BezierProfile extends DriveProfile {
 	public int getSize() {
 		return SIZE;
 	} //end getSize
+	
+	/**
+	 * Save the left and right profile velocities to a file
+	 * @param filename Name of the file
+	 * @return True if writing was successful, false if not
+	 */
+	public boolean saveVelsToFile(String filename) {
+		try {
+			PrintWriter p = new PrintWriter(new File(Util.UTIL_DIR + filename + ".vels"));
+			
+			for (double time = 0; time < this.totalTime; time += Util.UPDATE_PERIOD) {
+				int i = getIndex(time);
+				double left = leftProfile.get(i)[1];
+				double right = rightProfile.get(i)[1];
+				p.println(String.format("%.3f %.3f %.3f", time, left, right));
+			} //loop
+			
+			p.close();
+			return true;
+		} catch (IOException e) {
+			return false;
+		} //try-catch
+	} //end saveVelsToFile
+	
+	/**
+	 * Get the point index from the time
+	 * @param time Time from 0 to totalTime inclusive
+	 * @return Index of the trajectory point at this time
+	 */
+	private int getIndex(double time) {
+		time = Math.max(Math.min(this.totalTime, time), 0);
+		return Util.findSandwichedElements(times, time, 1E-3)[0];
+	} //end getIndex
 } //end class
