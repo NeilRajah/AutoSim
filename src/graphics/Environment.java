@@ -391,7 +391,7 @@ public class Environment extends JComponent {
 	 * @param g2 Object for drawing
 	 */
 	private void drawGoalPoint(Graphics2D g2) {
-		if (poseIndex > 0 && (data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT) != null)) {
+		if (poseIndex > 0 && data != null && (data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT) != null)) {
 			//drawing values
 			g2.setColor(Color.GRAY);
 			Point goal = (Point) data.get(poseIndex).get(ROBOT_KEY.GOAL_POINT);

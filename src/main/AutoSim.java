@@ -31,6 +31,7 @@ import model.Robot;
 import model.motion.BezierPath;
 import model.motion.BezierProfile;
 import model.motion.DriveProfile;
+import model.motion.ProfileGenerator;
 import util.FieldPoints;
 import util.PlotGenerator;
 import util.Util;
@@ -78,6 +79,9 @@ public class AutoSim {
 		w.addCommandGroup(cg);
 		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
+		//add poses to play
+//		w.addPoses(ProfileGenerator.posesFromFile("niceLongCurve"));
+		
 		//launch the application
 		w.launch();			
 	} //end main
@@ -116,7 +120,7 @@ public class AutoSim {
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
 		Robot r = new Robot(4, 120, 30, 30, gb); //120lb 4" wheel dia 30"x30" chassis
 		r.setXY(new Point(curve[0]));
-		r.setHeadingDegrees(new BezierPath(curve).calcHeading(0) - 180);
+		r.setHeadingDegrees(new BezierPath(curve).calcHeading(0));
 		
 		//set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -137,7 +141,7 @@ public class AutoSim {
 //		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
 		
 		bezTraj = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
-		Util.println("Width: " + r.getWidthInches(), "Max Lin Speed: " + r.getMaxLinSpeed());
+		Util.println(String.format("Width: %.3f Max Lin Speed: %.3f", r.getWidthInches(), r.getMaxLinSpeed()));
 		cg = new CommandList(new DriveCurveFollow(driveLoop, bezTraj, 1));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();

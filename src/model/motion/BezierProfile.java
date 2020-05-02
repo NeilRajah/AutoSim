@@ -424,7 +424,7 @@ public class BezierProfile extends DriveProfile {
 				int i = getIndex(time);
 				double left = leftProfile.get(i)[1];
 				double right = rightProfile.get(i)[1];
-				p.println(String.format("%.3f %.3f %.3f", time, left, right));
+				p.println(String.format("%.3f %.8f %.8f", time, left, right));
 			} //loop
 			
 			p.close();
@@ -443,4 +443,36 @@ public class BezierProfile extends DriveProfile {
 		time = Math.max(Math.min(this.totalTime, time), 0);
 		return Util.findSandwichedElements(times, time, 1E-3)[0];
 	} //end getIndex
+	
+	/**
+	 * Get the path the profile is following
+	 * @return BezierPath representation of the path the profile is following
+	 */
+	public BezierPath getPath() {
+		return path;
+	} //end getPath
+	
+	/**
+	 * Get the width of the robot
+	 * @return Distance from wheel to wheel of the robot in inches
+	 */
+	public double getTrackWidth() {
+		return trackWidth;
+	} //end getTrackWidth
+	
+	/**
+	 * Get the starting (x,y) of the robot
+	 * @return Initial (x,y) of the robot as a Point object
+	 */
+	public Point getStartPosition() {
+		return path.getControlPoints()[0];
+	} //end getStartPosition
+	
+	/**
+	 * Get the initial heading of the profile 
+	 * @return initial heading of the profile in degrees
+	 */
+	public double getInitialHeading() {
+		return path.getInitialHeading();
+	} //end getInitialHeading
 } //end class

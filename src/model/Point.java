@@ -73,12 +73,20 @@ public class Point {
 	
 	/**
 	 * Translate the point a given magnitude at a given angle
-	 * @param magnitude - distance to translate the point
-	 * @param angle - angle to translate the point at
+	 * @param magnitude Distance to translate the point 
+	 * @param angle Angle to translate the point at in radians
 	 */
 	public void translate(double magnitude, double angle) {
 		//sin and cos flipped because x and y of field are flipped
 		this.x += magnitude * Math.sin(angle); 
 		this.y += magnitude * Math.cos(angle);
 	} //end translate
+	
+	/**
+	 * Safe copy of this point
+	 * @return Clone of this point
+	 */
+	public Point clone() {
+		return new Point(x, y);
+	} //end clone
 } //end Point

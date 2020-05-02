@@ -8,6 +8,7 @@ package graphics;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JFrame;
@@ -20,6 +21,7 @@ import graphics.components.ButtonController;
 import graphics.widgets.Widget;
 import graphics.widgets.WidgetHub;
 import main.AutoSim;
+import model.Pose;
 import util.JComponentUtil;
 import util.Util;
 import util.Util.ROBOT_KEY;
@@ -196,12 +198,14 @@ public class Window extends JFrame {
 			
 			//loop through all poses every 5 milliseconds
 			for (int i = 1; i < env.getNumPoses(); i++) {
-				HashMap<ROBOT_KEY, Object> data = env.getDataPoint(i);
-				
 				env.incrementPoseIndex(); //draw the next pose
-				if (widgetHub != null)
-					widgetHub.update(data); //update all widgets
-				bar.setCommandName((String) data.get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
+				
+				try {
+					HashMap<ROBOT_KEY, Object> data = env.getDataPoint(i);
+					bar.setCommandName((String) data.get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
+					if (widgetHub != null)
+						widgetHub.update(data); //update all widgets
+				} catch (NullPointerException n) {}
 				
 				Util.pause(Util.ANIMATION_PERIOD);
 			} //loop
@@ -215,6 +219,16 @@ public class Window extends JFrame {
 		t.start();
 		Util.println("Thread Started");
 	} //end runAnimation
+	
+	/**
+	 * Add poses to the Environment
+	 * @param poses List of poses to add
+	 */
+	public void addPoses(ArrayList<Pose> poses) {
+		env.setPoses(poses);
+		env.incrementPoseIndex();
+		env.update();
+	} //end addPoses
 	
 	//Widgets
 	

@@ -28,6 +28,17 @@ public class Pose {
 	} //end constructor
 	
 	/**
+	 * Create a pose with a Point and a heading
+	 * @param point (x,y) position in inches
+	 * @param heading Heading in degrees
+	 */
+	public Pose(Point point, double heading) {
+		this.point = point;
+		this.heading = heading;
+		this.color = new Color(128, 0, 128); //purple
+	} //end constructor
+	
+	/**
 	 * Get the coordinates of the robot
 	 * @return - (x,y) position of robot
 	 */

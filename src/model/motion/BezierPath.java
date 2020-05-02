@@ -27,10 +27,6 @@ public class BezierPath {
 	//Calculated
 	protected int numSegments; //number of segments curve is split up into
 	
-	/*
-	 * Paramaterize so each point has t, dist, heading, curvature/radius, and can lin int between them
-	 */
-	
 	/**
 	 * Create a quintic bezier path given an array of control points
 	 * @param controlPts (x,y) control points
@@ -151,10 +147,18 @@ public class BezierPath {
 	 */
 	public double calcHeading(double t) {
 		if (t <= EPSILON) {
-			return FieldPositioning.calcGoalYaw(calcPoint(EPSILON), calcPoint(0));
+			return FieldPositioning.calcGoalYaw(calcPoint(EPSILON), calcPoint(0)) - 180;
 		} else if (t >= 1 - EPSILON) {
 			return FieldPositioning.calcGoalYaw(calcPoint(1 - EPSILON), calcPoint(1));
 		} //if
 		return FieldPositioning.calcGoalYaw(calcPoint(t - EPSILON), calcPoint(t + EPSILON));
 	} //end getHeading
+	
+	/**
+	 * Get the initial heading of the path
+	 * @return Initial heading of the path in degrees
+	 */
+	public double getInitialHeading() {
+		return calcHeading(0);
+	} //end getInitHeading
 } //end class
