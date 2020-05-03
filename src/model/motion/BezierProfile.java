@@ -258,8 +258,6 @@ public class BezierProfile extends DriveProfile {
 			this.leftProfile.add(new double[] {leftPos[i], leftVel[i] / 12, leftAcc[i]});
 			this.rightProfile.add(new double[] {rightPos[i], rightVel[i] / 12, rightAcc[i]});
 		} //loop
-		
-		Util.println(this.totalTime);
 	} //end fillProfiles
 	
 	/**

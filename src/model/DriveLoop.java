@@ -12,12 +12,11 @@ import util.Util;
 
 public class DriveLoop {
 	//Attributes
-	//Configured
 	private Robot robot; //robot controlled by loop
 	private PIDController drivePID; //PID controller for driving
 	private PIDController turnPID; //PID controller for turning
+	private RAMSETEController ramsete; //RAMSETE controller for pose tracking
 	
-	//Updated
 	private STATE state; //state the robot is in
 	private double goalDist; 	//distance to drive
 	private double tolerance; 	//epsilon to be within
@@ -29,9 +28,11 @@ public class DriveLoop {
 	
 	private double[] leftPVA; //position, velocity and acceleration
 	private double[] rightPVA; 
-	private double leftInit; //initial left pos
-	private double rightInit; //initial right pos
 	
+	private Pose goalPose; //goal pose (x,y,theta)
+	private double goalLinVel; //goal lin vel ft/s
+	private double goalAngVel; //goal ang vel ft/s
+
 	//States the robot can be in
 	public static enum STATE {
 		WAITING, 		//initial
@@ -54,6 +55,7 @@ public class DriveLoop {
 		this.robot = robot;
 		this.drivePID = new PIDController(drivePID.getP(), drivePID.getI(), drivePID.getD(), robot.getMaxLinSpeed());
 		this.turnPID = new PIDController(turnPID.getP(), turnPID.getI(), turnPID.getD(), robot.getMaxLinSpeed());
+		this.ramsete = new RAMSETEController();
 		
 		//default cases
 		state = STATE.WAITING;
@@ -368,59 +370,44 @@ public class DriveLoop {
 	 * Set the output based on the goal position, velocity and acceleration
 	 */
 	private void closedLoopLinearProfileLoop() {
+		//can choose from left or right, both are same
 		double pos = leftPVA[0] + this.drivePID.getInitPos(); //position robot needs to be at
 		double vel = leftPVA[1];
 		double acc = leftPVA[2];
 		
-//		Util.println(pos, vel, acc);
-				
-//		double output = drivePID.calcDVPID(pos, robot.getAveragePos(), vel, tolerance) + calcFFOutput(vel, acc);
-		double output = drivePID.calcDVPID(pos, robot.getAveragePos(), vel, tolerance);
-		output += calcFFOutput(vel, acc);
+		double output = drivePID.calcDVPID(pos, robot.getAveragePos(), vel, tolerance) + calcFFOutput(vel, acc);
 		
 		robot.update(output, output);
 	} //end closedLinearProfileLoop
 	
-	public void setCurveFollowingState(double leftInit, double rightInit) {
+	/**
+	 * Set the state machine into the curve following state
+	 */
+	public void setCurveFollowingState() {
 		this.state = STATE.CURVE_FOLLOWING;
-		this.leftInit = leftInit;
-		this.rightInit = rightInit;
-	}
+	} //end setCurveFollowingState
 	
 	/**
 	 * Update the left and right goals
 	 * @param left Left position, velocity and acceleration
 	 * @param right Right position, velocity and acceleration
 	 */
-	public void updateCurveFollowingState(double[] left, double[] right, double heading) {
-		this.leftPVA = left;
-		this.rightPVA = right;
-		this.goalAngle = heading;
+	public void updateCurveFollowingState(Pose goal, double goalLin, double goalAng) {
+		this.goalPose = goal;
+		this.goalLinVel = goalLin;
+		this.goalAngVel = goalAng;
 	} //end updateCurveFollowingState
 	
 	/**
 	 * Follow the wheel velocity setpoints using FF
 	 */
 	private void curveFollowingLoop() {
-		double posL = leftPVA[0] + this.drivePID.getInitPos(); //position robot needs to be at
-		double velL = leftPVA[1];
-		double accL = leftPVA[2];
+		double[] outputs = ramsete.calcWheelSpeeds(robot.getPose(), goalPose, goalLinVel, goalAngVel, robot.getWidthInches());
 		
-		double leftOut = drivePID.calcDVPID(posL, robot.getLeftPos(), velL, tolerance) + calcFFOutput(velL, accL);
+		double leftOut = Util.kP_DRIVE * outputs[0];
+		double rightOut = Util.kP_DRIVE * outputs[1];
 		
-		double posR = rightPVA[0] + this.drivePID.getInitPos(); //position robot needs to be at
-		double velR = rightPVA[1];
-		double accR = rightPVA[2];
-		
-		double rightOut = drivePID.calcDVPID(posR, robot.getAveragePos(), velR, tolerance) + calcFFOutput(velR, accR);
-		
-		double turnOut = turnPID.calcPID(goalAngle, robot.getYaw(), Math.toRadians(1));
-//		double leftOut = leftPVA[1] * kV;
-//		double rightOut = rightPVA[1] * kV;
-		
-//		Util.println(leftOut, rightOut);
-		
-		robot.update(leftOut - turnOut, rightOut + turnOut);
+		robot.update(leftOut, rightOut);
 	} //end curveFollowingLoop
 	
 	/**

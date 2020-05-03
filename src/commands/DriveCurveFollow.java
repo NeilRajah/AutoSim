@@ -38,7 +38,7 @@ public class DriveCurveFollow extends Command {
 	 * Set the state for the first time and zero the index
 	 */
 	protected void initialize() {
-		this.loop.setCurveFollowingState(robot.getLeftPos(), robot.getRightPos());
+		this.loop.setCurveFollowingState();
 		index = 0;
 	} //end initialize
 
@@ -47,7 +47,7 @@ public class DriveCurveFollow extends Command {
 	 */
 	protected void execute() {
 		double time = index * Util.UPDATE_PERIOD;
-		loop.updateCurveFollowingState(profile.getLeftTrajPoint(time), profile.getRightTrajPoint(time), profile.getHeading(time));
+//		loop.updateCurveFollowingState();
 		loop.onLoop();
 		index++;
 	} //end execute

@@ -33,9 +33,17 @@ public class Pose {
 	 * @param heading Heading in degrees
 	 */
 	public Pose(Point point, double heading) {
-		this.point = point;
-		this.heading = heading;
-		this.color = new Color(128, 0, 128); //purple
+		this(point, heading, new Color(128, 0, 128));
+	} //end constructor
+	
+	/**
+	 * Create a pose with (x,y,theta)
+	 * @param x X value of the point
+	 * @param y Y value of the point
+	 * @param heading Heading in degrees
+	 */
+	public Pose(double x, double y, double heading) {
+		this(new Point(x,y), heading, new Color(128, 0, 128));
 	} //end constructor
 	
 	/**
@@ -69,4 +77,20 @@ public class Pose {
 	public void setColor(Color clr) {
 		this.color = clr;
 	} //end setColor
+	
+	/**
+	 * Get the x value 
+	 * @return X value of the point
+	 */
+	public double getX() {
+		return this.point.getX();
+	} //end getX
+	
+	/**
+	 * Get the y value 
+	 * @return Y value of the point
+	 */
+	public double getY() {
+		return this.point.getY();
+	} //end getY
 } //end class

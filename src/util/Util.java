@@ -27,7 +27,7 @@ public class Util {
 	
 	//PID constants
 	//DrivePID constants
-	public static final double kP_DRIVE = 0.00; //0.3 P2P, 0.9 linear traj
+	public static final double kP_DRIVE = 0.3; //0.3 P2P, 0.9 linear traj, ___ RAMSETE
 	public static final double kI_DRIVE = 0;
 	public static final double kD_DRIVE = 0.0; //1.25 P2P, 0.13 linear traj
 
@@ -45,8 +45,8 @@ public class Util {
 	public static double kA_EMPIR = 0.005; //voltage -> ft/s^2, 0.07 linTraj, 0.07 curve
 	
 	//RAMSETE Controller Constants
-	public static double kBETA = 2.0;
-	public static double kZETA = 0.7;
+	public static final double kBETA = 2.0;
+	public static final double kZETA = 0.7;
 	
 	//Motors (values from https://motors.vex.com/)
 	//Free Speed (RPM), Free Current (A), Stall Torque (Nm), Stall Current (A)

@@ -15,7 +15,7 @@ import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.DriveCurveFollow;
+import commands.RAMSETECommand;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.BezierPathCreator;
@@ -27,11 +27,11 @@ import model.Gearbox;
 import model.Motor;
 import model.PIDController;
 import model.Point;
+import model.Pose;
 import model.Robot;
 import model.motion.BezierPath;
 import model.motion.BezierProfile;
 import model.motion.DriveProfile;
-import model.motion.ProfileGenerator;
 import util.FieldPoints;
 import util.PlotGenerator;
 import util.Util;
@@ -73,11 +73,11 @@ public class AutoSim {
 		
 		//create the window 
 		w = new Window(true); //true for debug, false for not
-		addWidgets(); //add widgets to the widget hub
+//		addWidgets(); //add widgets to the widget hub
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
-		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
+//		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
 		//add poses to play
 //		w.addPoses(ProfileGenerator.posesFromFile("niceLongCurve"));
@@ -142,7 +142,8 @@ public class AutoSim {
 		
 		bezTraj = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
 		//Util.println(String.format("Width: %.3f Max Lin Speed: %.3f", r.getWidthInches(), r.getMaxLinSpeed()));
-		cg = new CommandList(new DriveCurveFollow(driveLoop, bezTraj, 1));
+//		cg = new CommandList(new DriveCurveFollow(driveLoop, bezTraj, 1));
+		cg = new CommandList(new RAMSETECommand(driveLoop, new Pose(200, 200, 0), 1, Math.toRadians(30)));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
