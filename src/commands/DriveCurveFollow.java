@@ -47,7 +47,7 @@ public class DriveCurveFollow extends Command {
 	 */
 	protected void execute() {
 		double time = index * Util.UPDATE_PERIOD;
-		loop.updateCurveFollowingState(profile.getLeftTrajPoint(time), profile.getRightTrajPoint(time));
+		loop.updateCurveFollowingState(profile.getLeftTrajPoint(time), profile.getRightTrajPoint(time), profile.getHeading(time));
 		loop.onLoop();
 		index++;
 	} //end execute

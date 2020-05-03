@@ -392,9 +392,10 @@ public class DriveLoop {
 	 * @param left Left position, velocity and acceleration
 	 * @param right Right position, velocity and acceleration
 	 */
-	public void updateCurveFollowingState(double[] left, double[] right) {
+	public void updateCurveFollowingState(double[] left, double[] right, double heading) {
 		this.leftPVA = left;
 		this.rightPVA = right;
+		this.goalAngle = heading;
 	} //end updateCurveFollowingState
 	
 	/**
@@ -413,12 +414,13 @@ public class DriveLoop {
 		
 		double rightOut = drivePID.calcDVPID(posR, robot.getAveragePos(), velR, tolerance) + calcFFOutput(velR, accR);
 		
+		double turnOut = turnPID.calcPID(goalAngle, robot.getYaw(), Math.toRadians(1));
 //		double leftOut = leftPVA[1] * kV;
 //		double rightOut = rightPVA[1] * kV;
 		
 //		Util.println(leftOut, rightOut);
 		
-		robot.update(leftOut, rightOut);
+		robot.update(leftOut - turnOut, rightOut + turnOut);
 	} //end curveFollowingLoop
 	
 	/**

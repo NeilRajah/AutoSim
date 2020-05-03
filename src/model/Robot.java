@@ -49,11 +49,11 @@ public class Robot {
 	
 	/**
 	 * Create a robot with base parameters
-	 * double kWheelDia - wheel diameter in inches
-	 * double kMass - mass of the robot in pounds
-	 * double kLength - length of the robot in inches
-	 * double kWidth - width of the robot in inches
-	 * Gearbox gearbox - drive gearboxes
+	 * double kWheelDia Wheel diameter in inches
+	 * double kMass Mass of the robot in pounds
+	 * double kLength Length of the robot in inches
+	 * double kWidth Width of the robot in inches
+	 * Gearbox gearbox Drive gearboxes
 	 */
 	public Robot(double wheelDia, double mass, double length, double width, Gearbox gearbox) {
 		//set attributes in metric units
@@ -75,7 +75,7 @@ public class Robot {
 	
 	/**
 	 * Safely get a copy of this Robot
-	 * @return - identical copy of this Robot 
+	 * @return Identical copy of this Robot 
 	 */
 	public Robot clone() {
 		//convert the constants to imperial
@@ -140,7 +140,7 @@ public class Robot {
 	
 	/**
 	 * Get the average distance travelled by robot
-	 * @return average - average distance travelled by robot in inches
+	 * @return Average distance travelled by robot in inches
 	 */
 	public double getAveragePos() {
 		return averagePos;
@@ -148,7 +148,7 @@ public class Robot {
 	
 	/**
 	 * Get the linear velocity of the robot
-	 * @return linearSpeed - linear speed of the robot in inches per second
+	 * @return Linear speed of the robot in inches per second
 	 */
 	public double getLinearVel() {
 		return linearVel;
@@ -156,7 +156,7 @@ public class Robot {
 	
 	/**
 	 * Get the angular velocity of the robot
-	 * @return angularSpeed - angular speed of the robot in radians per second
+	 * @return Angular speed of the robot in radians per second
 	 */
 	public double getAngularVel() {
 		return angularVel;
@@ -164,7 +164,7 @@ public class Robot {
 	
 	/**
 	 * Get the max linear speed of the robot
-	 * @return maxLinSpeed - top linear speed of the robot in ft/s
+	 * @return Top linear speed of the robot in ft/s
 	 */
 	public double getMaxLinSpeed() {
 		return maxLinSpeed;
@@ -172,7 +172,7 @@ public class Robot {
 	
 	/**
 	 * Get the max angular speed of the robot
-	 * @return maxAngSpeed - top angular speed of the robot in rad/s
+	 * @return Top angular speed of the robot in rad/s
 	 */
 	public double getMaxAngSpeed() {
 		return maxAngSpeed;
@@ -212,8 +212,8 @@ public class Robot {
 	
 	/**
 	 * Check if the robot's speed is lower than a percent of its top speed
-	 * @param percent - percent of the top speed to be under between -1 and 1
-	 * @return - true if under, false if equal or over
+	 * @param percent Percent of the top speed to be under between -1 and 1
+	 * @return True if under, false if equal or over
 	 */
 	public boolean isSlowerThanPercent(double percent) {
 		return Math.abs(linearVel) < percent * maxLinSpeed;
@@ -223,7 +223,7 @@ public class Robot {
 	
 	/**
 	 * Get the coordinates of the robot
-	 * @return - (x,y) values of the robot as a Point
+	 * @return (x,y) values of the robot as a Point
 	 */
 	public Point getPoint() {
 		return new Point(point.getX(), point.getY());
@@ -231,7 +231,7 @@ public class Robot {
 	
 	/**
 	 * Get the x position of the robot
-	 * @return - x position of robot
+	 * @return X position of robot
 	 */
 	public double getX() {
 		return point.getX();
@@ -239,7 +239,7 @@ public class Robot {
 	
 	/**
 	 * Get the y position of the robot
-	 * @return - y position of robot
+	 * @return Y position of robot
 	 */
 	public double getY() {
 		return point.getY();
@@ -247,7 +247,7 @@ public class Robot {
 	
 	/**
 	 * Set the (x,y) coordinates of the robot
-	 * @param p - new (x,y) coordinates of the robot
+	 * @param p New (x,y) coordinates of the robot
 	 */
 	public void setXY(Point p) {
 		point = new Point(p.getX(), p.getY());
@@ -255,7 +255,7 @@ public class Robot {
 	
 	/**
 	 * Get the pose of the robot
-	 * @return - current pose of the robot
+	 * @return Current pose of the robot
 	 */
 	public Pose getPose() {
 		return new Pose(new Point(point.getX(), point.getY()), heading, 
@@ -264,7 +264,7 @@ public class Robot {
 	
 	/**
 	 * Get the heading of the robot
-	 * @return heading - heading of the robot in radians
+	 * @return Heading of the robot in radians
 	 */
 	public double getHeading() {
 		return heading;
@@ -272,7 +272,7 @@ public class Robot {
 	
 	/**
 	 * Set the heading of the robot
-	 * @param heading - heading in radians for the robot to point at
+	 * @param Heading in radians for the robot to point at
 	 */
 	public void setHeading(double heading) {
 		this.heading = heading;
@@ -280,7 +280,7 @@ public class Robot {
 	
 	/**
 	 * Set the heading of the robot in degrees
-	 * @param heading - heading in degrees to set the robot to
+	 * @param Heading in degrees to set the robot to
 	 */
 	public void setHeadingDegrees(double heading) {
 		this.heading = Math.toRadians(heading);
@@ -288,17 +288,16 @@ public class Robot {
 	
 	/**
 	 * Get the yaw of the robot in degrees
-	 * @param yaw - robot yaw in degrees
+	 * @param Robot yaw in degrees
 	 */
 	public double getYaw() {
 		yaw = Math.toDegrees(heading) % 360; //convert heading to degrees
-		
 		return yaw;
 	} // end getYaw
 
 	/**
 	 * Set the yaw (and heading) of the robot
-	 * @param yaw - yaw value to set the robot yaw to
+	 * @param Yaw value to set the robot yaw to
 	 */
 	public void setYaw(double yaw) {
 		this.yaw = yaw;
@@ -309,8 +308,8 @@ public class Robot {
 	
 	/**
 	 * Update the pose of the robot given voltages applied over an interval
-	 * @param leftVoltage - voltage applied to left gearbox
-	 * @param rightVoltage - voltage applied to right gearbox
+	 * @param leftVoltage Voltage applied to left gearbox
+	 * @param rightVoltage Voltage applied to right gearbox
 	 */
 	public void update(double leftVoltage, double rightVoltage) {
 		//clamp the voltages between min and max voltage values
@@ -336,8 +335,8 @@ public class Robot {
 	
 	/**
 	 * Calculate the accelerations of each side of the drive
-	 * @param leftTorque - torque of the left gearbox
-	 * @param rightTorque - torque of the right gearbox
+	 * @param leftTorque Torque of the left gearbox
+	 * @param rightTorque Torque of the right gearbox
 	 */
 	private void updateGearboxes(double leftForce, double rightForce) {
 		//calculate accelerations using forces
@@ -382,7 +381,7 @@ public class Robot {
 	
 	/**
 	 * Get the color of the robot
-	 * @return - color based on direction scaled to speed
+	 * @return Color based on direction scaled to speed
 	 */
 	public Color getColor() {
 		return color;
@@ -390,7 +389,7 @@ public class Robot {
 	
 	/**
 	 * Set the color of the robot
-	 * @param c - new Color for the robot
+	 * @param c New Color for the robot
 	 */
 	public void setColor(Color c) {
 		this.color = c;
@@ -424,7 +423,7 @@ public class Robot {
 	
 	/**
 	 * Get the width of the robot in pixels
-	 * @return - width of robot in pixels
+	 * @return Width of robot in pixels
 	 */
 	public int getWidthPixels() {
 		return (int) ((kWidth * AutoSim.PPI) / Util.INCHES_TO_METERS);
@@ -432,7 +431,7 @@ public class Robot {
 	
 	/**
 	 * Get the length of the robot in pixels
-	 * @return - width of robot in pixels
+	 * @return Length of robot in pixels
 	 */
 	public int getLengthPixels() {
 		return (int) ((kLength * AutoSim.PPI) / Util.INCHES_TO_METERS);
@@ -440,7 +439,7 @@ public class Robot {
 	
 	/**
 	 * Set the name of the Command the robot is running
-	 * @param name name of Command robot is currently running
+	 * @param name Name of Command robot is currently running
 	 */
 	public void setCommandName(String name) {
 		this.commandName = name;
@@ -448,7 +447,7 @@ public class Robot {
 	
 	/**
 	 * Set the goal point to be drawn
-	 * @param goal goal point Robot is attempting to reach
+	 * @param goal Goal point Robot is attempting to reach
 	 */
 	public void setGoalPoint(Point goal) {
 		this.goalPoint = goal;
@@ -456,7 +455,7 @@ public class Robot {
 	
 	/**
 	 * Get the data of the robot
-	 * @return all robot data point in a HashMap
+	 * @return All robot data point in a HashMap
 	 */
 	public HashMap<ROBOT_KEY, Object> getData() {
 		HashMap<ROBOT_KEY, Object> data = new HashMap<ROBOT_KEY, Object>();
@@ -469,10 +468,10 @@ public class Robot {
 		data.put(ROBOT_KEY.YAW, yaw);
 		data.put(ROBOT_KEY.POINT, point);
 		data.put(ROBOT_KEY.COLOR, color);
-		data.put(ROBOT_KEY.LEFT_POS, leftGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS);
-		data.put(ROBOT_KEY.RIGHT_POS, rightGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS);
-		data.put(ROBOT_KEY.LEFT_VEL, leftGearbox.getVel());
-		data.put(ROBOT_KEY.RIGHT_VEL, rightGearbox.getVel());
+		data.put(ROBOT_KEY.LEFT_POS, leftGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS); //in
+		data.put(ROBOT_KEY.RIGHT_POS, rightGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS); //in
+		data.put(ROBOT_KEY.LEFT_VEL, leftGearbox.getVel() * kWheelRad / Util.INCHES_TO_METERS / 12); //ft/s
+		data.put(ROBOT_KEY.RIGHT_VEL, rightGearbox.getVel() * kWheelRad / Util.INCHES_TO_METERS / 12); //ft/s
 		data.put(ROBOT_KEY.LEFT_ACC, leftGearbox.getAcc());
 		data.put(ROBOT_KEY.RIGHT_ACC, rightGearbox.getAcc());
 		data.put(ROBOT_KEY.LIN_ACC, ((leftGearbox.getAcc() + rightGearbox.getAcc()) / 2) * kWheelRad / Util.INCHES_TO_METERS);

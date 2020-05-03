@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import main.AutoSim;
 
@@ -26,12 +27,12 @@ public class Util {
 	
 	//PID constants
 	//DrivePID constants
-	public static final double kP_DRIVE = 0.9; //0.3 P2P, 0.9 traj
+	public static final double kP_DRIVE = 0.00; //0.3 P2P, 0.9 linear traj
 	public static final double kI_DRIVE = 0;
-	public static final double kD_DRIVE = 0.13; //1.25 P2P, 0.13 traj
+	public static final double kD_DRIVE = 0.0; //1.25 P2P, 0.13 linear traj
 
 	//TurnPID constants
-	public static final double kP_TURN = 7.5;
+	public static final double kP_TURN = 0.06; //7.5 P2P, 0.06 curve
 	public static final double kI_TURN = 0.0;
 	public static final double kD_TURN = 0.05;
 	
@@ -40,8 +41,12 @@ public class Util {
 	public static final double kA_MODEL = 0.0203;
 	
 	//Motion Profiling Constants (calculated empirically)
-	public static double kV_EMPIR = 1.07; //voltage -> ft/s, 1.2
-	public static double kA_EMPIR = 0.007; //voltage -> ft/s^2, 0.12
+	public static double kV_EMPIR = 1.07; //voltage -> ft/s, 1.07 linTraj, 1.07 curve
+	public static double kA_EMPIR = 0.005; //voltage -> ft/s^2, 0.07 linTraj, 0.07 curve
+	
+	//RAMSETE Controller Constants
+	public static double kBETA = 2.0;
+	public static double kZETA = 0.7;
 	
 	//Motors (values from https://motors.vex.com/)
 	//Free Speed (RPM), Free Current (A), Stall Torque (Nm), Stall Current (A)
@@ -540,4 +545,13 @@ public class Util {
 			return false;
 		} //try-catch
 	} //end saveDoubleArrayToFile
+	
+	/**
+	 * Convert a list of doubles to an array of doubles
+	 * @param list List of doubles
+	 * @return Array of doubles
+	 */
+	public static double[] doubleListToArray(ArrayList<Double> list) {
+		return Arrays.stream(list.toArray()).mapToDouble(num -> Double.parseDouble(num.toString())).toArray();
+	} //end doubleListToArray
 } //end Util

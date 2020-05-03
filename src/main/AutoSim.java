@@ -61,7 +61,7 @@ public class AutoSim {
 //	private static TrapezoidalProfile trap;
 	private static DriveProfile profile;
 	private static BezierProfile bezTraj;
-	private static double[][] curve;
+	public static double[][] curve;
 	
 	/**
 	 * Create a Window and launch the program
@@ -141,7 +141,7 @@ public class AutoSim {
 //		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
 		
 		bezTraj = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
-		Util.println(String.format("Width: %.3f Max Lin Speed: %.3f", r.getWidthInches(), r.getMaxLinSpeed()));
+		//Util.println(String.format("Width: %.3f Max Lin Speed: %.3f", r.getWidthInches(), r.getMaxLinSpeed()));
 		cg = new CommandList(new DriveCurveFollow(driveLoop, bezTraj, 1));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
@@ -186,9 +186,14 @@ public class AutoSim {
 		chart.addSeries("Robot Right Vel", robotSeries[0], robotSeries[1]);
 		
 		//profile data
-		
+		chart.addSeries("Profile Left Vel", bezTraj.getTimes(), bezTraj.getLeftVelocities());
+		chart.addSeries("Profile Right Vel", bezTraj.getTimes(), bezTraj.getRightVelocities());
 		
 		//show the chart
 		PlotGenerator.displayChart(chart);
+		PlotGenerator.saveChartToFile(chart, String.format("testPlots//%.3f_%.3f_%.3f_%.3f_%.3f_%.3f", 
+															Util.kP_DRIVE, Util.kD_DRIVE, 
+															Util.kV_EMPIR, Util.kA_EMPIR, 
+															Util.kP_TURN, Util.kD_TURN));
 	} //end plotData
 } //end AutoSim

@@ -3,6 +3,8 @@ package model.motion;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import model.FieldPositioning;
 import model.Point;
@@ -267,9 +269,8 @@ public class BezierProfile extends DriveProfile {
 		//first calc 
 		headings = new double[SIZE];
 		
-		for (int i = 0; i < headings.length; i++) {
+		for (int i = 0; i < headings.length; i++)
 			headings[i] = path.calcHeading(tVals[i]);
-		} //loop
 	} //end calcHeadings
 	
 	/**
@@ -445,6 +446,38 @@ public class BezierProfile extends DriveProfile {
 	} //end getIndex
 	
 	/**
+	 * Get the left velocities (ft/s)
+	 * @return Left wheel velocities as an array
+	 */
+	public double[] getLeftVelocities() {
+		ArrayList<Double> leftVel = new ArrayList<Double>();
+		
+		for (double time = 0; time < this.totalTime; time += Util.UPDATE_PERIOD) {
+			int i = getIndex(time);
+			leftVel.add(leftProfile.get(i)[1]);			
+		} //loop
+		
+		//convert double list to double array
+		return Arrays.stream(leftVel.toArray()).mapToDouble(num -> Double.parseDouble(num.toString())).toArray();
+	} //end getLeftVelocities
+	
+	/**
+	 * Get the right velocities (ft/s)
+	 * @return Right wheel velocities as an array
+	 */
+	public double[] getRightVelocities() {
+		ArrayList<Double> rightVel = new ArrayList<Double>();
+		
+		for (double time = 0; time < this.totalTime; time += Util.UPDATE_PERIOD) {
+			int i = getIndex(time);
+			rightVel.add(rightProfile.get(i)[1]);			
+		} //loop
+		
+		//convert double list to double array
+		return Arrays.stream(rightVel.toArray()).mapToDouble(num -> Double.parseDouble(num.toString())).toArray();
+	} //end getRightVelocities
+	
+	/**
 	 * Get the path the profile is following
 	 * @return BezierPath representation of the path the profile is following
 	 */
@@ -475,4 +508,13 @@ public class BezierProfile extends DriveProfile {
 	public double getInitialHeading() {
 		return path.getInitialHeading();
 	} //end getInitialHeading
+	
+	/**
+	 * Get the heading at a specific time
+	 * @param time Time in the profile in seconds
+	 * @return Heading in degrees
+	 */
+	public double getHeading(double time) {
+		return headings[getIndex(time)];
+	} //end getHeading
 } //end class

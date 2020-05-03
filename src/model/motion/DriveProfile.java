@@ -1,7 +1,6 @@
 package model.motion;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import util.Util;
 
@@ -139,7 +138,16 @@ public abstract class DriveProfile {
 		return rightVel;
 	} //end getRightVelocities
 	
-	public List<?> getRightProfile() {
-		return rightProfile;
-	}
+	/**
+	 * Get the times the profile occurs at
+	 * @return Times each setpoint runs at in seconds as an array
+	 */
+	public double[] getTimes() {
+		ArrayList<Double> times = new ArrayList<Double>();
+		
+		for (double time = 0; time < this.totalTime; time += Util.UPDATE_PERIOD)
+			times.add(time);
+		
+		return Util.doubleListToArray(times);
+	} //end getTimes
 } //end class
