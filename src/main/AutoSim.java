@@ -136,14 +136,14 @@ public class AutoSim {
 //		profile = new TrapezoidalProfile(120, 24, 12);
 //		profile = new JerkProfile(200, 30, 12);
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
-//							 new TurnAngle(driveLoop, 180, 2, 12, true),
+//							 new TurnAngle(driveLoop, 180, 2, 12, true),s
 //							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
 //		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
 		
 		bezTraj = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
 		//Util.println(String.format("Width: %.3f Max Lin Speed: %.3f", r.getWidthInches(), r.getMaxLinSpeed()));
 //		cg = new CommandList(new DriveCurveFollow(driveLoop, bezTraj, 1));
-		cg = new CommandList(new RAMSETECommand(driveLoop, new Pose(200, 200, 0), 1, Math.toRadians(30)));
+		cg = new CommandList(new RAMSETECommand(driveLoop, new Pose(200, curve[0][1], Math.toRadians(-30)), 6, Math.toRadians(30)));
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));

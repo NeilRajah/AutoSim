@@ -46,14 +46,13 @@ public class RAMSETECommand extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return FieldPositioning.isWithinBounds(goal.getPoint(), robot.getPoint(), 1) 
-				&& Util.fuzzyEquals(robot.getHeading(), goal.getHeading(), 1);
+//		return FieldPositioning.isWithinBounds(goal.getPoint(), robot.getPoint(), 3);
+		return false;
 	}
 
 	@Override
 	protected void end() {
-		// TODO Auto-generated method stub
-
+		Util.println(loop.getRobot().getLinearVel());
 	}
 
 	@Override

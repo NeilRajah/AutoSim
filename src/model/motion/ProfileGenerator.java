@@ -9,11 +9,11 @@ package model.motion;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import main.AutoSim;
 import model.Point;
 import model.Pose;
 import util.FieldPoints;
@@ -31,10 +31,11 @@ public class ProfileGenerator {
 		Util.println("Profile generation delta time: " + (System.currentTimeMillis() - init) + "ms");
 		
 		String filename = "niceLongCurve";
-		Util.println("Vels file saved: " + bezTraj.saveVelsToFile(filename));
+		posesToFile(bezTraj, filename);
+//		Util.println("Vels file saved: " + bezTraj.saveVelsToFile(filename));
 		
-		ArrayList<Pose> poses = posesFromVelsFile(filename, bezTraj);
-		Util.println("Poses written to file: " + posesToFile(poses, filename));
+//		ArrayList<Pose> poses = posesFromVelsFile(filename, bezTraj);
+//		Util.println("Poses written to file: " + posesToFile(poses, filename));
 	} //end main
 	
 	/**
@@ -146,4 +147,26 @@ public class ProfileGenerator {
 		
 		return poses;
 	} //end posesFromFile
+	
+	public static boolean posesToFile(BezierProfile profile, String filename) {
+		try {
+			PrintWriter pw = new PrintWriter(new File(Util.UTIL_DIR + filename + ".ramsete"));
+			
+			for (double time = 0; time < profile.getTotalTime(); time += Util.UPDATE_PERIOD) {
+				Pose p = profile.getPose(time);
+				double x = p.getX();
+				double y = p.getY();
+				double theta = p.getHeading();
+				double v = profile.getCenter(time);
+				double w = profile.getOmega(time);
+				pw.println(String.format("%.3f %.3f %.3f %.3f %.3f %.3f", time, x, y, theta, v, w));
+			}
+			
+			pw.close();
+			return true;
+			
+		} catch(IOException e) {
+			return false;
+		}
+	}
 } //end class 

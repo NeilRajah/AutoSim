@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import model.FieldPositioning;
 import model.Point;
+import model.Pose;
 import util.Util;
 
 public class BezierProfile extends DriveProfile {
@@ -40,6 +41,9 @@ public class BezierProfile extends DriveProfile {
 	private double[] leftAcc; //left wheel acceleration in in/s^2
 	private double[] rightAcc; //right wheel acceleration in in/s^2
 	
+	private Pose[] poses;
+	private double[] omega;
+	
 	/**
 	 * Create a profile to follow a Bezier curve while respecting kinematic robot constraints
 	 * @param controlPts Control points of the Bezier curve
@@ -60,6 +64,7 @@ public class BezierProfile extends DriveProfile {
 		//create profile
 		computeConstants();
 		fillProfiles();
+		fillPoses();
 	} //end constructor
 	
 	/**
@@ -259,6 +264,21 @@ public class BezierProfile extends DriveProfile {
 			this.rightProfile.add(new double[] {rightPos[i], rightVel[i] / 12, rightAcc[i]});
 		} //loop
 	} //end fillProfiles
+	
+	public void fillPoses() {
+		fillTimes();
+		
+		poses = new Pose[SIZE];
+		poses[0] = new Pose(path.getControlPoints()[0], Math.toRadians(path.getInitialHeading()));
+		
+		omega = new double[SIZE];
+		omega[0] = 0;
+		
+		for (int i = 1; i < poses.length; i++) {
+			omega[i] = Math.toRadians(headings[i] - headings[i-1]) / Util.UPDATE_PERIOD;
+			poses[i] = new Pose(evenPoints[i], headings[i]);
+		}
+	}
 	
 	/**
 	 * Fill the array of headings for the robot to follow
@@ -515,4 +535,16 @@ public class BezierProfile extends DriveProfile {
 	public double getHeading(double time) {
 		return headings[getIndex(time)];
 	} //end getHeading
+	
+	public Pose getPose(double time) {
+		return poses[getIndex(time)];
+	}
+	
+	public double getCenter(double time) {
+		return centerVel[getIndex(time)];
+	}
+	
+	public double getOmega(double time) {
+		return omega[getIndex(time)];
+	}
 } //end class

@@ -32,15 +32,14 @@ public class RAMSETEController {
 	 */
 	public double[] calcWheelSpeeds(Pose current, Pose goal, double goalLin, double goalAng, double trackWidth) {
 		//deltas
-		double dx = goal.getX() - current.getX();
-		double dy = goal.getY() - current.getY();
+		double dy = goal.getX() - current.getX();
+		double dx = goal.getY() - current.getY();
 		double theta = current.getHeading();
 		
 		//errors
 		double eX = dx * Math.cos(theta) + dy * Math.sin(theta);
 		double eY = dx * -Math.sin(theta) + dy * Math.cos(theta);
 		eY *= -1;
-		eX *= 1;
 		double eTheta = goal.getHeading() - current.getHeading();
 		
 		//k constant for output calculating (from stability function)
@@ -48,14 +47,13 @@ public class RAMSETEController {
 		double sinc = Util.fuzzyEquals(eTheta, 0, 0.01) ? 1.0 : Math.sin(eTheta) / eTheta;
 		
 		//outputs
-		double v = goalLin * Math.cos(eTheta) + k * eY;
-		double w = goalAng + k * eTheta + kBeta * goalLin * sinc * eX;
+		double v = goalLin * Math.cos(eTheta) + k * eX;
+		double w = goalAng + k * eTheta + kBeta * goalLin * sinc * eY;
+//		w = Util.fuzzyEquals(v, 0, 0.001) ? 0 : w; //set angular velocity to zero if not moving linearly
 		
 		//wheel speeds
 		double left = (2 * v + w * trackWidth) / 2;
 		double right = (2 * v - w * trackWidth) / 2;
-		
-		Util.println(k, sinc, v, w);
 		
 		return new double[] {left, right};
 	} //end calcWheelSpeeds
