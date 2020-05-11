@@ -25,6 +25,7 @@ public class ProfileGenerator {
 	 * Main script for saving profiles to files
 	 */
 	public static void main(String[] args) {
+		/*
 		double[][] curve = FieldPoints.niceLongCurve;
 		long init = System.currentTimeMillis();
 		BezierProfile bezTraj = new BezierProfile(curve, 30, 12 * 12, 200, 200);
@@ -32,10 +33,16 @@ public class ProfileGenerator {
 		
 		String filename = "niceLongCurve";
 		posesToFile(bezTraj, filename);
-//		Util.println("Vels file saved: " + bezTraj.saveVelsToFile(filename));
+		Util.println("Vels file saved: " + bezTraj.saveVelsToFile(filename));
 		
-//		ArrayList<Pose> poses = posesFromVelsFile(filename, bezTraj);
-//		Util.println("Poses written to file: " + posesToFile(poses, filename));
+		ArrayList<Pose> poses = posesFromVelsFile(filename, bezTraj);
+		Util.println("Poses written to file: " + posesToFile(poses, filename));	
+		Util.println("Path points to file: " + printPathPointsToFile(new BezierPath(curve), "curve", 100));
+		*/
+		
+		PursuitPath path = new PursuitPath(FieldPoints.niceLongCurve, 30, 12*12, 200, 200);
+		Util.println("PursuitPath made: " + path.writeToFile("niceLongCurve"));
+		Util.println("PursuitPath2 made: " + PursuitPath.createFromFile("niceLongCurve").writeToFile("niceLongCurve2"));
 	} //end main
 	
 	/**
@@ -166,6 +173,31 @@ public class ProfileGenerator {
 			return true;
 			
 		} catch(IOException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Print the points of a curve to a file
+	 * @param path Path to calculate points with
+	 * @param filename Name of the file to write to
+	 * @param numPoints Number of points to split the path into
+	 * @return True if writing was successful, false if not
+	 */
+	public static boolean printPathPointsToFile(BezierPath path, String filename, int numPoints) {
+		try {
+			PrintWriter pw = new PrintWriter(new File(Util.UTIL_DIR + filename + ".path"));
+			
+			double step = 1.0 / numPoints;
+			for (double t = 0; t <= 1.0; t += step) {
+				Point p = path.calcPoint(t);
+				pw.write(String.format("%.3f %.3f\n", p.getX(), p.getY()));
+			}
+			
+			pw.close();
+			return true;
+			
+		} catch (Exception e) {
 			return false;
 		}
 	}

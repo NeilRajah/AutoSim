@@ -6,6 +6,8 @@
  */
 package model;
 
+import util.Util;
+
 public class FieldPositioning {
 
 	/**
@@ -37,9 +39,9 @@ public class FieldPositioning {
 
 	/**
 	 * Calculate the distance between two points using the Pythagorean theorem
-	 * @param p1 - first point
-	 * @param p2 - second point
-	 * @return - absolute distance between the two points
+	 * @param p1 First point
+	 * @param p2 Second point
+	 * @return Absolute distance between the two points
 	 */
 	public static double calcDistance(Point p1, Point p2) {
 		return Math.hypot(p2.getX() - p1.getX(), p2.getY() - p1.getY());
@@ -118,4 +120,25 @@ public class FieldPositioning {
 		
 		return curvePts;
 	} //end pointsFromDoubles
+	
+	/**
+	 * Calculate the radius of the circle formed by three points
+	 * @param p1 First point
+	 * @param p2 Second point
+	 * @param p3 Third point
+	 * @return Radius formed by those three points
+	 */
+	public static double calcRadius(Point p1, Point p2, Point p3) {
+		//triangle side lengths
+		double a = calcDistance(p1, p2);
+		double b = calcDistance(p2, p3);
+		double c = calcDistance(p1, p3);
+		
+		//Heron's formula for area
+		double s = (a + b + c) / 2.0;
+		double k = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+		
+		//radius is derived from side lengths and area
+		return Util.fuzzyEquals(k, 0, 0.001) ? 100000 : (a * b * c) / (4 * k);
+	} //end calcRadius
 } //end class
