@@ -204,7 +204,7 @@ public class PlotGenerator {
 	public static XYChart createChartFromArray(int w, int h, String t, String x, String y, double[] data) {
 		XYChart chart = buildChart(w, h, t, x, y);
 		
-		chart.addSeries("rightVel", data);
+		chart.addSeries("data", data);
 		
 		return chart;
 	} //end createChartFromArray

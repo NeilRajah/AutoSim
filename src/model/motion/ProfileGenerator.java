@@ -14,9 +14,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.knowm.xchart.XYChart;
+
 import model.Point;
 import model.Pose;
 import util.FieldPoints;
+import util.PlotGenerator;
 import util.Util;
 
 public class ProfileGenerator {
@@ -42,7 +45,10 @@ public class ProfileGenerator {
 		
 		PursuitPath path = new PursuitPath(FieldPoints.niceLongCurve, 30, 12*12, 200, 200);
 		Util.println("PursuitPath made: " + path.writeToFile("niceLongCurve"));
-		Util.println("PursuitPath2 made: " + PursuitPath.createFromFile("niceLongCurve").writeToFile("niceLongCurve2"));
+		
+		double[] vels = path.getVels();
+		XYChart c = PlotGenerator.createChartFromArray(1920, 1080, "Pursuit Path Velocities", "Index", "Velocity", vels);
+		PlotGenerator.displayChart(c);
 	} //end main
 	
 	/**

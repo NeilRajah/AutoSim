@@ -108,8 +108,8 @@ public class FieldPositioning {
 	
 	/**
 	 * Create an array of Points from a 2D array of points
-	 * @param controlPts - 2D array of points containing (x,y) of control points
-	 * @return control points as Point objects
+	 * @param controlPts 2D array of points containing (x,y) of control points
+	 * @return Control points as Point objects
 	 */
 	public static Point[] pointsFromDoubles(double[][] controlPts) {
 		//turn double[][] to point array 
