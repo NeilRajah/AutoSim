@@ -57,6 +57,42 @@ public class FieldPoints {
 		{301.4, 300.4}
 	};
 	
+	public static double[][] jShape = new double[][] {
+		{23.4, 25.7},
+		{23.5, 145.5},
+		{282, 37},
+		{308.5, 271},
+		{147.5, 312},
+		{47.5, 228.5}
+	};
+	
+	public static double[][] almostS = new double[][] {
+		{36, 171},
+		{-3.5, 39.5},
+		{139, 26.5},
+		{137.5, 64.5},
+		{69.5, 317.5},
+		{254, 129}
+	};
+	
+	public static double[][] wrongL = new double[][] {
+		{28, 303},
+		{54, 285.5},
+		{263, 272.5},
+		{315.5, 300.5},
+		{229, 142},
+		{288.5, 28.5}
+	};
+	
+	public static double[][] pretzel = new double[][] {
+		{143.5, 168},
+		{141, 286},
+		{274, 289.5},
+		{285.5, 40.5},
+		{59, 12},
+		{92, 188}
+	};
+	
 	//Points
 	public static final Point MID_INITIATION = new Point(162, 522);
 	

@@ -43,12 +43,12 @@ public class ProfileGenerator {
 		Util.println("Path points to file: " + printPathPointsToFile(new BezierPath(curve), "curve", 100));
 		*/
 		
-		PursuitPath path = new PursuitPath(FieldPoints.niceLongCurve, 30, 12*12, 200, 200);
-		Util.println("PursuitPath made: " + path.writeToFile("niceLongCurve"));
+		PursuitPath path = new PursuitPath(FieldPoints.wrongL, 30, 12*12, 200, 200, 6);
+		Util.println("PursuitPath made: " + path.saveXYToJS("wrongL", 2.5, 2.75, true));
 		
-		double[] vels = path.getVels();
-		XYChart c = PlotGenerator.createChartFromArray(1920, 1080, "Pursuit Path Velocities", "Index", "Velocity", vels);
-		PlotGenerator.displayChart(c);
+//		double[] vels = path.getVels();
+//		XYChart c = PlotGenerator.createChartFromArray(1920, 1080, "Pursuit Path Velocities", "Index", "Velocity", vels);
+//		PlotGenerator.displayChart(c);
 	} //end main
 	
 	/**

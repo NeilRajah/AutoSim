@@ -15,7 +15,7 @@ import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.RAMSETECommand;
+import commands.DriveClosedLoopLinearProfile;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.BezierPathCreator;
@@ -27,11 +27,11 @@ import model.Gearbox;
 import model.Motor;
 import model.PIDController;
 import model.Point;
-import model.Pose;
 import model.Robot;
 import model.motion.BezierPath;
 import model.motion.BezierProfile;
 import model.motion.DriveProfile;
+import model.motion.JerkProfile;
 import util.FieldPoints;
 import util.PlotGenerator;
 import util.Util;
@@ -73,7 +73,7 @@ public class AutoSim {
 		
 		//create the window 
 		w = new Window(true); //true for debug, false for not
-//		addWidgets(); //add widgets to the widget hub
+		addWidgets(); //add widgets to the widget hub
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
@@ -114,7 +114,7 @@ public class AutoSim {
 	 * Initialize the program by creating the robot and the command group
 	 */
 	private static void initializeSimulation() {
-		curve = FieldPoints.niceLongCurve;
+		curve = FieldPoints.jShape;
 		
 		//create robot
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
@@ -134,17 +134,17 @@ public class AutoSim {
 		
 		//create the command group
 //		profile = new TrapezoidalProfile(120, 24, 12);
-//		profile = new JerkProfile(200, 30, 12);
+		profile = new JerkProfile(200, 30, 12);
 //		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //							 new TurnAngle(driveLoop, 180, 2, 12, true),s
 //							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
 //		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
 		
-		bezTraj = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
+//		bezTraj = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
 		//Util.println(String.format("Width: %.3f Max Lin Speed: %.3f", r.getWidthInches(), r.getMaxLinSpeed()));
 //		cg = new CommandList(new DriveCurveFollow(driveLoop, bezTraj, 1));
 //		cg = new CommandList(new RAMSETECommand(driveLoop, new Pose(200, curve[0][1], Math.toRadians(-30)), 6, Math.toRadians(30)));
-//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
+		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 //		cg = new DriveToGoalDemo();
 //		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
 	} //end initialize

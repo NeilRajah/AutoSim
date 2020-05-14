@@ -17,15 +17,13 @@ import model.Point;
 import util.Util;
 
 public class PursuitPath {
-	//Constants
-	private final double DIST_STEP = 1.0; //spacing between points
-	
 	//Attributes
 	private BezierPath path; //quintic bezier spline
 	private double trackWidth; //wheel-wheel robot width in inches
 	private double maxVel; //top speed in in/s
 	private double acc; //acceleration constant in in/s^2
 	private double dec; //deceleration constant in in/s^2
+	private double DIST_STEP; //spacing between points
 	
 	private Point[] points; //points along the path
 	private double totalLength; //total length of the path in inches
@@ -40,14 +38,16 @@ public class PursuitPath {
 	 * @param maxVel Top velocity for robot to reach in in/s
 	 * @param acc Magnitude of acceleration constant in in/s^2
 	 * @param dec Magnitude of deceleration constant in in/s^2
+	 * @param spacing Linear distance between points in inches
 	 */
-	public PursuitPath(Point[] controlPts, double trackWidth, double maxVel, double acc, double dec) {
+	public PursuitPath(Point[] controlPts, double trackWidth, double maxVel, double acc, double dec, double spacing) {
 		//set attributes
 		this.path = new BezierPath(controlPts);
 		this.trackWidth = trackWidth;
 		this.maxVel = maxVel;
 		this.acc = acc;
 		this.dec = dec;
+		this.DIST_STEP = spacing;
 		
 		//create the necessary arrays 
 		createPath();
@@ -58,11 +58,11 @@ public class PursuitPath {
 	 * @param controlPts Control points for quintic spline
 	 * @param trackWidth Wheel-wheel robot width in inches
 	 * @param maxVel Top velocity for robot to reach in in/s
-	 * @param acc Magnitude of acceleration constant in in/s^2
-	 * @param dec Magnitude of deceleration constant in in/s^2
+	 * @param acc Magnitude of acceleration and deceleration constants in in/s^2
+	 * @param spacing Linear distance between points in inches
 	 */
-	public PursuitPath(Point[] controlPts, double trackWidth, double maxVel, double acc) {
-		this(controlPts, trackWidth, maxVel, acc, -acc);
+	public PursuitPath(Point[] controlPts, double trackWidth, double maxVel, double acc, double spacing) {
+		this(controlPts, trackWidth, maxVel, acc, -acc, spacing);
 	} //end constructor
 	
 	/**
@@ -72,9 +72,10 @@ public class PursuitPath {
 	 * @param maxVel Top velocity for robot to reach in in/s
 	 * @param acc Magnitude of acceleration constant in in/s^2
 	 * @param dec Magnitude of deceleration constant in in/s^2
+	 * @param spacing Linear distance between points in inches
 	 */
-	public PursuitPath(double[][] controlPts, double trackWidth, double maxVel, double acc, double dec) {
-		this(FieldPositioning.pointsFromDoubles(controlPts), trackWidth, maxVel, acc, dec);
+	public PursuitPath(double[][] controlPts, double trackWidth, double maxVel, double acc, double dec, double spacing) {
+		this(FieldPositioning.pointsFromDoubles(controlPts), trackWidth, maxVel, acc, dec, spacing);
 	} //end constructor
 	
 	/**
@@ -83,9 +84,10 @@ public class PursuitPath {
 	 * @param trackWidth Wheel-wheel robot width in inches
 	 * @param maxVel Top velocity for robot to reach in in/s
 	 * @param acc Magnitude of acceleration constant in in/s^2
+	 * @param spacing Linear distance between points in inches
 	 */
-	public PursuitPath(double[][] controlPts, double trackWidth, double maxVel, double acc) {
-		this(FieldPositioning.pointsFromDoubles(controlPts), trackWidth, maxVel, acc, -acc);
+	public PursuitPath(double[][] controlPts, double trackWidth, double maxVel, double acc, double spacing) {
+		this(FieldPositioning.pointsFromDoubles(controlPts), trackWidth, maxVel, acc, -acc, spacing);
 	} //end constructor
 	
 	/**
@@ -303,6 +305,79 @@ public class PursuitPath {
 	} //end writeToFile
 	
 	/**
+	 * Write the path to a JS file
+	 * @param filename Name of the file
+	 * @return True if writing was successful, false if not
+	 */
+	public boolean writeToJSFile(String name) {
+		try {
+			String filename = Util.UTIL_DIR + name + ".js";
+			PrintWriter pw = new PrintWriter(new File(filename));
+			
+			//JS info
+			pw.println("//Create an invisible element in the DOM with the contents of the path to read later");
+			pw.println("var " + name + " = document.createElement('" + name + "');");
+			pw.print(name + ".innerText = `");
+			
+			//header of file is size of path
+			pw.println(points.length);
+			for (int i = 0; i < points.length; i++) {
+				//x y distAlongPath radius vel
+				pw.println(String.format("%.3f %.3f %.3f %.3f %.3f", 
+							points[i].getX(), points[i].getY(), //(x,y) point
+							distAlongPath[i], //based off index because evenly spaced
+							radius[i], //radius
+							vel[i])); //velocity
+			} //loop
+			
+			pw.println("`");
+			pw.println(name + ".style.display = \"none\";");
+			
+			pw.close();
+			
+			return true;
+			
+		} catch (FileNotFoundException f) {
+			Util.println("Could not find", name);
+			return false;
+		} //try-catch
+	} //end writeToFile
+
+	/**
+	 * Write the (x,y) points straight to a JS file 
+	 * @param name Name of the file and of the variable with the arrays
+	 * @param sx Scale factor for x values
+	 * @param sy Scale factor for y values
+	 * @param flip Whether to flip the x and y points or not
+	 * @return True if writing was successful, false if not
+	 */
+	public boolean saveXYToJS(String name, double sx, double sy, boolean flip) {
+		try {
+			String filename = Util.UTIL_DIR + name + ".js";
+			PrintWriter pw = new PrintWriter(new File(filename));
+			
+			//set up the variable
+			pw.println(String.format("%s = [", name));
+			for (int i = 0; i < points.length; i++) {
+				double x = points[i].getX() * sx;
+				double y = points[i].getY() * sy;
+				if (flip) 
+					pw.println(String.format("[%.3f, %.3f],", y, x));
+				else
+					pw.println(String.format("[%.3f, %.3f],", x, y));
+			}
+			pw.print("]");
+			pw.close();
+			
+			return true;
+			
+		} catch (FileNotFoundException f) {
+			Util.println("Could not find", name);
+			return false;
+		} //try-catch
+	} //end saveXYtoJS
+	
+	/**
 	 * Create a path object from a file
 	 * @param filename Name of the file
 	 * @return Path object if reading & creating was successful, null if not
@@ -342,8 +417,4 @@ public class PursuitPath {
 			return null;
 		} //try-catch
 	} //end createFromFile
-	
-	public double[] getVels() {
-		return vel;
-	}
 } //end class
