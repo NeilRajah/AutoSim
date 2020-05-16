@@ -268,12 +268,12 @@ public class GraphicBezierPath extends BezierPath {
 		if (i == 0) {
 			Point p1 = new Point(x[1], y[1]);
 			Point p2 = new Point(x[0], y[0]);
-			return FieldPositioning.calcGoalYaw(p1, p2);
+			return FieldPositioning.goalYaw(p1, p2);
 		} //if
 		
 		Point p1 = new Point(x[i-1], y[i-1]);
 		Point p2 = new Point(x[i], y[i]);
-		return FieldPositioning.calcGoalYaw(p1, p2);
+		return FieldPositioning.goalYaw(p1, p2);
 	} //end calcHeading
 	
 	/**

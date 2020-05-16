@@ -125,9 +125,9 @@ public class BezierPath {
 		Point p3 = calcPoint(t);
 		
 		//three triangle side lengths
-		double a = FieldPositioning.calcDistance(p1, p2);
-		double b = FieldPositioning.calcDistance(p2, p3);
-		double c = FieldPositioning.calcDistance(p1, p3);
+		double a = FieldPositioning.dist(p1, p2);
+		double b = FieldPositioning.dist(p2, p3);
+		double c = FieldPositioning.dist(p1, p3);
 		
 		//Heron's formula for area
 		double s = (a + b + c) / 2;
@@ -147,11 +147,11 @@ public class BezierPath {
 	 */
 	public double calcHeading(double t) {
 		if (t <= EPSILON) {
-			return FieldPositioning.calcGoalYaw(calcPoint(EPSILON), calcPoint(0)) - 180;
+			return FieldPositioning.goalYaw(calcPoint(EPSILON), calcPoint(0)) - 180;
 		} else if (t >= 1 - EPSILON) {
-			return FieldPositioning.calcGoalYaw(calcPoint(1 - EPSILON), calcPoint(1));
+			return FieldPositioning.goalYaw(calcPoint(1 - EPSILON), calcPoint(1));
 		} //if
-		return FieldPositioning.calcGoalYaw(calcPoint(t - EPSILON), calcPoint(t + EPSILON));
+		return FieldPositioning.goalYaw(calcPoint(t - EPSILON), calcPoint(t + EPSILON));
 	} //end getHeading
 	
 	/**

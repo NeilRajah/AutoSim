@@ -219,7 +219,7 @@ class ModelTest {
 	void pathPointTest() {
 		BezierPath testPath = new BezierPath(FieldPoints.curve);
 		Point correctPoint = new Point(5.4, 3.7);
-		assertEquals(0.0, FieldPositioning.calcDistance(correctPoint, testPath.calcPoint(0)), 0.1);
+		assertEquals(0.0, FieldPositioning.dist(correctPoint, testPath.calcPoint(0)), 0.1);
 	} //end pathPointTest
 	
 	@Test
@@ -231,7 +231,7 @@ class ModelTest {
 		Point p2 = new Point(0,1);
 		double correctHeading = 0;
 		
-		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E-3);
+		assertEquals(correctHeading, FieldPositioning.goalYaw(p1, p2), 1E-3);
 	} //end pathHeadingTest1
 	
 	@Test
@@ -243,7 +243,7 @@ class ModelTest {
 		Point p2 = new Point(1,0);
 		double correctHeading = 90;
 		
-		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E-3);
+		assertEquals(correctHeading, FieldPositioning.goalYaw(p1, p2), 1E-3);
 	} //end pathHeadingTest2
 	
 	@Test
@@ -255,7 +255,7 @@ class ModelTest {
 		Point p2 = new Point(0,-1);
 		double correctHeading = 180;
 		
-		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E-3);
+		assertEquals(correctHeading, FieldPositioning.goalYaw(p1, p2), 1E-3);
 	} //end pathHeadingTest3
 	
 	@Test
@@ -267,7 +267,7 @@ class ModelTest {
 		Point p2 = new Point(-1,0);
 		double correctHeading = -90;
 		
-		assertEquals(correctHeading, FieldPositioning.calcGoalYaw(p1, p2), 1E-3);
+		assertEquals(correctHeading, FieldPositioning.goalYaw(p1, p2), 1E-3);
 	} //end pathHeadingTest4
 	
 	@Test
@@ -434,4 +434,155 @@ class ModelTest {
 		
 		assertEquals(expected, output, 0.001);
 	} //end calcRadiusTest
+	
+	@Test
+	/**
+	 * Test the add function of the Point class
+	 */
+	void pointAddTest() {
+		assertEquals(2, Point.add(new Point(1,0), new Point(1,0)).getX(), 0.001);
+	} //end pointAddTest
+	
+	@Test
+	/**
+	 * Test the subtract function of the Point class
+	 */
+	void pointSubtractTest() {
+		assertEquals(0, Point.subtract(new Point(1,0), new Point(1,0)).getX(), 0.001);
+	} //end pointSubtractTest
+	
+	@Test
+	/**
+	 * Test the scale function of the Point class
+	 */
+	void pointScaleTest() {
+		assertEquals(3, Point.scale(new Point(1,0), 3).getX(), 0.001);
+	} //end pointScaleTest
+	
+	@Test
+	/**
+	 * Test the magnitude function of the Point class
+	 */
+	void pointMagTest() {
+		assertEquals(2.828, new Point(2,2).getMag(), 0.001);
+	} //end pointMagTest
+	
+	@Test
+	/**
+	 * Test the heading function of the Point class
+	 */
+	void pointHeadingTest() {
+		assertEquals(Math.toRadians(45), new Point(2,2).getHeading(), 0.001);
+	} //end pointHeadingTest
+		
+	@Test
+	/**
+	 * Test the setMag function of the Point class
+	 */
+	void pointSetMagTest() {
+		assertEquals(3, Point.setMag(new Point(1,1), 3).getMag(), 0.001);
+	} //end pointSetMagTest
+	
+	@Test
+	/**
+	 * Test the angleBetween method in the FieldPositioning class
+	 */
+	void fieldPositioningAngleBetweenTest() {
+		assertEquals(Math.PI/2, FieldPositioning.angleBetween(new Point(1,0), new Point(0,1)), 0.001);
+	} //end fieldPositioningAngleBetweenTest
+	
+	@Test
+	/**
+	 * Test the limitMag function of the Point class
+	 */
+	void pointLimitMagTest() {
+		assertEquals(3, Point.limitMag(new Point(5,5), 3).getMag(), 0.001);
+	} //end pointLimitMagTest
+	
+	@Test
+	/**
+	 * Test the angleWrap function of the FieldPositioning class
+	 */
+	void angleWrapRadTest() {
+		assertEquals(Math.toRadians(-90), FieldPositioning.angleWrap(Math.toRadians(270)), 0.001);
+	} //end angleWrapRadTest
+	
+	@Test
+	/**
+	 * Test the angleWrapDeg function of the FieldPositioning class
+	 */
+	void angleWrapDegTest() {
+		assertEquals(-90, FieldPositioning.angleWrapDeg(270), 0.001);
+	} //end angleWrapDegTest
+	
+	@Test
+	/**
+	 * Test the minMag function of the Point class
+	 */
+	void minMagTest() {
+		assertEquals(2.828, Point.minMag(new Point(2,2), new Point(25,25)).getMag(), 0.001);
+	} //end minMagTest
+	
+	@Test
+	/**
+	 * Test the normalize function of the Point class
+	 */
+	void normalizeTest() {
+		assertEquals(1.0, Point.normalize(new Point(5,3)).getMag(), 0.001);
+	} //end normalizeTest
+	
+	@Test
+	/**
+	 * Test the normalize function of the Point class
+	 */
+	void dotTest() {
+		assertEquals(4, Point.dot(new Point(1,1), new Point(2,2)), 0.001);
+	} //end dotTest
+	
+	@Test
+	/**
+	 * Test the equals method of the Point class
+	 */
+	void pointEqualsTest() {
+		assertEquals(true, new Point(4,4).equals(new Point(3.9997, 4.00001)));
+	} //end pointEqualsTest
+	
+	@Test
+	/**
+	 * Test the getNormalPoint function of the FieldPositioning class
+	 */
+	void getNormalPointTest() {
+		Point p = new Point(0.5,5); //point to find normal of
+		Point a = new Point(0,0); //start of line segment
+		Point b = new Point(1,0); //end of line segment
+		Point expected = new Point(0.5,0);
+		
+		assertEquals(true, FieldPositioning.getNormalPoint(p,a,b).equals(expected));
+	} //end getNormalPointTest
+	
+	@Test
+	/**
+	 * Test the pointOnLine function of the FieldPositioning class
+	 */
+	void pointOnLineTest() {
+		Point a = new Point(0,0); //start of segment
+		Point b = new Point(3,3); //end of segment
+		Point p = new Point(1,1); //point supposedly on line
+		
+		assertEquals(true, FieldPositioning.pointOnLine(p, a, b, 0.001));
+	} //end pointOnLineTest
+	
+	@Test
+	/**
+	 * Test the lineCircleIntersect function of the FieldPositioning class
+	 */
+	void lineCircleIntersect() {
+		Point E = new Point(2, -2); //start of line segment
+		Point L = new Point(2, 2); //end of line segment
+		Point C = new Point(0, 0); //center of circle
+		double r = 2; //circle radius
+		Point expected = new Point(2,0);
+		
+		assertEquals(true, FieldPositioning.lineCircleIntersect(E, L, C, r).get(0).equals(expected));
+	} //end lineCircleIntersect
 } //end class

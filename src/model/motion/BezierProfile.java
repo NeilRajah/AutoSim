@@ -131,7 +131,7 @@ public class BezierProfile extends DriveProfile {
 		
 		for (int i = 1; i < SIZE; i++) {
 			//cumulatively sum the distance
-			dist += FieldPositioning.calcDistance(path.calcPoint(t), path.calcPoint(t - STEP));
+			dist += FieldPositioning.dist(path.calcPoint(t), path.calcPoint(t - STEP));
 			distances[i] = dist;
 			
 			t += 1.0 / SIZE;

@@ -137,7 +137,7 @@ public class DriveToGoal extends Command {
 				System.out.println("Expected Point value: " + goalPoint.getString());
 				System.out.println("  Actual: " + this.robot.getPoint().getString());
 				System.out.println(String.format("  Distance from goal: %.3f", 
-									FieldPositioning.calcDistance(this.robot.getPoint(), goalPoint)));
+									FieldPositioning.dist(this.robot.getPoint(), goalPoint)));
 			} //if
 			
 			//Speed
@@ -160,7 +160,7 @@ public class DriveToGoal extends Command {
 	 */
 	private void updateSetpoints() {
 		// distance from robot to goal point
-		double dist = FieldPositioning.calcDistance(loop.getRobot().getPoint(), goalPoint);
+		double dist = FieldPositioning.dist(loop.getRobot().getPoint(), goalPoint);
 
 		// update distance and angle setpoints if more than half a foot away
 		if (dist >= tolerance) {
@@ -200,7 +200,7 @@ public class DriveToGoal extends Command {
 	 * @return - required angle change in degrees
 	 */
 	private double calcDeltaAngle() {
-		double pointYaw = FieldPositioning.calcGoalYaw(robot.getPoint(), goalPoint); // calculate the yaw to
+		double pointYaw = FieldPositioning.goalYaw(robot.getPoint(), goalPoint); // calculate the yaw to
 		
 		pointYaw -= reverse ? Math.copySign(180, pointYaw) : 0; // add 180 in opposite direction if reversing
 

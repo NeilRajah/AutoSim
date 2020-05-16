@@ -164,7 +164,7 @@ public class PursuitPath {
 		for (int i = 1; i < size; i++) {
 			t += step;
 			//cumulatively sum the distance
-			dist += FieldPositioning.calcDistance(path.calcPoint(t), path.calcPoint(t - step));
+			dist += FieldPositioning.dist(path.calcPoint(t), path.calcPoint(t - step));
 			distances[i] = dist;
 		} //loop
 		
@@ -206,7 +206,7 @@ public class PursuitPath {
 			points[i] = path.calcPoint(t);
 			
 			//add the distance to the distances array
-			dist += FieldPositioning.calcDistance(points[i-1], points[i]);
+			dist += FieldPositioning.dist(points[i-1], points[i]);
 			distAlongPath[i] = dist;
 		} //loop
 	} //end parameterizeByD
