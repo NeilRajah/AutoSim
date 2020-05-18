@@ -101,10 +101,12 @@ public class PurePursuitController {
 		} else {
 			/*
 			 * Seek with linSpeed = maxVel
-			 * Seek and arrive with rateLimiter
+			 * 
 			 * Seek and arrive to one point
 			 * Seek and arrive to multiple points
 			 * Pursue multiple points
+			 * 
+			 * Seek and arrive with rateLimiter
 			 */
 			speed = maxVel;
 			seek();

@@ -121,8 +121,8 @@ public class AutoSim {
 		Robot r = new Robot(4, 120, 30, 30, gb); //120lb 4" wheel dia 30"x30" chassis
 //		r.setXY(new Point(curve[0]));
 //		r.setHeadingDegrees(new BezierPath(curve).calcHeading(0));
-		r.setXY(new Point(50,50));
-		r.setHeading(0);
+		r.setXY(new Point(250,250));
+		r.setHeadingDegrees(0);
 		
 		//set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -141,7 +141,7 @@ public class AutoSim {
 		PurePursuitController ppc = new PurePursuitController();
 		ppc.setSeekConstants(0.5, 5.5, 12);
 		ppc.setArriveConstants(30, 3);
-		ppc.setPurePursuitConstants(30, new Point[] {new Point(200,200)});
+		ppc.setPurePursuitConstants(30, new Point[] {new Point(50,50)});
 		cg = new CommandList(new PurePursuit(driveLoop, ppc));
 	} //end initialize
 	
