@@ -15,45 +15,48 @@ import model.motion.PurePursuitController;
 public class PurePursuit extends Command {
 	//Attributes
 	private DriveLoop loop; //drivetrain state machine to control
+	private PurePursuitController ppc; //Pure pursuit controller to follow
 	private Point[] goals;
-	private PurePursuitController ppc;
 	
+	/**
+	 * Create a PurePursuit command
+	 * @param loop Drivetrain loop
+	 * @param ppc Pure Pursuit controller
+	 */
 	public PurePursuit(DriveLoop loop, PurePursuitController ppc) {
 		//set attributes
 		this.loop = loop;
 		this.ppc = ppc;
 		this.robot = loop.getRobot();
-	}
+	} //end constructor
 
-	@Override
+	/**
+	 * Set up the loop and the graphics
+	 */
 	protected void initialize() {
 		loop.setPurePursuitController(ppc);
 		loop.setState(STATE.PURE_PURSUIT);
 		
 		this.robot.setLookahead(ppc.getLookahead());
 		this.robot.setGoalPoint(ppc.getGoal());
-	}
+	} //end initialize
 
-	@Override
+	/**
+	 * Update the controller and execute the loop
+	 */
 	protected void execute() {
 		loop.updatePurePursuitState(loop.getRobot().getPose());
 		loop.onLoop();
-	}
+	} //end execute
 
-	@Override
+	/**
+	 * Stop when the controller has arrived
+	 */
 	protected boolean isFinished() {
 		return ppc.isArrived();
-	}
+	} //end isFinished
 
-	@Override
-	protected void end() {
-		ppc.writeToFile();
-	}
+	protected void end() {}
 
-	@Override
-	protected void timedOut() {
-		// TODO Auto-generated method stub
-
-	}
-
-}
+	protected void timedOut() {}
+} //end class

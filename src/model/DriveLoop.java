@@ -428,14 +428,20 @@ public class DriveLoop {
 	
 	//Pure Pursuit
 	
+	/**
+	 * Update the pure pursuit state
+	 * @param robotPose Current pose of the robot
+	 */
 	public void updatePurePursuitState(Pose robotPose) {
 		ppc.calcOutputs(robotPose);
-	}
+	} //end updatePurePursuitState
 	
+	/**
+	 * Set the outputs based on the pure pursuit controller
+	 */
 	private void purePursuitLoop() {
 		double speed = ppc.getLinOut();
 		double turn = ppc.getAngOut();
-//		robot.update(speed - turn, speed + turn);
-		robot.update(speed + turn, speed - turn);
-	}
+		robot.update(speed - turn, speed + turn);
+	} //end purePursuitLoop
 } //end class

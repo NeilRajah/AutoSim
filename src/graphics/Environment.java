@@ -416,9 +416,9 @@ public class Environment extends JComponent {
 			g2.setColor(Color.BLACK);
 			Point robot = poses.get(poseIndex).getPoint();
 			double lookahead = (Double) data.get(poseIndex).get(ROBOT_KEY.LOOKAHEAD_DIST);
-			int rad = (int) lookahead;
+			int dia = (int) (lookahead * 2.0);
 			
-			Painter.drawEmptyCircle(g2, robot, rad);
+			Painter.drawEmptyCircle(g2, robot, dia);
 		} //if
 	} //end drawLookAhead
 } //end Environment
