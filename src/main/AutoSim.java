@@ -15,11 +15,9 @@ import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.DriveClosedLoopLinearProfile;
+import commands.PurePursuit;
 import graphics.Painter;
 import graphics.Window;
-import graphics.widgets.BezierPathCreator;
-import graphics.widgets.BezierPathCreatorWidget;
 import graphics.widgets.SpeedDisplay;
 import graphics.widgets.SpeedDisplayWidget;
 import model.DriveLoop;
@@ -31,7 +29,7 @@ import model.Robot;
 import model.motion.BezierPath;
 import model.motion.BezierProfile;
 import model.motion.DriveProfile;
-import model.motion.JerkProfile;
+import model.motion.PurePursuitController;
 import util.FieldPoints;
 import util.PlotGenerator;
 import util.Util;
@@ -77,10 +75,10 @@ public class AutoSim {
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
-//		new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
+		//new Thread(AutoSim::plotData).run(); //run in parallel to speed things up
 		
-		//add poses to play
-//		w.addPoses(ProfileGenerator.posesFromFile("niceLongCurve"));
+		//add poses to play (not from command)
+		//w.addPoses(ProfileGenerator.posesFromFile("niceLongCurve"));
 		
 		//launch the application
 		w.launch();			
@@ -106,6 +104,8 @@ public class AutoSim {
 			//always chooses primary monitor's resolution
 		} //if
 		
+//		SCREEN_WIDTH = 2160; SCREEN_HEIGHT = 1440; TOP_SCREEN = false;
+		
 		//5 pixels per inch on a 3840x2160 screen
 		PPI = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
 	} //end initializeScreen
@@ -119,8 +119,10 @@ public class AutoSim {
 		//create robot
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
 		Robot r = new Robot(4, 120, 30, 30, gb); //120lb 4" wheel dia 30"x30" chassis
-		r.setXY(new Point(curve[0]));
-		r.setHeadingDegrees(new BezierPath(curve).calcHeading(0));
+//		r.setXY(new Point(curve[0]));
+//		r.setHeadingDegrees(new BezierPath(curve).calcHeading(0));
+		r.setXY(new Point(50,50));
+		r.setHeading(0);
 		
 		//set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -133,20 +135,14 @@ public class AutoSim {
 		driveLoop.setFFValues(Util.kV_EMPIR, Util.kA_EMPIR); //need better values
 		
 		//create the command group
-//		profile = new TrapezoidalProfile(120, 24, 12);
-		profile = new JerkProfile(200, 30, 12);
-//		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
-//							 new TurnAngle(driveLoop, 180, 2, 12, true),s
-//							 new DriveClosedLoopLinearProfile(driveLoop, profile, 1)); 
-//		cg = new CommandList(new TimedVoltage(driveLoop, 12, 0.5));
+		//profile = new JerkProfile(200, 30, 12);
+		//cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 		
-//		bezTraj = new BezierProfile(curve, r.getWidthInches(), r.getMaxLinSpeed() * 12, 200, 200);
-		//Util.println(String.format("Width: %.3f Max Lin Speed: %.3f", r.getWidthInches(), r.getMaxLinSpeed()));
-//		cg = new CommandList(new DriveCurveFollow(driveLoop, bezTraj, 1));
-//		cg = new CommandList(new RAMSETECommand(driveLoop, new Pose(200, curve[0][1], Math.toRadians(-30)), 6, Math.toRadians(30)));
-		cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
-//		cg = new DriveToGoalDemo();
-//		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, 12));
+		PurePursuitController ppc = new PurePursuitController();
+		ppc.setSeekConstants(0.5, 5.5, 12);
+		ppc.setArriveConstants(30, 3);
+		ppc.setPurePursuitConstants(30, new Point[] {new Point(200,200)});
+		cg = new CommandList(new PurePursuit(driveLoop, ppc));
 	} //end initialize
 	
 	/**
@@ -169,9 +165,9 @@ public class AutoSim {
 		w.addWidget(angSpd);
 		
 		//bezier path creator widget
-		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
-		bezWidg.setControlPoints(curve);
-		w.addWidget(bezWidg);
+//		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
+//		bezWidg.setControlPoints(curve);
+//		w.addWidget(bezWidg);
 	} //end addWidgets
 
 	/**

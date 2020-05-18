@@ -8,6 +8,7 @@ package model;
 
 import java.awt.Color;
 
+import model.motion.PurePursuitController;
 import util.Util;
 
 public class DriveLoop {
@@ -16,6 +17,7 @@ public class DriveLoop {
 	private PIDController drivePID; //PID controller for driving
 	private PIDController turnPID; //PID controller for turning
 	private RAMSETEController ramsete; //RAMSETE controller for pose tracking
+	private PurePursuitController ppc; //Pure Pursuit controller
 	
 	private STATE state; //state the robot is in
 	private double goalDist; 	//distance to drive
@@ -41,21 +43,21 @@ public class DriveLoop {
 		TURN_ANGLE, 	//PID angle turning
 		OPEN_LOOP_PROFILE, //FF profile following
 		CLOSED_LOOP_LINEAR_PROFILE, //FF + PID profile following
-		CURVE_FOLLOWING //PIDFF curve following
+		CURVE_FOLLOWING, //PIDFF curve following
+		PURE_PURSUIT //pure pursuit algorithm
 	} //end enum
 	
 	/**
 	 * Create a loop with a robot
-	 * @param robot - robot to be controlled by the loop
-	 * @param drivePID - PID controller for driving
-	 * @param turnPID - PID controller for turning
+	 * @param robot Robot to be controlled by the loop
+	 * @param drivePID PID controller for driving
+	 * @param turnPID PID controller for turning
 	 */
 	public DriveLoop(Robot robot, PIDController drivePID, PIDController turnPID) {
 		//set attributes
 		this.robot = robot;
 		this.drivePID = new PIDController(drivePID.getP(), drivePID.getI(), drivePID.getD(), robot.getMaxLinSpeed());
 		this.turnPID = new PIDController(turnPID.getP(), turnPID.getI(), turnPID.getD(), robot.getMaxLinSpeed());
-		this.ramsete = new RAMSETEController();
 		
 		//default cases
 		state = STATE.WAITING;
@@ -78,6 +80,14 @@ public class DriveLoop {
 		this.kA = kA;
 	} //end setFFValues
 	
+	/**
+	 * Set the Pure Pursuit Controller for the loop
+	 * @param ppc Configured Pure Pursuit Controller
+	 */
+	public void setPurePursuitController(PurePursuitController ppc) {
+		this.ppc = ppc;
+	} //end setPurePursuitController
+	
 	//States
 	
 	/**
@@ -90,7 +100,7 @@ public class DriveLoop {
 	
 	/**
 	 * Set the state of the robot
-	 * @return state - new state of the robot
+	 * @return state New state of the robot
 	 */
 	public void setState(STATE state) {
 		this.state = state;
@@ -139,20 +149,16 @@ public class DriveLoop {
 			case CURVE_FOLLOWING:
 				curveFollowingLoop();
 				break;
+				
+			case PURE_PURSUIT:
+				purePursuitLoop();
+				break;
 		} //switch-case
 	} //end onLoop
-	
-	/**
-	 * Get a copy of the robot being controlled by the loop
-	 * @return - copy of robot being controlled
-	 */
-	public Robot getRobotClone() {
-		return robot.clone();
-	} //end getRobot
-	
+		
 	/**
 	 * Get the robot being controlled by the loop
-	 * @return robot - robot being controlled by loop
+	 * @return robot Robot being controlled by loop
 	 */
 	public Robot getRobot() {
 		return robot;
@@ -160,7 +166,7 @@ public class DriveLoop {
 	
 	/**
 	 * Get whether or not the PID controller for driving is at its target
-	 * @return - isDone of drivePID
+	 * @return isDone of drivePID
 	 */
 	public boolean isDrivePIDAtTarget() {
 		return drivePID.isDone();
@@ -168,7 +174,7 @@ public class DriveLoop {
 	
 	/**
 	 * Get whether or not the PID controller for turning is at its target
-	 * @return - isDone of turnPID
+	 * @return isDone of turnPID
 	 */
 	public boolean isTurnPIDAtTarget() {
 		return turnPID.isDone();
@@ -176,8 +182,8 @@ public class DriveLoop {
 	
 	/**
 	 * Get whether or not the robot being controlled is moving slower than a percent of its top speed
-	 * @param percent - percent of its top speed between -1 and 1
-	 * @return - isSlowerThanPercent of robot
+	 * @param percent Percent of its top speed between -1 and 1
+	 * @return isSlowerThanPercent of robot
 	 */
 	public boolean isRobotSlowerThanPercent(double percent) {
 		return robot.isSlowerThanPercent(percent); 
@@ -196,9 +202,9 @@ public class DriveLoop {
 	
 	/**
 	 * Set the loop to the DriveDistance state
-	 * @param distance - distance from current position to drive to in inches
-	 * @param topSpeed - top speed to be below in ft/s
-	 * @param tolerance - range to be within in inches
+	 * @param distance Distance from current position to drive to in inches
+	 * @param topSpeed Top speed to be below in ft/s
+	 * @param tolerance Range to be within goal distance in inches
 	 */
 	public void setDriveDistanceState(double distance, double topSpeed, double tolerance) {
 		//configure loop parameters
@@ -232,10 +238,10 @@ public class DriveLoop {
 	
 	/**
 	 * Set the loop to the TurnAngle state
-	 * @param angle - angle for the robot to turn to in radians
-	 * @param topSpeed - top speed to be below in ft/s
-	 * @param tolerance - tolerance to be within in radians
-	 * @param relative - whether or not angle is relative to the robot's current heading or the zero
+	 * @param angle Angle for the robot to turn to in radians
+	 * @param topSpeed Top speed to be below in ft/s
+	 * @param tolerance Tolerance to be within in radians
+	 * @param relative Whether or not angle is relative to the robot's current heading or the zero
 	 */
 	public void setTurnAngleState(double angle, double topSpeed, double tolerance, boolean relative) {
 		//configure loop parameters
@@ -266,12 +272,12 @@ public class DriveLoop {
 	
 	/**
 	 * Set the loop to the DriveToGoal state
-	 * @param dist - distance to drive to in inches
-	 * @param angle - angle to drive to in radians
-	 * @param range - distance from goal point to be within in inches
-	 * @param topSpeed - top speed to be under in ft/s
-	 * @param minSpeed - minimum speed to be over in ft/s
-	 * @param reverse - whether to drive to the goal point in reverse or not
+	 * @param dist Distance to drive to in inches
+	 * @param angle Angle to drive to in radians
+	 * @param range Distance from goal point to be within in inches
+	 * @param topSpeed Top speed to be under in ft/s
+	 * @param minSpeed Minimum speed to be over in ft/s
+	 * @param reverse Whether to drive to the goal point in reverse or not
 	 */
 	public void setDriveToGoalState(double dist, double angle, double range, double topSpeed, double minSpeed, boolean reverse) {
 		//update the parameters
@@ -284,12 +290,12 @@ public class DriveLoop {
 	
 	/**
 	 * Update the DriveToGoal state parameters
-	 * @param dist - distance to drive to in inches
-	 * @param angle - angle to drive to in radians
-	 * @param range - distance from goal point to be within in inches
-	 * @param topSpeed - top speed to be under in ft/s
-	 * @param minSpeed - minimum speed to be over in ft/s
-	 * @param reverse - whether to drive to the goal point in reverse or not
+	 * @param dist Distance to drive to in inches
+	 * @param angle Angle to drive to in radians
+	 * @param range Distance from goal point to be within in inches
+	 * @param topSpeed Top speed to be under in ft/s
+	 * @param minSpeed Minimum speed to be over in ft/s
+	 * @param reverse Whether to drive to the goal point in reverse or not
 	 */
 	public void updateDriveToGoalState(double dist, double yaw, double range, double topSpeed, double minSpeed, boolean reverse) {
 		//configure loop parameters
@@ -419,4 +425,17 @@ public class DriveLoop {
 	private double calcFFOutput(double vel, double acc) {
 		return kV * vel + kA * acc;
 	} //end calcFFOutput
+	
+	//Pure Pursuit
+	
+	public void updatePurePursuitState(Pose robotPose) {
+		ppc.calcOutputs(robotPose);
+	}
+	
+	private void purePursuitLoop() {
+		double speed = ppc.getLinOut();
+		double turn = ppc.getAngOut();
+//		robot.update(speed - turn, speed + turn);
+		robot.update(speed + turn, speed - turn);
+	}
 } //end class

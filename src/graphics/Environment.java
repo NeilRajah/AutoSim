@@ -273,7 +273,7 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Draw the environment
-	 * @param g - responsible for drawing
+	 * @param g Responsible for drawing
 	 */
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g; //Graphics2D for better graphics
@@ -292,13 +292,16 @@ public class Environment extends JComponent {
 		
 		//draw the goal point
 		drawGoalPoint(g2);
+		
+		//draw the lookahead
+		drawLookAhead(g2);
 	} //end paintComponent
 	
 	//User Interaction
 	
 	/**
 	 * Add a UI bar
-	 * @param bar - bar to store for the environment to update
+	 * @param bar Bar to store for the environment to update
 	 */
 	public void addUIBar(UIBar bar) {
 		this.bar = bar;
@@ -306,8 +309,8 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Set the mouse coordinates for the UI to draw
-	 * @param x - x location of the mouse
-	 * @param y - y location of the mouse
+	 * @param x X location of the mouse
+	 * @param y Y location of the mouse
 	 */
 	public void setBarCursorLocation(int x, int y) {
 		bar.setCursorLocation(x, y);
@@ -317,7 +320,7 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Draw the background of the Environment
-	 * @param g2
+	 * @param g2 Object for drawing
 	 */
 	private void drawBackground(Graphics2D g2) {
 		//draw the field image as the background
@@ -403,4 +406,19 @@ public class Environment extends JComponent {
 			Painter.drawLine(g2, goal, robot);
 		} //if
 	} //end drawGoalPoint
+	
+	/**
+	 * Draw the lookahead distance, if it exists
+	 * @param g2 Object for drawing
+	 */
+	private void drawLookAhead(Graphics2D g2) {
+		if (poseIndex > 0 && data != null && ((double) data.get(poseIndex).get(ROBOT_KEY.LOOKAHEAD_DIST) != 0)) {
+			g2.setColor(Color.BLACK);
+			Point robot = poses.get(poseIndex).getPoint();
+			double lookahead = (Double) data.get(poseIndex).get(ROBOT_KEY.LOOKAHEAD_DIST);
+			int rad = (int) lookahead;
+			
+			Painter.drawEmptyCircle(g2, robot, rad);
+		} //if
+	} //end drawLookAhead
 } //end Environment

@@ -37,6 +37,7 @@ public class Robot {
 	private Color color; //color of the robot
 	private String commandName; //name of the command
 	private Point goalPoint; //used for graphics
+	private double lookahead; //lookahead circle radius
 	
 	//Computed constants
 	private double kWheelRad; //wheel radius in meters
@@ -454,6 +455,14 @@ public class Robot {
 	} //end setGoalPoint
 	
 	/**
+	 * Set the lookahead for the robot
+	 * @param lookahead New lookahead distance in inches
+	 */
+	public void setLookahead(double lookahead) {
+		this.lookahead = lookahead;
+	} //end setLookAhead
+	
+	/**
 	 * Get the data of the robot
 	 * @return All robot data point in a HashMap
 	 */
@@ -478,6 +487,7 @@ public class Robot {
 		data.put(ROBOT_KEY.ANG_ACC, (kWheelRad / (2 * kPivotArm)) * (rightGearbox.getAcc() - leftGearbox.getAcc()));
 		data.put(ROBOT_KEY.CURRENT_COMMAND, commandName);
 		data.put(ROBOT_KEY.GOAL_POINT, goalPoint);
+		data.put(ROBOT_KEY.LOOKAHEAD_DIST, lookahead);
 		
 		return data;
 	} //end getData

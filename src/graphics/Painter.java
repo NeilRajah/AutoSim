@@ -34,10 +34,10 @@ public class Painter {
 	
 	/**
 	 * Draw a string to the screen
-	 * @param g2 - used for drawing
-	 * @param str - string to draw
-	 * @param x - x position to draw to
-	 * @param y - y position to draw to
+	 * @param g2 Used for drawing
+	 * @param str String to draw
+	 * @param x X position to draw to
+	 * @param y Y position to draw to
 	 */
 	public static void drawFlippedString(Graphics2D g2, String str, int x, int y) {
 		g2.scale(1.0, -1.0);
@@ -47,8 +47,8 @@ public class Painter {
 	
 	/**
 	 * Draw a robot pose to the screen
-	 * @param g2 object for drawing
-	 * @param p pose to draw
+	 * @param g2 Object for drawing
+	 * @param p Pose to draw
 	 */
 	public static void drawPose(Graphics2D g2, Pose p) {
 		
@@ -66,10 +66,10 @@ public class Painter {
 	
 	/**
 	 * Draw the grid to the environment
-	 * @param g2 object for drawing
-	 * @param width width of the environment
-	 * @param height height of the environment
-	 * @param step increments for the grid lines
+	 * @param g2 Object for drawing
+	 * @param width Width of the environment
+	 * @param height Height of the environment
+	 * @param step Increments for the grid lines
 	 */
 	public static void drawGrid(Graphics2D g2, int width, int height, int step) {
 		//draw vertical lines
@@ -86,7 +86,7 @@ public class Painter {
 	/**
 	 * Draw a point in real space
 	 * @param g2 Used for drawing
-	 * @param p point to draw
+	 * @param p Point to draw
 	 * @param rad Radius of point
 	 */
 	public static void drawPoint(Graphics2D g2, Point p, int rad) {
@@ -156,4 +156,18 @@ public class Painter {
 	public static void setTransparency(Graphics2D g2, double transparency) {
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) transparency));
 	} //end setTransparency
+	
+	/**
+	 * Draw a empty circle in real space
+	 * @param g2 Used for drawing
+	 * @param p Point to draw
+	 * @param rad Radius of point
+	 */
+	public static void drawEmptyCircle(Graphics2D g2, Point p, int rad) {
+		rad *= AutoSim.PPI;
+		int x = (int) (p.getX() * AutoSim.PPI);
+		int y = (int) (p.getY() * AutoSim.PPI);
+		
+		g2.drawOval((int) (y - rad/2.0), (int) (x - rad/2.0), rad, rad);
+	} //end drawPoint
 } //end Painter 

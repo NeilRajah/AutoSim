@@ -10,9 +10,6 @@ package util;
 import static org.junit.Assert.assertEquals;
 
 import java.awt.Color;
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -519,7 +516,7 @@ class ModelTest {
 	/**
 	 * Test the minMag function of the Point class
 	 */
-	void minMagTest() {
+	void pointMinMagTest() {
 		assertEquals(2.828, Point.minMag(new Point(2,2), new Point(25,25)).getMag(), 0.001);
 	} //end minMagTest
 	
@@ -585,4 +582,12 @@ class ModelTest {
 		
 		assertEquals(true, FieldPositioning.lineCircleIntersect(E, L, C, r).get(0).equals(expected));
 	} //end lineCircleIntersect
+	
+	@Test
+	/**
+	 * Test the minMag function of the Util class
+	 */
+	void minMagTest() {
+		assertEquals(-2, Util.minMag(-2, 13.05), 0.001);
+	} //end minMag
 } //end class

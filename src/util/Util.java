@@ -86,7 +86,8 @@ public class Util {
 		ANG_ACC,
 		STATE,
 		CURRENT_COMMAND,
-		GOAL_POINT
+		GOAL_POINT,
+		LOOKAHEAD_DIST
 	} //end enum
 	
 	//Testing Constants
@@ -554,4 +555,14 @@ public class Util {
 	public static double[] doubleListToArray(ArrayList<Double> list) {
 		return Arrays.stream(list.toArray()).mapToDouble(num -> Double.parseDouble(num.toString())).toArray();
 	} //end doubleListToArray
+	
+	/**
+	 * Return the number with the smaller magnitude
+	 * @param a First number
+	 * @param b Second number
+	 * @return Number with the smaller magnitude (regardless of sign)
+	 */
+	public static double minMag(double a, double b) {
+		return Math.abs(a) < Math.abs(b) ? a : b;
+	} //end minMag
 } //end Util
