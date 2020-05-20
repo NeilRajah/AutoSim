@@ -92,7 +92,7 @@ public class DriveLoop {
 	
 	/**
 	 * Get the state the robot is in
-	 * @return state - state the robot is in
+	 * @return state State the robot is currently in
 	 */
 	public STATE getState() {
 		return state;
@@ -431,9 +431,10 @@ public class DriveLoop {
 	/**
 	 * Update the pure pursuit state
 	 * @param robotPose Current pose of the robot
+	 * @param robotSpeed Current linear speed of the robot
 	 */
-	public void updatePurePursuitState(Pose robotPose) {
-		ppc.calcOutputs(robotPose);
+	public void updatePurePursuitState(Pose robotPose, double robotSpeed) {
+		ppc.calcOutputs(robotPose, robotSpeed);
 	} //end updatePurePursuitState
 	
 	/**

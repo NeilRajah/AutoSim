@@ -9,9 +9,12 @@ package model.motion;
 
 import java.util.ArrayList;
 
+import org.knowm.xchart.XYChart;
+
 import model.FieldPositioning;
 import model.Point;
 import model.Pose;
+import util.PlotGenerator;
 import util.Util;
 
 public class PurePursuitController {
@@ -19,7 +22,7 @@ public class PurePursuitController {
 	//Seek
 	private double accTime; //time to accelerate linear output to maxVel
 	private double turnConst; //for angular output calculations
-	private double maxVel; //maximum linear output in ft/s
+	private double maxSpeed; //maximum linear output in ft/s
 
 	//Arrive
 	private double goalDist; //distance away from the final point to start decelerating
@@ -36,7 +39,13 @@ public class PurePursuitController {
 	private double speed; //linear speed output
 	private double turn; //angular speed output
 	private Pose robotPose; //pose of the robot
+	
+	//Rate Limiter
 	private double prevTime; //for rate limiter
+	private double lastSpeed; //last speed value
+	private double robotSpeed; //speed from robot
+	private double maxSpeedStep; //maximum amount the speed can increase
+	ArrayList<Double> output = new ArrayList<Double>();
 		
 	/**
 	 * Create a pure pursuit controller
@@ -54,12 +63,16 @@ public class PurePursuitController {
 	 * Set the constants for the seek mode
 	 * @param accTime Time for linear output to reach maximum
 	 * @param turnConst Proportional gain on angle error
-	 * @param maxVel Maximum linear output (-12 to 12)
+	 * @param maxSpeed Maximum linear output (-12 to 12)
+	 * @param reverse Whether to drive through the points in reverse
 	 */
-	public void setSeekConstants(double accTime, double turnConst, double maxVel) {
+	public void setSeekConstants(double accTime, double turnConst, double maxSpeed, boolean reverse) {
 		this.accTime = accTime;
 		this.turnConst = turnConst;
-		this.maxVel = maxVel;
+		this.maxSpeed = maxSpeed;
+		this.reverse = reverse;
+		this.lastSpeed = 0; //start at zero lastSpeed
+		this.maxSpeedStep = Util.UPDATE_PERIOD * maxSpeed / accTime;
 	} //end setSeekConstants
 	
 	/**
@@ -125,20 +138,27 @@ public class PurePursuitController {
 	
 	/**
 	 * Calculate the outputs for the controller
-	 * @param robot Pose of the robot (x,y,theta)
+	 * @param robotPose Pose of the robot (x,y,theta)
+	 * @param robotSpeed Current linear speed of the robot
 	 */
-	public void calcOutputs(Pose robot) {
-		//set the pose
-		this.robotPose = robot;
+	public void calcOutputs(Pose robotPose, double robotSpeed) {
+		//set the pose and current speed
+		this.robotPose = robotPose;
+		this.robotSpeed = robotSpeed;
 		
 		//calculate the arrived state
-		arrived = FieldPositioning.dist(robot.getPoint(), goal) <= endDist;
+		arrived = FieldPositioning.dist(robotPose.getPoint(), goal) <= endDist;
 		
 		//stop if the controller has arrived
 		if (arrived) {
 			//don't output if arrived
-			speed = 0;
-			turn = 0;
+			this.robotSpeed = 0;
+			this.turn = 0;
+			
+			XYChart c = PlotGenerator.buildChart("PPC Speed vs. Time", "Time (s)", "Output (V)");
+			c.addSeries("Time", Util.scaleArray(Util.indexArray(output.size()), Util.UPDATE_PERIOD), 
+						Util.doubleListToArray(output));
+			PlotGenerator.displayChart(c);
 			
 		//pursue the goals
 		} else {
@@ -147,7 +167,7 @@ public class PurePursuitController {
 			 * Seek with linSpeed = maxVel
 			 * Seek and arrive to one point
 			 * 
-			 * To-Dp
+			 * To-Do
 			 * Seek and arrive to multiple points
 			 * Pursue multiple points
 			 * 
@@ -181,9 +201,17 @@ public class PurePursuitController {
 		speed *= angleScale(twist); //slow down more the larger the relative angle is
 		if (reverse)
 			speed = -Math.abs(speed); //flip speed if reverse
+		//rate limit speed
+		if (Math.abs(speed) - Math.abs(lastSpeed) > 0) {
+			speed = Math.min(speed, lastSpeed + maxSpeedStep);
+			lastSpeed = speed;
+		}
 		
 		//calculate the turn output
 		turn = Math.copySign(turnConst * Math.abs(twist), twist);
+		
+		//set the last speed
+		output.add(speed); //dbg
 	} //end seek
 	
 	/**
@@ -203,12 +231,12 @@ public class PurePursuitController {
 		if (FieldPositioning.isWithinBounds(goal, robotPose.getPoint(), goalDist)) {
 			double dist = FieldPositioning.dist(robotPose.getPoint(), goal);
 			double scaleFactor = dist < endDist ? 0 : (dist-endDist) / (goalDist-endDist);
-			speed = maxVel * scaleFactor;
+			speed = maxSpeed * scaleFactor;
 			arrived = dist < endDist;
 			
 		//set the goal to max vel if not arriving
 		} else {
-			speed = maxVel;
+			speed = maxSpeed;
 		} //if
 	} //end arrive
 	

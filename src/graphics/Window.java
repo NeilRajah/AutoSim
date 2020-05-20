@@ -139,7 +139,7 @@ public class Window extends JFrame {
 		this.pack();
 		this.setResizable(false); 
 		if (AutoSim.TOP_SCREEN)
-			this.setLocation((int) (AutoSim.SCREEN_WIDTH / 2.6), -AutoSim.SCREEN_HEIGHT + 100);
+			this.setLocation((int) (AutoSim.SCREEN_WIDTH / 1.2), -AutoSim.SCREEN_HEIGHT + 100);
 		else
 			this.setLocation(AutoSim.SCREEN_WIDTH/2 - this.getWidth()/2, AutoSim.SCREEN_HEIGHT/2 - this.getHeight()/2);
 		this.setVisible(true);

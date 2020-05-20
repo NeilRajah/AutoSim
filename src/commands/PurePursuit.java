@@ -45,7 +45,7 @@ public class PurePursuit extends Command {
 	 * Update the controller and execute the loop
 	 */
 	protected void execute() {
-		loop.updatePurePursuitState(loop.getRobot().getPose());
+		loop.updatePurePursuitState(loop.getRobot().getPose(), loop.getRobot().getLinearVel());
 		loop.onLoop();
 	} //end execute
 
