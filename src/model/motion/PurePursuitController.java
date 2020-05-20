@@ -27,6 +27,7 @@ public class PurePursuitController {
 	//Arrive
 	private double goalDist; //distance away from the final point to start decelerating
 	private double endDist; //distance to be from the final point to be considered "done"
+	private int goalIndex; //index of the current goal in the list
 
 	//Pure Pursuit
 	private double lookahead; //lookahead distance
@@ -83,6 +84,7 @@ public class PurePursuitController {
 	public void setArriveConstants(double goal, double end) {
 		this.goalDist = goal;
 		this.endDist = end;
+		this.goalIndex = 0; //start at the first point
 	} //end setArriveConstants
 	
 	/**
@@ -147,7 +149,12 @@ public class PurePursuitController {
 		this.robotSpeed = robotSpeed;
 		
 		//calculate the arrived state
-		arrived = FieldPositioning.dist(robotPose.getPoint(), goal) <= endDist;
+		if (FieldPositioning.dist(robotPose.getPoint(), goal) <= endDist) {
+			goalIndex++;
+			goal = goals[Math.min(goalIndex, goals.length-1)];
+		}
+		
+		arrived = goalIndex == goals.length;
 		
 		//stop if the controller has arrived
 		if (arrived) {
@@ -155,10 +162,12 @@ public class PurePursuitController {
 			this.robotSpeed = 0;
 			this.turn = 0;
 			
+			/*
 			XYChart c = PlotGenerator.buildChart("PPC Speed vs. Time", "Time (s)", "Output (V)");
 			c.addSeries("Time", Util.scaleArray(Util.indexArray(output.size()), Util.UPDATE_PERIOD), 
 						Util.doubleListToArray(output));
 			PlotGenerator.displayChart(c);
+			*/
 			
 		//pursue the goals
 		} else {
@@ -166,12 +175,12 @@ public class PurePursuitController {
 			 * Done
 			 * Seek with linSpeed = maxVel
 			 * Seek and arrive to one point
+			 * Seek and arrive with rateLimiter
 			 * 
 			 * To-Do
 			 * Seek and arrive to multiple points
 			 * Pursue multiple points
 			 * 
-			 * Seek and arrive with rateLimiter
 			 */
 			arrive();
 			seek();			
@@ -227,12 +236,12 @@ public class PurePursuitController {
 	 * Arrive at the goal
 	 */
 	private void arrive() {
-		//ramp down the speed based on how far from the goal it is
-		if (FieldPositioning.isWithinBounds(goal, robotPose.getPoint(), goalDist)) {
+		//ramp down the speed based on how far from the final point it is
+		if (FieldPositioning.isWithinBounds(goals[goals.length-1], robotPose.getPoint(), goalDist)) {
 			double dist = FieldPositioning.dist(robotPose.getPoint(), goal);
 			double scaleFactor = dist < endDist ? 0 : (dist-endDist) / (goalDist-endDist);
 			speed = maxSpeed * scaleFactor;
-			arrived = dist < endDist;
+			//arrived = dist < endDist;
 			
 		//set the goal to max vel if not arriving
 		} else {

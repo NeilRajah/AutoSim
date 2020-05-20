@@ -47,6 +47,7 @@ public class PurePursuit extends Command {
 	protected void execute() {
 		loop.updatePurePursuitState(loop.getRobot().getPose(), loop.getRobot().getLinearVel());
 		loop.onLoop();
+		this.robot.setGoalPoint(ppc.getGoal());
 	} //end execute
 
 	/**
