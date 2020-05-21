@@ -590,4 +590,12 @@ class ModelTest {
 	void minMagTest() {
 		assertEquals(-2, Util.minMag(-2, 13.05), 0.001);
 	} //end minMag
+	
+	@Test
+	/**
+	 * Test the distanceSquared method in FieldPositioning
+	 */
+	void distsqTest() {
+		assertEquals(100.0, FieldPositioning.distsq(new Point(0,0), new Point(10,0)), 0.001);
+	} //end distsqTest
 } //end class

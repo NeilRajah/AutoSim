@@ -296,11 +296,11 @@ public class Environment extends JComponent {
 		//draw the goal point
 		drawGoalPoint(g2);
 		
-		//draw the lookahead
-		drawLookAhead(g2);
-		
 		//draw the current pose
 		drawCurrentPose(g2);
+		
+		//draw the lookahead
+		drawLookAhead(g2);
 	} //end paintComponent
 	
 	//User Interaction

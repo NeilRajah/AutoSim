@@ -142,13 +142,16 @@ public class AutoSim {
 		PurePursuitController ppc = new PurePursuitController();
 		ppc.setSeekConstants(0.5, 5.5, 12, false);
 		ppc.setArriveConstants(30, 3);
+		ppc.setPurePursuitConstants(12);
+		driveLoop.setPurePursuitController(ppc);
+		
 		Point[] testPoints = new Point[3];
 		for (int i = 0; i < testPoints.length; i++) {
 			testPoints[i] = new Point(Math.random() * Util.FIELD_HEIGHT, Math.random() * Util.FIELD_HEIGHT);
 		}
-		ppc.setPurePursuitConstants(30);
-		driveLoop.setPurePursuitController(ppc);
+		
 		cg = new CommandList(new PurePursuit(driveLoop, testPoints));
+		r.setXY(testPoints[0]);
 	} //end initialize
 	
 	/**

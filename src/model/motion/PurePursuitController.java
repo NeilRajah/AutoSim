@@ -158,7 +158,7 @@ public class PurePursuitController {
 		if (FieldPositioning.dist(robotPose.getPoint(), goal) <= endDist) {
 			goalIndex++;
 			goal = goals[Math.min(goalIndex, goals.length-1)];
-		}
+		} //if
 		
 		arrived = goalIndex == goals.length;
 		
@@ -273,8 +273,61 @@ public class PurePursuitController {
 		 * 	 	set goal to last point and arrive
 		 * 		- could potentially change this to distAlongPathLeft < goalDist
 		 * 		- distAlongPathLeft = totalDist - distAlongPath(closestPoint)
-		 * Seek goal		
+		 * Seek goal
+		 * 		
+		 * - split field up into cells for intersect finding 
+		 *   - find points in bounds of lookahead + some distance, lookahead times a constant
+		 *   - then evaluate intersects
+		 */
+		ArrayList<Point> intersects = new ArrayList<Point>();
+		for (int i = 0; i < goals.length-1; i++) {
+			intersects.addAll(FieldPositioning.lineCircleIntersect(goals[i], goals[i+1], robotPose.getPoint(), lookahead));
+		} //loop
+		
+		//if no intersects, choose the closest point the robot
+		//otherwise, choose the last intersect added
+//		goal = intersects.size() == 0 ? closestPoint() : intersects.get(intersects.size()-1);
+		
+		/*
+		 * if the robot is close the end
+		 * 	goal = end
+		 * else
+		 * 	if no intersects
+		 * 	 goal = closest
+		 * 	else
+		 * 	 goal = last intersect
 		 */
 		
+		if (FieldPositioning.dist(robotPose.getPoint(), goals[goals.length-1]) < goalDist) {
+			goal = goals[goals.length-1];
+		} else if (intersects.isEmpty()) {
+			goal = closestPoint();
+		} else {
+			goal = intersects.get(intersects.size()-1);
+		}
+		
+		arrive();
+		seek();
 	} //end purePursuit
+	
+	/**
+	 * Get the point on the path the robot is closest to
+	 * @return Point in goals the robot is closest to 
+	 */
+	private Point closestPoint() {
+		double minDist = Double.POSITIVE_INFINITY;
+		int record = 0;
+		double dist = 0;
+		
+		//loop through every point, looking for the closest one
+		for (int i = 0; i < goals.length; i++) {
+			dist = FieldPositioning.distsq(goals[i], robotPose.getPoint());
+			if (dist < minDist) {
+				minDist = dist;
+				record = i;
+			} //if
+		} //loop
+		
+		return goals[record];
+	} //end closestPoint
 } //end class

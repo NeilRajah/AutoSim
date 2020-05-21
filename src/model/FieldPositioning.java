@@ -245,4 +245,15 @@ public class FieldPositioning {
 			intersects.add(p2);
 		return intersects;
 	} //end lineCircleIntersect
+	
+	/**
+	 * Get the square of the distance between points (faster than square root)
+	 * @param p1 First point
+	 * @param p2 Second point
+	 * @return Distance squared between points
+	 */
+	public static double distsq(Point p1, Point p2) {
+		Point delta = Point.subtract(p2, p1);
+		return delta.getX() * delta.getX() + delta.getY() * delta.getY();
+	} //end distsq
 } //end class
