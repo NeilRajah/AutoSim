@@ -105,7 +105,7 @@ public class AutoSim {
 			//always chooses primary monitor's resolution
 		} //if
 		
-//		SCREEN_WIDTH = 2160; SCREEN_HEIGHT = 1440; TOP_SCREEN = false;
+		SCREEN_WIDTH = 3840; SCREEN_HEIGHT = 2160; TOP_SCREEN = false;
 		
 		//5 pixels per inch on a 3840x2160 screen
 		PPI = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
@@ -146,8 +146,9 @@ public class AutoSim {
 		for (int i = 0; i < testPoints.length; i++) {
 			testPoints[i] = new Point(Math.random() * Util.FIELD_HEIGHT, Math.random() * Util.FIELD_HEIGHT);
 		}
-		ppc.setPurePursuitConstants(30, testPoints);
-		cg = new CommandList(new PurePursuit(driveLoop, ppc));
+		ppc.setPurePursuitConstants(30);
+		driveLoop.setPurePursuitController(ppc);
+		cg = new CommandList(new PurePursuit(driveLoop, testPoints));
 	} //end initialize
 	
 	/**

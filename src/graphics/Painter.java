@@ -51,7 +51,6 @@ public class Painter {
 	 * @param p Pose to draw
 	 */
 	public static void drawPose(Graphics2D g2, Pose p) {
-		
 		//translate to center of robot, robot to its heading
 		g2.translate(p.getPoint().getY()*AutoSim.PPI, p.getPoint().getX()*AutoSim.PPI);
 		g2.rotate(p.getHeading());

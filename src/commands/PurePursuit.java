@@ -7,6 +7,7 @@
 
 package commands;
 
+import graphics.Environment;
 import model.DriveLoop;
 import model.Point;
 import model.DriveLoop.STATE;
@@ -23,20 +24,23 @@ public class PurePursuit extends Command {
 	 * @param loop Drivetrain loop
 	 * @param ppc Pure Pursuit controller
 	 */
-	public PurePursuit(DriveLoop loop, PurePursuitController ppc) {
+	public PurePursuit(DriveLoop loop, Point[] goals) {
 		//set attributes
 		this.loop = loop;
-		this.ppc = ppc;
+		this.goals = goals;
 		this.robot = loop.getRobot();
+		this.ppc = loop.getPurePursuitController();
 	} //end constructor
 
 	/**
 	 * Set up the loop and the graphics
 	 */
 	protected void initialize() {
-		loop.setPurePursuitController(ppc);
 		loop.setState(STATE.PURE_PURSUIT);
+		ppc.setWaypoints(goals);
 		
+		//graphics
+		Environment.getInstance().setWaypoints(goals);
 		this.robot.setLookahead(ppc.getLookahead());
 		this.robot.setGoalPoint(ppc.getGoal());
 	} //end initialize
@@ -47,6 +51,8 @@ public class PurePursuit extends Command {
 	protected void execute() {
 		loop.updatePurePursuitState(loop.getRobot().getPose(), loop.getRobot().getLinearVel());
 		loop.onLoop();
+		
+		//graphics
 		this.robot.setGoalPoint(ppc.getGoal());
 	} //end execute
 

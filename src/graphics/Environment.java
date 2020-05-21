@@ -55,7 +55,8 @@ public class Environment extends JComponent {
 	//Curves
 	private ArrayList<int[][]> curves; //points for the bezier path
 	private BezierPath curve; //curve from the BPC widget
-	private Circle[] controlPoints; //control points for path	
+	private Circle[] controlPoints; //control points for path
+	private Point[] waypoints; //waypoints the robot is following
 	
 	/**
 	 * The environment the robot is simulated in
@@ -78,10 +79,7 @@ public class Environment extends JComponent {
 	 * @return Single instance of the environment
 	 */
 	public static Environment getInstance() {
-		if (mInstance == null)
-			mInstance = new Environment();
-		
-		return mInstance;
+		return mInstance == null ? mInstance = new Environment() : mInstance;
 	} //end getInstance
 	
 	/**
@@ -131,7 +129,7 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Add poses to be later drawn
-	 * @param poses - list of poses to be drawn
+	 * @param poses List of poses to be drawn
 	 */
 	public void setPoses(ArrayList<Pose> poses) {
 		this.poses = poses;
@@ -139,13 +137,10 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Get the number of poses in the environment
-	 * @return - number of poses in the poses list if the list is not null
+	 * @return Number of poses in the poses list if the list is not null
 	 */
 	public int getNumPoses() {
-		if (poses != null) {
-			return poses.size();
-		} //if
-		return 0;
+		return poses != null ? poses.size() : null;
 	} //end getNumPoses
 	
 	/**
@@ -159,7 +154,7 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Set the pose index to a specified value
-	 * @param index - index to set pose index to
+	 * @param index Index to set pose index to
 	 */
 	public void setPoseIndex(int index) {
 		poseIndex = index;
@@ -203,6 +198,14 @@ public class Environment extends JComponent {
 		update();
 	} //end setCurve
 	
+	/**
+	 * Set the waypoints to be displayed
+	 * @param waypoints Waypoints for the robot to follow
+	 */
+	public void setWaypoints(Point[] waypoints) {
+		this.waypoints = waypoints;
+	} //end setWaypoints
+	
 	//Data
 	
 	/**
@@ -226,7 +229,7 @@ public class Environment extends JComponent {
 	
 	/**
 	 * Return the width of the environment
-	 * @return width - width of component in pixels
+	 * @return width Width of component in pixels
 	 */
 	public int width() {
 		return width;
@@ -234,7 +237,7 @@ public class Environment extends JComponent {
 
 	/**
 	 * Return the height of the environment
-	 * @return height - height of component in pixels
+	 * @return height Height of component in pixels
 	 */
 	public int height() {
 		return height;
@@ -286,15 +289,18 @@ public class Environment extends JComponent {
 		
 		//draw the current path
 		drawPath(g2);
-
-		//draw the current pose
-		drawCurrentPose(g2);
+		
+		//draw the waypoints
+		drawWaypoints(g2);
 		
 		//draw the goal point
 		drawGoalPoint(g2);
 		
 		//draw the lookahead
 		drawLookAhead(g2);
+		
+		//draw the current pose
+		drawCurrentPose(g2);
 	} //end paintComponent
 	
 	//User Interaction
@@ -421,4 +427,23 @@ public class Environment extends JComponent {
 			Painter.drawEmptyCircle(g2, robot, dia);
 		} //if
 	} //end drawLookAhead
+	
+	/**
+	 * Draw the waypoints the robot is following, if they exist
+	 * @param g2 Object for drawing
+	 */
+	private void drawWaypoints(Graphics2D g2) {
+		if (waypoints != null) {
+			g2.setColor(Color.BLACK);
+			g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 1.0), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+			
+			for (int i = 1; i < waypoints.length; i++) {
+				Painter.drawLine(g2, waypoints[i-1], waypoints[i]);
+			} //loop
+			
+			for (int i = 0; i < waypoints.length; i++) {
+				Painter.drawPoint(g2, waypoints[i]);
+			} //loop
+		} //if
+	} //end drawWaypoints
 } //end Environment

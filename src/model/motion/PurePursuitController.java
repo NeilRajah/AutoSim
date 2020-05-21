@@ -61,6 +61,15 @@ public class PurePursuitController {
 	} //end constructor
 
 	/**
+	 * Set the path for the controller to follow
+	 * @param goals Points to follow
+	 */
+	public void setWaypoints(Point[] goals) {
+		this.goals = goals;
+		this.goal = goals[0]; //set the goal to be the first point
+	} //end setWaypoints
+		
+	/**
 	 * Set the constants for the seek mode
 	 * @param accTime Time for linear output to reach maximum
 	 * @param turnConst Proportional gain on angle error
@@ -90,12 +99,9 @@ public class PurePursuitController {
 	/**
 	 * Set the constants for the pure pursuit mode
 	 * @param lookahead Size of circle to lookahead
-	 * @param goals
 	 */
-	public void setPurePursuitConstants(double lookahead, Point[] goals) {
+	public void setPurePursuitConstants(double lookahead) {
 		this.lookahead = lookahead;
-		this.goals = goals;
-		this.goal = goals[0]; //set the goal to be the first point
 	} //end setPurePursuitConstants
 	
 	/**
@@ -176,14 +182,15 @@ public class PurePursuitController {
 			 * Seek with linSpeed = maxVel
 			 * Seek and arrive to one point
 			 * Seek and arrive with rateLimiter
+			 * Seek and arrive to multiple points
 			 * 
 			 * To-Do
-			 * Seek and arrive to multiple points
 			 * Pursue multiple points
 			 * 
 			 */
-			arrive();
-			seek();			
+//			arrive();
+//			seek();			
+			purePursuit();
 		} //if
 	} //end calcOutputs
 	
@@ -249,7 +256,25 @@ public class PurePursuitController {
 		} //if
 	} //end arrive
 	
+	/**
+	 * Employ the Pure Pursuit tracking algorithm to follow the path
+	 */
 	private void purePursuit() {
+		/*
+		 * Find the closest point
+		 *   optimize by using distsq; helper method for this
+		 * Find all intersects
+		 * Set goal
+		 *   if no intersects
+		 *   	goal = closest
+		 *   else
+		 *   	choose last one (potentially change to point with minDist && minDistAlongPath)
+		 * If within distance of final point 
+		 * 	 	set goal to last point and arrive
+		 * 		- could potentially change this to distAlongPathLeft < goalDist
+		 * 		- distAlongPathLeft = totalDist - distAlongPath(closestPoint)
+		 * Seek goal		
+		 */
 		
-	}
+	} //end purePursuit
 } //end class

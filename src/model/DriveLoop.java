@@ -88,6 +88,14 @@ public class DriveLoop {
 		this.ppc = ppc;
 	} //end setPurePursuitController
 	
+	/**
+	 * Get the Pure Pursuit controller
+	 * @return Pure Pursuit controller used for path following
+	 */
+	public PurePursuitController getPurePursuitController() {
+		return ppc;
+	} //end getPurePursuitController
+	
 	//States
 	
 	/**
