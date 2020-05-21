@@ -442,7 +442,7 @@ public class Environment extends JComponent {
 			} //loop
 			
 			for (int i = 0; i < waypoints.length; i++) {
-				Painter.drawPoint(g2, waypoints[i]);
+				Painter.drawPoint(g2, waypoints[i], 3);
 			} //loop
 		} //if
 	} //end drawWaypoints

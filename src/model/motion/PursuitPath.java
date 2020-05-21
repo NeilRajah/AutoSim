@@ -417,4 +417,21 @@ public class PursuitPath {
 			return null;
 		} //try-catch
 	} //end createFromFile
+	
+	/**
+	 * Get the points in the path
+	 * @return Evenly spaced points on the path
+	 */
+	public Point[] getPoints() {
+		return points;
+	} //end getPoints
+	
+	/**
+	 * Get the path's initial heading
+	 * @return Initial heading of the path for the robot to point at
+	 */
+	public double getInitialHeading() {
+		Point delta = Point.subtract(points[1], points[0]);
+		return Math.atan2(delta.getY(), delta.getX()) - Math.PI/2; 
+	} //end getInitialHeading
 } //end class

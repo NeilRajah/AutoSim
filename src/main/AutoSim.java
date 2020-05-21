@@ -21,15 +21,16 @@ import graphics.Window;
 import graphics.widgets.SpeedDisplay;
 import graphics.widgets.SpeedDisplayWidget;
 import model.DriveLoop;
+import model.FieldPositioning;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
 import model.Point;
 import model.Robot;
-import model.motion.BezierPath;
 import model.motion.BezierProfile;
 import model.motion.DriveProfile;
 import model.motion.PurePursuitController;
+import model.motion.PursuitPath;
 import util.FieldPoints;
 import util.PlotGenerator;
 import util.Util;
@@ -82,7 +83,7 @@ public class AutoSim {
 		
 		//launch the application
 		w.launch();		
-		w.runAnimation();
+		//w.runAnimation();
 	} //end main
 	
 	/**
@@ -140,18 +141,24 @@ public class AutoSim {
 		//cg = new CommandList(new DriveClosedLoopLinearProfile(driveLoop, profile, 1));
 		
 		PurePursuitController ppc = new PurePursuitController();
-		ppc.setSeekConstants(0.5, 5.5, 12, false);
-		ppc.setArriveConstants(30, 3);
-		ppc.setPurePursuitConstants(12);
+		ppc.setSeekConstants(0.25, 22, 12, false);
+		ppc.setArriveConstants(30, 6);
+		ppc.setPurePursuitConstants(6);
 		driveLoop.setPurePursuitController(ppc);
 		
-		Point[] testPoints = new Point[3];
+		/*Point[] testPoints = new Point[3];
 		for (int i = 0; i < testPoints.length; i++) {
 			testPoints[i] = new Point(Math.random() * Util.FIELD_HEIGHT, Math.random() * Util.FIELD_HEIGHT);
-		}
+		}*/
+		PursuitPath path = new PursuitPath(FieldPoints.jShape, r.getWidthInches(), 12, 200, 200, 6);
+		Point[] testPoints = path.getPoints();
+		for (int i = 0; i < testPoints.length; i++) {
+			testPoints[i] = Point.scale(testPoints[i], 1.0);
+		} //loop
 		
 		cg = new CommandList(new PurePursuit(driveLoop, testPoints));
 		r.setXY(testPoints[0]);
+		r.setHeading(path.getInitialHeading());
 	} //end initialize
 	
 	/**
