@@ -377,9 +377,8 @@ public class Environment extends JComponent {
 			//draw the control points
 			if (curves.size() == 3) {					
 				//control points
-				for (int i = 0; i < 6; i++) {
+				for (int i = 0; i < 6; i++)
 					Painter.drawCircle(g2, controlPoints[i]);
-				} //loop
 				
 				//tangents
 				g2.setColor(Color.GRAY);
