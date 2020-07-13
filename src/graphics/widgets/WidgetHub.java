@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 
 import graphics.Painter;
 import main.AutoSim;
+import util.Util;
 import util.Util.ROBOT_KEY;
 import util.Util.WIDGET_ID;
 
@@ -108,9 +109,8 @@ public class WidgetHub extends JPanel {
 				//fill the values using the widget's keys
 				double[] values = new double[keys.length];
 				
-				for (int k = 0; k < keys.length; k++) {
+				for (int k = 0; k < keys.length; k++)
 					values[k] = (double) data.get(keys[k]); 
-				} //loop
 				
 				//send those values to the widget
 				widgets.get(i).update(values);

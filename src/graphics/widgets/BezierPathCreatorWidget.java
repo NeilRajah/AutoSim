@@ -10,10 +10,12 @@ package graphics.widgets;
 import graphics.Environment;
 import graphics.GraphicBezierPath;
 import model.Point;
+import util.Util;
 
 public class BezierPathCreatorWidget extends Widget {
 	//Attributes
 	private BezierPathCreator bpc; //path creator JComponent
+	private boolean hideMode; //whether to hide the widget on the Environment when running or not
 	
 	/**
 	 * Create a widget containing a BezierPathCreator
@@ -24,10 +26,11 @@ public class BezierPathCreatorWidget extends Widget {
 		
 		//set attributes
 		this.bpc = bpc;
+		this.hideMode = false;
 		
 		//add the controllers
 		registerControllers();
-	} //end constructor
+	} 
 
 	/**
 	 * Add the key and mouse controllers
@@ -42,7 +45,7 @@ public class BezierPathCreatorWidget extends Widget {
 		PathMouseController pmc = new PathMouseController(bpc);
 		Environment.getInstance().addMouseListener(pmc);
 		Environment.getInstance().addMouseMotionListener(pmc);
-	} //end registerControllers
+	} 
 	
 	/**
 	 * Set the control points of the path 
@@ -50,7 +53,7 @@ public class BezierPathCreatorWidget extends Widget {
 	 */
 	public void setControlPoints(Point[] points) {
 		bpc.setCircles(GraphicBezierPath.circlesFromPoints(points));
-	} //end setControlPoints
+	} 
 	
 	/**
 	 * Set the control points of the path 
@@ -58,7 +61,7 @@ public class BezierPathCreatorWidget extends Widget {
 	 */
 	public void setControlPoints(double[][] points) {
 		bpc.setCircles(GraphicBezierPath.circlesFromCoordinates(points));
-	} //end setControlPoints
+	}
 	
 	/**
 	 * Set the control points of the path
@@ -66,13 +69,21 @@ public class BezierPathCreatorWidget extends Widget {
 	 */
 	public void setControlPoints(String filename) {
 		bpc.setCircles(GraphicBezierPath.circlesFromFile(filename));
-	} //end setControlPoints
+	} 
 	
 	/**
 	 * Update the widget given update values
 	 * @param values Values given from the update
 	 */
 	public void update(double[] values) {
+		Util.println("I do exist!");
+		Environment.getInstance().setDrawCurve(!hideMode);
+	}
 	
-	} //end update
-} //end class
+	/**
+	 * Hide the widget when the animation is running
+	 */
+	public void hideWhenRunning() {
+		hideMode = true;
+	}
+} 

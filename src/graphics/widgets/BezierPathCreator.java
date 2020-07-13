@@ -38,7 +38,6 @@ public class BezierPathCreator extends JPanel {
 	private GraphicBezierPath curve; //curve being manipulated
 	private HashMap<String, JTextField> textBoxes; //text boxes for control points
 	private BoxButton[] buttons; //buttons for control points
-	
 	/**
 	 * Create a BezierPathCreator with a width and a height
 	 * @param width Width in pixels

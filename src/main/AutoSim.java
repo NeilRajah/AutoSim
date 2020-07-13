@@ -18,10 +18,11 @@ import commands.CommandList;
 import commands.PurePursuit;
 import graphics.Painter;
 import graphics.Window;
+import graphics.widgets.BezierPathCreator;
+import graphics.widgets.BezierPathCreatorWidget;
 import graphics.widgets.SpeedDisplay;
 import graphics.widgets.SpeedDisplayWidget;
 import model.DriveLoop;
-import model.FieldPositioning;
 import model.Gearbox;
 import model.Motor;
 import model.PIDController;
@@ -116,7 +117,7 @@ public class AutoSim {
 	 * Initialize the program by creating the robot and the command group
 	 */
 	private static void initializeSimulation() {
-		curve = FieldPoints.jShape;
+		curve = FieldPoints.niceLongCurve;
 		
 		//create robot
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
@@ -142,15 +143,16 @@ public class AutoSim {
 		
 		PurePursuitController ppc = new PurePursuitController();
 		ppc.setSeekConstants(0.25, 22, 12, false);
-		ppc.setArriveConstants(30, 6);
-		ppc.setPurePursuitConstants(6);
+		ppc.setArriveConstants(30, 3);
+		ppc.setPurePursuitConstants(18);
 		driveLoop.setPurePursuitController(ppc);
 		
 		/*Point[] testPoints = new Point[3];
 		for (int i = 0; i < testPoints.length; i++) {
 			testPoints[i] = new Point(Math.random() * Util.FIELD_HEIGHT, Math.random() * Util.FIELD_HEIGHT);
 		}*/
-		PursuitPath path = new PursuitPath(FieldPoints.jShape, r.getWidthInches(), 12, 200, 200, 6);
+		PursuitPath path = new PursuitPath(curve, r.getWidthInches(), 12, 200, 200, 24);
+		Util.println("Number of PursuitPath Points: ", path.getPoints().length);
 		Point[] testPoints = path.getPoints();
 		for (int i = 0; i < testPoints.length; i++) {
 			testPoints[i] = Point.scale(testPoints[i], 1.0);
@@ -181,10 +183,10 @@ public class AutoSim {
 		w.addWidget(angSpd);
 		
 		//bezier path creator widget
-//		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
-//		bezWidg.setControlPoints(curve);
-//		w.addWidget(bezWidg);
-	} //end addWidgets
+		BezierPathCreatorWidget bezWidg = new BezierPathCreatorWidget(new BezierPathCreator(w.getHubWidth(), w.getHubHeight() * 1/2));
+		bezWidg.setControlPoints(curve);
+		w.addWidget(bezWidg);
+	}
 
 	/**
 	 * Plot the robot data to a separate window
@@ -208,5 +210,5 @@ public class AutoSim {
 															Util.kP_DRIVE, Util.kD_DRIVE, 
 															Util.kV_EMPIR, Util.kA_EMPIR, 
 															Util.kP_TURN, Util.kD_TURN));
-	} //end plotData
-} //end AutoSim
+	}
+}

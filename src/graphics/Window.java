@@ -45,7 +45,14 @@ public class Window extends JFrame {
 		
 		this.debug = debug;
 		layoutView();
-	} //end constructor
+	} 
+	
+	/**
+	 * Create a regular window
+	 */
+	public Window() {
+		this(false);
+	}
 	
 	/**
 	 * Layout the window, add all components
@@ -90,7 +97,7 @@ public class Window extends JFrame {
 		
 		//set focus
 		env.setFocusable(true);
-	} //end setUpEnvironment
+	}
 	
 	/**
 	 * Set up the Widget Hub
@@ -101,7 +108,7 @@ public class Window extends JFrame {
 		GridBagConstraints widgGridBag = JComponentUtil.createGBC(2, 0);
 		widgGridBag.gridheight = 2;
 		mainPanel.add(widgetHub, widgGridBag);
-	} //end setUpWidgetHub
+	}
 	
 	/**
 	 * Set up the UI bar
@@ -112,7 +119,7 @@ public class Window extends JFrame {
 		
 		//add UI bar to environment
 		env.addUIBar(bar);
-	} //end setUpUIBar
+	}
 	
 	/**
 	 * Set up the start button
@@ -125,7 +132,7 @@ public class Window extends JFrame {
 		start.addMouseListener(startCtrl);
 		
 		mainPanel.add(start, JComponentUtil.createGBC(1, 1));
-	} //end setUpStartButton
+	} 
 	
 	/**
 	 * Configure and launch the window
@@ -146,14 +153,14 @@ public class Window extends JFrame {
 		env.update();
 		
 		Util.println("Window launched");
-	} //end launch
+	} 
 	
 	/**
 	 * Set the debug mode of the Environment
 	 */
 	public void setDebug() {
 		env.setDebug();
-	} //end setDebug
+	} 
 	
 	/**
 	 * Add a Command to be animated
@@ -164,7 +171,7 @@ public class Window extends JFrame {
 		env.setPoses(c.getPoses());
 		env.setCurves(c.getCurves());
 		env.setData(c.getData());
-	} //end addCommand
+	} 
 	
 	/**
 	 * Add a CommandGroup to be animated
@@ -181,7 +188,7 @@ public class Window extends JFrame {
 			env.setCurves(cg.getCurves());
 		
 		env.update();
-	} //end addCommandGroup
+	} 
 	
 	/**
 	 * Run the animation
@@ -208,7 +215,7 @@ public class Window extends JFrame {
 				} catch (NullPointerException n) {}
 				
 				Util.pause(Util.ANIMATION_PERIOD);
-			} //loop
+			}
 			
 			env.setSimulating(false);
 			Util.println("ran");
@@ -218,7 +225,7 @@ public class Window extends JFrame {
 		Thread t = new Thread(loop);
 		t.start();
 		Util.println("Thread Started");
-	} //end runAnimation
+	} 
 	
 	/**
 	 * Add poses to the Environment
@@ -228,17 +235,17 @@ public class Window extends JFrame {
 		env.setPoses(poses);
 		env.incrementPoseIndex();
 		env.update();
-	} //end addPoses
+	}
 	
 	//Widgets
 	
 	/**
 	 * Add a widget to the hub
-	 * @param w - Widget to add to the hub
+	 * @param w Widget to add to the hub
 	 */
 	public void addWidget(Widget w) {
 		widgetHub.addWidget(w);
-	} //end addWidget
+	}
 	
 	/**
 	 * Get the width of the widget hub
@@ -246,7 +253,7 @@ public class Window extends JFrame {
 	 */
 	public int getHubWidth() {
 		return widgetHub.width();
-	} //end getHubWidth
+	}
 	
 	/**
 	 * Get the height of the widget hub
@@ -254,5 +261,5 @@ public class Window extends JFrame {
 	 */
 	public int getHubHeight() {
 		return widgetHub.height();
-	} //end getHubHeight
-} //end Window
+	} 
+}

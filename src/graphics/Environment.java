@@ -48,7 +48,6 @@ public class Environment extends JComponent {
 	private ArrayList<Pose> poses; //list of robot poses to draw
 	private ArrayList<HashMap<ROBOT_KEY, Object>> data; //data from the robot
 	private static int poseIndex; //index in pose list of pose to draw
-	private int curveIndex; //index in curve list of curve to draw
 	private boolean debug; //whether to display the field or not
 	private boolean simulating; //true when the animation is running
 	
@@ -57,6 +56,7 @@ public class Environment extends JComponent {
 	private BezierPath curve; //curve from the BPC widget
 	private Circle[] controlPoints; //control points for path
 	private Point[] waypoints; //waypoints the robot is following
+	private boolean drawCurves; //whether the widget wants to draw the curve or not
 	
 	/**
 	 * The environment the robot is simulated in
@@ -67,8 +67,8 @@ public class Environment extends JComponent {
 		//reset values
 		debug = false;
 		poseIndex = -1;
-		curveIndex = 0;
 		simulating = false;
+		drawCurves = true;
 		
 		//add border
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, AutoSim.PPI * 2));
@@ -80,7 +80,7 @@ public class Environment extends JComponent {
 	 */
 	public static Environment getInstance() {
 		return mInstance == null ? mInstance = new Environment() : mInstance;
-	} //end getInstance
+	}
 	
 	/**
 	 * Set the size of the Environment
@@ -174,10 +174,9 @@ public class Environment extends JComponent {
 	 * Increment the curve index by one and repaint the component
 	 */
 	public void incrementCurveIndex() {
-		curveIndex++;
 		bar.setTime(poseIndex);
 		repaint();
-	} //end incrementPoseIndex
+	} 
 	
 	/**
 	 * Set the curve to be drawn (intended for widget use)
@@ -196,7 +195,7 @@ public class Environment extends JComponent {
 		curves.add(path.getRightPolyline());
 		this.controlPoints = path.getCircles();
 		update();
-	} //end setCurve
+	} 
 	
 	/**
 	 * Set the waypoints to be displayed
@@ -204,7 +203,16 @@ public class Environment extends JComponent {
 	 */
 	public void setWaypoints(Point[] waypoints) {
 		this.waypoints = waypoints;
-	} //end setWaypoints
+	} 
+	
+	/**
+	 * Set whether to draw the curves
+	 * @param val Whether to draw curves or not
+	 */
+	public void setDrawCurve(boolean val) {
+		drawCurves = val;
+		Util.println(drawCurves);
+	}
 	
 	//Data
 	
@@ -353,7 +361,7 @@ public class Environment extends JComponent {
 	 */
 	private void drawPath(Graphics2D g2) {
 		//draw the current path
-		if (curves != null && !curves.isEmpty()) {
+		if (!simulating && curves != null && !curves.isEmpty()) {
 			//stroke for lines
 			g2.setColor(Color.WHITE);
 			
@@ -379,9 +387,9 @@ public class Environment extends JComponent {
 				Painter.drawLine(g2, controlPoints[0], controlPoints[1]);
 				Painter.drawLine(g2, controlPoints[4], controlPoints[5]);
 				Painter.setTransparency(g2, 1.0);
-			} //if
-		} //if
-	} //end drawPath
+			} 
+		}
+	}
 
 	/**
 	 * Draw the current pose in the simulation
@@ -425,8 +433,8 @@ public class Environment extends JComponent {
 			int dia = (int) (lookahead * 2.0);
 			
 			Painter.drawEmptyCircle(g2, robot, dia);
-		} //if
-	} //end drawLookAhead
+		} 
+	} 
 	
 	/**
 	 * Draw the waypoints the robot is following, if they exist
@@ -437,13 +445,19 @@ public class Environment extends JComponent {
 			g2.setColor(Color.BLACK);
 			g2.setStroke(new BasicStroke((float) (AutoSim.PPI * 1.0), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 			
-			for (int i = 1; i < waypoints.length; i++) {
+			for (int i = 1; i < waypoints.length; i++)
 				Painter.drawLine(g2, waypoints[i-1], waypoints[i]);
-			} //loop
 			
-			for (int i = 0; i < waypoints.length; i++) {
+			for (int i = 0; i < waypoints.length; i++) 
 				Painter.drawPoint(g2, waypoints[i], 3);
-			} //loop
-		} //if
-	} //end drawWaypoints
-} //end Environment
+		} 
+	} 
+	
+	/**
+	 * Check whether the animation is running or not 
+	 * @return simulating Whether the animation is running or not
+	 */
+	public boolean isSimulating() {
+		return simulating;
+	}
+}
