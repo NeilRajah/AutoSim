@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.text.AbstractDocument;
 
 import graphics.Environment;
 import graphics.GraphicBezierPath;
@@ -30,6 +31,8 @@ import graphics.components.LockButtonController;
 import main.AutoSim;
 import model.Point;
 import util.JComponentUtil;
+import util.TextFieldFilter;
+import util.Util;
 
 public class BezierPathCreator extends JPanel {
 	//Attributes
@@ -93,6 +96,9 @@ public class BezierPathCreator extends JPanel {
 		gb.setConstraints(title, topRowConstraint);
 		controlPointArea.add(title);
 		
+		//filter for textboxes
+		TextFieldFilter filter = new TextFieldFilter(Util.NUMBER_INPUT);
+		
 		//add buttons and text boxes
 		int y = 0;
 		for (int i = 0; i < 12; i++) {
@@ -103,8 +109,9 @@ public class BezierPathCreator extends JPanel {
 			
 			//add textbox controller
 			BezierTextController boxController = new BezierTextController(textBox, this);
-			textBox.addKeyListener(boxController);
 			textBox.addFocusListener(boxController);
+			AbstractDocument d = (AbstractDocument) textBox.getDocument();
+			d.setDocumentFilter(filter);
 			
 			//for every two text areas, add one button
 			if (i % 2 == 0) {

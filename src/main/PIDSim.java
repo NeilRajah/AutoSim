@@ -110,11 +110,12 @@ public class PIDSim {
 		w.addWidget(linSpd);	
 		
 		//Widget for each constant
-		TextInputWidget kPWidg = new TextInputWidget(new TextInput("kP", w.getHubHeight(), w.getHubWidth()));
+		TextInputWidget kPWidg = new TextInputWidget(new TextInput("kP", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
+		//add controller to change the driveLoop values 
 		w.addWidget(kPWidg);
-		TextInputWidget kIWidg = new TextInputWidget(new TextInput("kI", w.getHubHeight(), w.getHubWidth()));
+		TextInputWidget kIWidg = new TextInputWidget(new TextInput("kI", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
 		w.addWidget(kIWidg);
-		TextInputWidget kDWidg = new TextInputWidget(new TextInput("kD", w.getHubHeight(), w.getHubWidth()));
+		TextInputWidget kDWidg = new TextInputWidget(new TextInput("kD", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
 		w.addWidget(kDWidg);
 	}
 }

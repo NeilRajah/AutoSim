@@ -63,6 +63,9 @@ public class Util {
 	//Directory Constants
 	public static final String UTIL_DIR = "./src//util//";
 	
+	//Filter Constants
+	public static final String NUMBER_INPUT = "0123456789.";
+	
 	//Widget IDs
 	public static enum WIDGET_ID {
 		SPEED_DISPLAY

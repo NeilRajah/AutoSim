@@ -13,10 +13,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.text.AbstractDocument;
 
 import graphics.Painter;
 import main.AutoSim;
 import util.JComponentUtil;
+import util.TextFieldFilter;
+import util.Util;
 
 public class TextInput extends JPanel {
 	//Attributes
@@ -26,15 +29,21 @@ public class TextInput extends JPanel {
 	private String text;
 	private JLabel titleComp;
 	private JTextField textComp;
+	private String validKeys;
 	
-	public TextInput(String title, int height,int width) {
+	public TextInput(String title, int height, int width, String validKeys) {
 		super();
 		
 		this.height = height;
 		this.width = width;
 		this.title = title;
+		this.validKeys = validKeys;
 		
 		layoutView();
+	}
+	
+	public TextInput(String title, int height, int width) {
+		this(title, height, width, "");
 	}
 	
 	private void layoutView() {
@@ -47,7 +56,11 @@ public class TextInput extends JPanel {
 		titleComp.setPreferredSize(new Dimension(width / 6, h));
 		this.add(titleComp);
 
-		textComp = JComponentUtil.textField("0.0", (int) (this.width * 0.7), h, AutoSim.PPI * 3);	
+		textComp = JComponentUtil.textField("0.0", (int) (this.width * 0.7), h, AutoSim.PPI * 3);
+		if (!validKeys.equals("")) {
+			AbstractDocument d = (AbstractDocument) textComp.getDocument();
+			d.setDocumentFilter(new TextFieldFilter(validKeys));
+		}
 		this.add(textComp);
 	}
 }
