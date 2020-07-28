@@ -39,41 +39,77 @@ public class PIDController {
 		errorSum = 0; //no error sum at beginning
 		lastError = 0; //zero previous error at beginning
 		initPos = 0; //initial position is zero
-	} //end constructor
+	} 
 
 	//Attributes
 	
 	/**
 	 * Return whether the error is within the epsilon bounds or not
-	 * @return atTarget - whether controller is at target
+	 * @return atTarget Whether controller is at target
 	 */
 	public boolean isDone() {
 		return atTarget;
-	} //end isDone
+	} 
 
 	/**
 	 * Get the proportionality constant of the controller
-	 * @return kP - proportionality constant
+	 * @return kP Proportionality constant
 	 */
 	public double getP() {
 		return kP;
-	} //end getP
+	}
+	
+	/**
+	 * Set the proportionality constant
+	 * @param kP New proportionality constant for PID controller
+	 */
+	public void setP(double kP) {
+		this.kP = kP;
+	}
 
 	/**
 	 * Get the integral constant of the controller
-	 * @return kI - integral constant
+	 * @return kI Integral constant
 	 */
 	public double getI() {
 		return kI;
-	} //end getI
+	} 
+	
+	/**
+	 * Set the integral constant
+	 * @param kI New integration constant for PID controller
+	 */
+	public void setI(double kI) {
+		this.kI = kI;
+	}
 
 	/**
 	 * Get the derivative constant of the controller
-	 * @return kD - derivative constant
+	 * @return kD Derivative constant
 	 */
 	public double getD() {
 		return kD;
-	} //end getD
+	}
+	
+	/**
+	 * Set the derivative constant
+	 * @param kD New derivative constant for PID controller
+	 */
+	public void setD(double kD) {
+		this.kD = kD;
+	}
+	
+	/**
+	 * Set the gains for the controller
+	 * @param kP Proportionality constant
+	 * @param kI Integration constant
+	 * @param kD Derivative constant
+	 */
+	public void setGains(double kP, double kI, double kD) {
+		this.kP = kP;
+		this.kI = kI;
+		this.kD = kD;
+	}
 	
 	/**
 	 * Reset the controller for the next set of calculations
@@ -82,7 +118,7 @@ public class PIDController {
 		errorSum = 0;
 		lastError = 0;
 		atTarget = false;
-	} //end reset
+	} 
 	
 	/**
 	 * Set the initial position of the controller
@@ -90,7 +126,7 @@ public class PIDController {
 	 */
 	public void setInitPos(double initPos) {
 		this.initPos = initPos;
-	} //end setInitPos
+	}
 	
 	/**
 	 * Get the initial position of the controller
@@ -98,7 +134,7 @@ public class PIDController {
 	 */
 	public double getInitPos() {
 		return initPos;
-	} //end getInitPos
+	}
 	
 	//Calculations
 	
@@ -131,7 +167,7 @@ public class PIDController {
 		
 		//output is sum of each constant's output
 		return pOut + iOut + dOut;
-	} //end calcPID
+	} 
 	
 	/**
 	 * Calculate a regulated PID output based on setpoint, current value and tolerance
@@ -148,7 +184,7 @@ public class PIDController {
 		double botLimit = 12 * (Math.abs(minSpeed) / this.topSpeed);
 		
 		return Util.regulatedClamp(output, botLimit, topLimit);
-	} //end calcRegulatedPID
+	} 
 	
 	/**
 	 * Return PID output based on a Distance and Velocity goal
@@ -177,5 +213,5 @@ public class PIDController {
 		
 		//output is sum of both terms
 		return pOut + dOut;
-	} //end calcDVPID
-} //end class
+	}
+} 

@@ -72,7 +72,7 @@ public class AutoSim {
 		initializeSimulation(); 
 		
 		//create the window 
-		w = new Window(true); //true for debug, false for not
+		w = new Window("AutoSim", true); //true for debug, false for not
 		addWidgets(); //add widgets to the widget hub
 		
 		//add the command group and plot data
@@ -85,7 +85,7 @@ public class AutoSim {
 		//launch the application
 		w.launch();		
 		//w.runAnimation();
-	} //end main
+	} 
 	
 	/**
 	 * Set the constants related to the screen
@@ -107,11 +107,11 @@ public class AutoSim {
 			//always chooses primary monitor's resolution
 		} //if
 		
-		SCREEN_WIDTH = 3840; SCREEN_HEIGHT = 2160; TOP_SCREEN = false;
+//		SCREEN_WIDTH = 3840; SCREEN_HEIGHT = 2160; TOP_SCREEN = false;
 		
 		//5 pixels per inch on a 3840x2160 screen
 		PPI = (int) Math.floor(5.0 * (SCREEN_WIDTH/3840.0));
-	} //end initializeScreen
+	} 
 	
 	/**
 	 * Initialize the program by creating the robot and the command group
@@ -156,12 +156,12 @@ public class AutoSim {
 		Point[] testPoints = path.getPoints();
 		for (int i = 0; i < testPoints.length; i++) {
 			testPoints[i] = Point.scale(testPoints[i], 1.0);
-		} //loop
+		}
 		
 		cg = new CommandList(new PurePursuit(driveLoop, testPoints));
 		r.setXY(testPoints[0]);
 		r.setHeading(path.getInitialHeading());
-	} //end initialize
+	} 
 	
 	/**
 	 * Add Widgets to the Widget Hub

@@ -16,7 +16,6 @@ public class DriveLoop {
 	private Robot robot; //robot controlled by loop
 	private PIDController drivePID; //PID controller for driving
 	private PIDController turnPID; //PID controller for turning
-	private RAMSETEController ramsete; //RAMSETE controller for pose tracking
 	private PurePursuitController ppc; //Pure Pursuit controller
 	
 	private STATE state; //state the robot is in
@@ -29,11 +28,7 @@ public class DriveLoop {
 	private double kA; //feedforward acceleration constant
 	
 	private double[] leftPVA; //position, velocity and acceleration
-	private double[] rightPVA; 
-	
-	private Pose goalPose; //goal pose (x,y,theta)
-	private double goalLinVel; //goal lin vel ft/s
-	private double goalAngVel; //goal ang vel ft/s
+	private double[] rightPVA;
 
 	//States the robot can be in
 	public static enum STATE {
@@ -43,9 +38,8 @@ public class DriveLoop {
 		TURN_ANGLE, 	//PID angle turning
 		OPEN_LOOP_PROFILE, //FF profile following
 		CLOSED_LOOP_LINEAR_PROFILE, //FF + PID profile following
-		CURVE_FOLLOWING, //PIDFF curve following
 		PURE_PURSUIT //pure pursuit algorithm
-	} //end enum
+	}
 	
 	/**
 	 * Create a loop with a robot
@@ -66,7 +60,7 @@ public class DriveLoop {
 		minSpeed = 0;
 		topSpeed = 0;
 		tolerance = 0;
-	} //end constructor
+	}
 	
 	//Configure Constants
 	
@@ -78,7 +72,7 @@ public class DriveLoop {
 	public void setFFValues(double kV, double kA) {
 		this.kV = kV;
 		this.kA = kA;
-	} //end setFFValues
+	} 
 	
 	/**
 	 * Set the Pure Pursuit Controller for the loop
@@ -86,7 +80,7 @@ public class DriveLoop {
 	 */
 	public void setPurePursuitController(PurePursuitController ppc) {
 		this.ppc = ppc;
-	} //end setPurePursuitController
+	} 
 	
 	/**
 	 * Get the Pure Pursuit controller
@@ -94,7 +88,23 @@ public class DriveLoop {
 	 */
 	public PurePursuitController getPurePursuitController() {
 		return ppc;
-	} //end getPurePursuitController
+	} 
+	
+	/**
+	 * Get the PID controller for driving
+	 * @return drivePID Controller for driving
+	 */
+	public PIDController getDrivePID() {
+		return drivePID;
+	}
+	
+	/**
+	 * Get the PID controller for turning
+	 * @return turnPID Controller for turning
+	 */
+	public PIDController getTurnPID() {
+		return turnPID;
+	}
 	
 	//States
 	
@@ -104,7 +114,7 @@ public class DriveLoop {
 	 */
 	public STATE getState() {
 		return state;
-	} //end getState
+	} 
 	
 	/**
 	 * Set the state of the robot
@@ -112,7 +122,7 @@ public class DriveLoop {
 	 */
 	public void setState(STATE state) {
 		this.state = state;
-	} //end setState
+	} 
 	
 	/**
 	 * Run commands based on the state the robot is in
@@ -154,15 +164,11 @@ public class DriveLoop {
 				closedLoopLinearProfileLoop();
 				break;
 				
-			case CURVE_FOLLOWING:
-				curveFollowingLoop();
-				break;
-				
 			case PURE_PURSUIT:
 				purePursuitLoop();
 				break;
-		} //switch-case
-	} //end onLoop
+		} 
+	} 
 		
 	/**
 	 * Get the robot being controlled by the loop
@@ -170,7 +176,7 @@ public class DriveLoop {
 	 */
 	public Robot getRobot() {
 		return robot;
-	} //end robot
+	} 
 	
 	/**
 	 * Get whether or not the PID controller for driving is at its target
@@ -178,7 +184,7 @@ public class DriveLoop {
 	 */
 	public boolean isDrivePIDAtTarget() {
 		return drivePID.isDone();
-	} //end isDrivePIDAtTarget
+	} 
 	
 	/**
 	 * Get whether or not the PID controller for turning is at its target
@@ -186,7 +192,7 @@ public class DriveLoop {
 	 */
 	public boolean isTurnPIDAtTarget() {
 		return turnPID.isDone();
-	} //end isTurnPIDAtTarget
+	} 
 	
 	/**
 	 * Get whether or not the robot being controlled is moving slower than a percent of its top speed
@@ -195,7 +201,7 @@ public class DriveLoop {
 	 */
 	public boolean isRobotSlowerThanPercent(double percent) {
 		return robot.isSlowerThanPercent(percent); 
-	} //end isRobotSlowerThanPercent
+	} 
 	
 	/**
 	 * Return if the robot is slower than a velocity (ft/s)
@@ -204,7 +210,7 @@ public class DriveLoop {
 	 */
 	public boolean isRobotSlowerThanVel(double vel) {
 		return robot.isSlowerThanPercent(Math.abs(vel) / robot.getMaxLinSpeed());
-	} //end isRobotSlowerThanVel
+	} 
 	
 	//DriveDistance state
 	
@@ -228,7 +234,7 @@ public class DriveLoop {
 		//reset the PID controllers
 		drivePID.reset();
 		turnPID.reset();
-	} //end setDriveDistanceState
+	} 
 	
 	/**
 	 * Drive the robot with PID control to a distance target below a top speed until it gets to its target
@@ -240,7 +246,7 @@ public class DriveLoop {
 		
 		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);
-	} //end driveDistanceLoop
+	} 
 	
 	//TurnAngle state
 	
@@ -263,7 +269,7 @@ public class DriveLoop {
 		//reset the PID controllers
 		drivePID.reset();
 		turnPID.reset();
-	} //end setTurnAngleState
+	} 
 	
 	/**
 	 * Turn the robot with PID control to a distance target below a top speed until it gets to its target
@@ -274,7 +280,7 @@ public class DriveLoop {
 		
 		//set respective sides
 		robot.update(-turnOut, turnOut);
-	} //end turnAngleLoop
+	} 
 	
 	//DriveToGoal state
 	
@@ -294,7 +300,7 @@ public class DriveLoop {
 		//reset the controllers
 		drivePID.reset();
 		turnPID.reset();
-	} //end setDriveToGoalState
+	} 
 	
 	/**
 	 * Update the DriveToGoal state parameters
@@ -315,7 +321,7 @@ public class DriveLoop {
 		
 		//set state
 		this.state = STATE.DRIVE_TO_GOAL;
-	} //end updateDriveToGoalState
+	} 
 	
 	/**
 	 * Drive the robot to a goal point using the P2P control scheme
@@ -327,7 +333,7 @@ public class DriveLoop {
 		
 		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);
-	} //end driveToGoalLoop	
+	} 
 
 	/**
 	 * Set the state machine into the open loop profile state
@@ -335,7 +341,7 @@ public class DriveLoop {
 	public void setOpenLoopProfileState() {
 		//set the state
 		this.state = STATE.OPEN_LOOP_PROFILE;
-	} //end setOpenLoopProfileState
+	} 
 	
 	/**
 	 * Update the left and right goal velocities
@@ -345,7 +351,7 @@ public class DriveLoop {
 	public void updateOpenLoopProfileState(double[] left, double[] right) {
 		this.leftPVA = left;
 		this.rightPVA = right;
-	} //end updateOpenLoopProfileState
+	} 
 	
 	/**
 	 * Set the robot output based on left and right goal velocities
@@ -355,7 +361,7 @@ public class DriveLoop {
 		double rightOut = kV * rightPVA[1] + kA * rightPVA[2];
 		
 		robot.update(leftOut, rightOut);
-	} //end openLoopProfileLoop
+	} 
 
 	/**
 	 * Set the state of the loop to closed loop profile
@@ -368,7 +374,7 @@ public class DriveLoop {
 		this.tolerance = tolerance;
 		this.goalDist = totalDist;
 		this.drivePID.setInitPos(initPos);
-	} //end set state
+	} 
 	
 	/**
 	 * Update the left and right goals
@@ -378,7 +384,7 @@ public class DriveLoop {
 	public void updateClosedLoopLinearProfileState(double[] left, double[] right) {
 		this.leftPVA = left;
 		this.rightPVA = right;
-	} //end updateClosedLoopLinearProfileState
+	} 
 	
 	/**
 	 * Set the output based on the goal position, velocity and acceleration
@@ -392,37 +398,7 @@ public class DriveLoop {
 		double output = drivePID.calcDVPID(pos, robot.getAveragePos(), vel, tolerance) + calcFFOutput(vel, acc);
 		
 		robot.update(output, output);
-	} //end closedLinearProfileLoop
-	
-	/**
-	 * Set the state machine into the curve following state
-	 */
-	public void setCurveFollowingState() {
-		this.state = STATE.CURVE_FOLLOWING;
-	} //end setCurveFollowingState
-	
-	/**
-	 * Update the left and right goals
-	 * @param left Left position, velocity and acceleration
-	 * @param right Right position, velocity and acceleration
-	 */
-	public void updateCurveFollowingState(Pose goal, double goalLin, double goalAng) {
-		this.goalPose = goal;
-		this.goalLinVel = goalLin;
-		this.goalAngVel = goalAng;
-	} //end updateCurveFollowingState
-	
-	/**
-	 * Follow the wheel velocity setpoints using FF
-	 */
-	private void curveFollowingLoop() {
-		double[] outputs = ramsete.calcWheelSpeeds(robot.getPose(), goalPose, goalLinVel, goalAngVel, robot.getWidthInches());
-		
-		double leftOut = Util.kP_DRIVE * outputs[0];
-		double rightOut = Util.kP_DRIVE * outputs[1];
-		
-		robot.update(leftOut, rightOut);
-	} //end curveFollowingLoop
+	} 
 	
 	/**
 	 * Calculate the feedforward output based on velocity and acceleration
@@ -432,7 +408,7 @@ public class DriveLoop {
 	 */
 	private double calcFFOutput(double vel, double acc) {
 		return kV * vel + kA * acc;
-	} //end calcFFOutput
+	} 
 	
 	//Pure Pursuit
 	
@@ -443,7 +419,7 @@ public class DriveLoop {
 	 */
 	public void updatePurePursuitState(Pose robotPose, double robotSpeed) {
 		ppc.calcOutputs(robotPose, robotSpeed);
-	} //end updatePurePursuitState
+	} 
 	
 	/**
 	 * Set the outputs based on the pure pursuit controller
@@ -452,5 +428,5 @@ public class DriveLoop {
 		double speed = ppc.getLinOut();
 		double turn = ppc.getAngOut();
 		robot.update(speed - turn, speed + turn);
-	} //end purePursuitLoop
-} //end class
+	} 
+} 

@@ -32,7 +32,7 @@ public class Circle extends Point {
 		this.color = color;
 		this.hoverColor = this.color.darker();
 		this.lockedColor = hoverColor.darker();
-	} //end constructor
+	} 
 	
 	/**
 	 * Create a circle with a point
@@ -45,7 +45,7 @@ public class Circle extends Point {
 		this.color = color;
 		this.hoverColor = this.color.darker();
 		this.lockedColor = this.color.darker();
-	} //end constructor
+	} 
 	
 	/**
 	 * Get the color of the circle
@@ -57,7 +57,7 @@ public class Circle extends Point {
 		else if (hovered)
 			return hoverColor;
 		return color;
-	} //end getColor
+	} 
 	
 	/**
 	 * Set the circle to be hovered over and update the Environment
@@ -66,7 +66,7 @@ public class Circle extends Point {
 		this.hovered = true;
 		this.locked = false;
 		Environment.getInstance().update();
-	} //end setHovered
+	} 
 	
 	/**
 	 * Set the circle to be locked and update the Environment
@@ -75,7 +75,7 @@ public class Circle extends Point {
 		this.locked = true;
 		this.hovered = false;
 		Environment.getInstance().update();
-	} //end setLocked
+	}
 	
 	/**
 	 * Get whether or not the circle is locked
@@ -83,7 +83,7 @@ public class Circle extends Point {
 	 */
 	public boolean isLocked() {
 		return locked;
-	} //end isLocked
+	}
 	
 	/**
 	 * Set the circle to its default state
@@ -92,7 +92,7 @@ public class Circle extends Point {
 		this.locked = false;
 		this.hovered = false;
 		Environment.getInstance().update();
-	} //end setDefault
+	} 
 	
 	/**
 	 * Get the state of the Circle
@@ -106,7 +106,7 @@ public class Circle extends Point {
 			return BUTTON_STATE.LOCK;
 		
 		return BUTTON_STATE.DEFAULT;
-	} //end getState
+	} 
 	
 	/**
 	 * Set the state of the circle and update the Environment
@@ -128,17 +128,8 @@ public class Circle extends Point {
 				hovered = false;
 				locked = true;
 				break;
-		} //switch
+		}
 		
 		Environment.getInstance().update();
-	} //end setState
-	
-//	/**
-//	 * Set the (x,y) values of the point
-//	 * @param p New (x,y) values of the point
-//	 */
-//	public void setXY(Point p) {
-//		this.setX(p.getX());
-//		this.setY(p.getY());
-//	} //end setXY
+	} 
 } //end class

@@ -149,6 +149,10 @@ public class JComponentUtil {
 	
 	/**
 	 * Create a text field
+	 * @param text Text in the text field
+	 * @param width Width in pixels
+	 * @param height Height in pixels
+	 * @param fontSize Size of font in pixels
 	 */
 	public static JTextField textField(String text, int width, int height, int fontSize) {
 		JTextField textField = new JTextField(text);

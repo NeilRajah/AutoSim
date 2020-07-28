@@ -50,8 +50,6 @@ public class UIBar extends JComponent {
 		currentCmd = "";
 		TEXT_HEIGHT = height / 10;
 		
-//		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
-		
 		//draw default information
 		repaint();
 	} //end constructor

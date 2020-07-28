@@ -38,6 +38,7 @@ public class BezierPathCreator extends JPanel {
 	private GraphicBezierPath curve; //curve being manipulated
 	private HashMap<String, JTextField> textBoxes; //text boxes for control points
 	private BoxButton[] buttons; //buttons for control points
+	
 	/**
 	 * Create a BezierPathCreator with a width and a height
 	 * @param width Width in pixels
@@ -55,7 +56,7 @@ public class BezierPathCreator extends JPanel {
 		
 		//layout all components
 		layoutView();
-	} //end constructor
+	} 
 	
 	/**
 	 * Lay out the view of the BezierPathCreator
@@ -70,7 +71,7 @@ public class BezierPathCreator extends JPanel {
 		
 		//update curve points
 		updateControlPoints();
-	} //end layoutView
+	} 
 	
 	/**
 	 * Layout the area containing all the control points
@@ -127,18 +128,18 @@ public class BezierPathCreator extends JPanel {
 				
 				//add button to panel
 				controlPointArea.add(button);
-			} //if
+			}
 			
 			//constrain to grid (x = 1, 2, 1, 2, 1 ...)
 			gb.setConstraints(textBox, JComponentUtil.createGBC(i % 2 + 1, y, 0.375, 1));
 			
 			//add to panel
 			controlPointArea.add(textBox);
-		} //loop
+		} 
 		
 		//add all to panel
 		this.add(controlPointArea);
-	} //end layoutControlPointArea
+	} 
 	
 	/**
 	 * Update a circle in the curve from button input
@@ -161,8 +162,8 @@ public class BezierPathCreator extends JPanel {
 			case LOCK:				
 				curve.requestCircleLock(key);
 				break;
-		} //switch-case
-	} //end updateCircle
+		} 
+	} 
 	
 	/**
 	 * Update a button
@@ -185,8 +186,8 @@ public class BezierPathCreator extends JPanel {
 			case LOCK:				
 				requestButtonToggle(key);
 				break;
-		} //switch-case
-	} //end updateCircle
+		} 
+	} 
 	
 	/**
 	 * Set a coordinate value in the curvecurve
@@ -200,8 +201,8 @@ public class BezierPathCreator extends JPanel {
 		//send to environment
 		if (allBoxesValid()) {
 			Environment.getInstance().setPath(curve);
-		} //if
-	} //end setCurveCoordinate
+		} 
+	} 
 	
 	/**
 	 * Update the control points of the curve
@@ -228,18 +229,18 @@ public class BezierPathCreator extends JPanel {
 					
 				} else if (entry.getKey().contains("y")) {
 					y = Double.parseDouble(entry.getValue().getText());
-				} //if
+				} 
 				
 			} catch (NumberFormatException e) {
 				x = 0;
 				y = 0;
-			} //try-catch
+			} 
 			
 			//set the point
 			if (loops % 2 == 0) {
 				circles[loops / 2 - 1] = new Circle(x, y, Painter.BEZ_BTN_DARK);
-			} //if
-		} //while
+			} 
+		} 
 		
 		//reset the locked button
 		int lockIndex = getLockedButtonIndex();
@@ -249,7 +250,7 @@ public class BezierPathCreator extends JPanel {
 		//set the control circles and the curve
 		curve.setCircles(circles);
 		Environment.getInstance().setPath(curve);
-	} //end updateControlPoints
+	} 
 	
 	/**
 	 * Loop through all the boxes, checking if they are all valid
@@ -263,11 +264,11 @@ public class BezierPathCreator extends JPanel {
 			
 			if (entry.getValue().getText().equals("")) {
 				return false;
-			} //if
-		} //else
+			}
+		}
 		
 		return true;
-	} //end allBoxesValid
+	}
 	
 	/**
 	 * Set the control points to the boxes
@@ -288,15 +289,15 @@ public class BezierPathCreator extends JPanel {
 				
 			} else if (entry.getKey().contains("y")) {
 				entry.getValue().setText(Double.toString(circles[loops/2].getY()));
-			} //if
+			}
 
 			loops++;
-		} //while
+		}
 		
 		//set the control circles and the curve
 		curve.setCircles(circles);
 		Environment.getInstance().setPath(curve);
-	} //end setControlPoints
+	}
 	
 	/**
 	 * Request a toggle for a button
@@ -316,8 +317,8 @@ public class BezierPathCreator extends JPanel {
 			
 		} else if (lockIndex == index) { //this button is locked
  			buttons[index].setState(BUTTON_STATE.DEFAULT);
-		} //if
-	} //end requestToggle
+		}
+	}
 	
 	/**
 	 * Get the index of the locked button
@@ -328,10 +329,10 @@ public class BezierPathCreator extends JPanel {
 		for (int i = 0; i < buttons.length; i++) {
 			if (buttons[i].isLocked())
 				lockIndex = i;
-		} //loop
+		}
 		
 		return lockIndex;
-	} //end getLockedButton
+	}
 	
 	/**
 	 * Translate a circle in the x and y directions
@@ -353,8 +354,8 @@ public class BezierPathCreator extends JPanel {
 			//set the new (x,y) values to the corresponding textboxes and update the circles
 			setTextXY(l, xVal, yVal);
 			updateControlPoints();
-		} //if
-	} //end movePoint
+		}
+	} 
 	
 	/**
 	 * Set the Circle at the index (for use when dragging)
@@ -365,7 +366,7 @@ public class BezierPathCreator extends JPanel {
 		setTextXY(i, p.getX(), p.getY());
 		updateControlPoints();
 		Environment.getInstance().update();
-	} //end setCircle
+	} 
 	
 	/**
 	 * Set the (x,y) value for a textbox
@@ -381,8 +382,8 @@ public class BezierPathCreator extends JPanel {
 			
 			JTextField yBox = textBoxes.get("y".concat(Integer.toString(i)));
 			yBox.setText(String.format("%.1f", yVal));
-		} //if
-	} //end setTextXY
+		} 
+	}
 
 	/**
 	 * Get the curve being manipulated
@@ -390,5 +391,5 @@ public class BezierPathCreator extends JPanel {
 	 */
 	public GraphicBezierPath getCurve() {
 		return curve;
-	} //end getCurve
-} //end class
+	} 
+}

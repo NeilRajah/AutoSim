@@ -128,6 +128,20 @@ public class Point {
 		return false;
 	} //end equals
 	
+	/**
+	 * Create a random Point within a given range
+	 * @param x Base x value
+	 * @param xRange +/- range for the x value
+	 * @param y Base y value
+	 * @param yRange +/- range for the y value
+	 * @return Point within the specified range
+	 */
+	public static Point randomPoint(double x, double xRange, double y, double yRange) {
+		double xVal = (x - xRange) + 2 * xRange * Math.random();
+		double yVal = (y - yRange) + 2 * yRange * Math.random();
+		return new Point(xVal, yVal);
+	}
+	
 	//Math
 	
 	/**

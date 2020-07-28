@@ -22,10 +22,10 @@ public class DriveDistance extends Command {
 	
 	/**
 	 * Drive the robot a specified distance within a tolerance and below a top speed
-	 * @param loop - drivetrain loop to update
-	 * @param distance - distance to drive in inches
-	 * @param tolerance - tolerance to be within in inches
-	 * @param topSpeed - top speed to drive at in inches
+	 * @param loop Drivetrain loop to update
+	 * @param distance Distance to drive in inches
+	 * @param tolerance Tolerance to be within in inches
+	 * @param topSpeed Top speed to drive at in inches
 	 */
 	public DriveDistance(DriveLoop loop, double distance, double tolerance, double topSpeed) {
 		//set attributes
@@ -36,38 +36,40 @@ public class DriveDistance extends Command {
 		
 		//set robot and name
 		this.robot = loop.getRobot();
-	} //end constructor
+	} 
 
 	/**
 	 * Initialize the command by setting the state machine state and corresponding values
 	 */
 	protected void initialize() {
 		loop.setDriveDistanceState(distance + tolerance, topSpeed, tolerance);
-	} //end initialize
+	} 
 
 	/**
 	 * Execute the command by running the state machine
 	 */
 	protected void execute() {
 		loop.onLoop();
-	} //end onLoop
+	} 
 
 	/**
 	 * Return whether the robot is moving slowly within the target or not
-	 * @return - true if it is, false if it is not
+	 * @return True if conditions are met, false if not
 	 */
 	protected boolean isFinished() {
 		return loop.isDrivePIDAtTarget() && 
-				loop.isRobotSlowerThanPercent(Util.kP_DRIVE * tolerance);
-	} //end isFinished
+				loop.isRobotSlowerThanPercent(loop.getDrivePID().getP() * tolerance * 0.01);
+	} 
 
 	/**
 	 * Run at the end of the command
 	 */
-	protected void end() {}
+	protected void end() {
+		loop.getRobot().update(0, 0); //stop the robot
+	}
 
 	/**
 	 * Run if the command times out
 	 */
 	protected void timedOut() {} 
-} //end class
+} 

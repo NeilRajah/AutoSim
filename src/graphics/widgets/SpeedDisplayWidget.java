@@ -23,7 +23,7 @@ public class SpeedDisplayWidget extends Widget {
 		
 		//set the keys to be used when updating
 		this.keyArray = new ROBOT_KEY[] {key}; 
-	} //end constructor
+	} 
 	
 	/**
 	 * Create a SpeedDisplayWidget
@@ -34,7 +34,7 @@ public class SpeedDisplayWidget extends Widget {
 	 */
 	public SpeedDisplayWidget(int width, int height, double maxVal, ROBOT_KEY key) {
 		this(new SpeedDisplay(width, height, maxVal), key);
-	} //end constructor
+	} 
 	
 	/**
 	 * Update the component
@@ -42,7 +42,7 @@ public class SpeedDisplayWidget extends Widget {
 	 */
 	public void update(double[] values) {
 		sd.update(values[0]);
-	} //end update
+	} 
 	
 	/**
 	 * Set the color of the bar
@@ -50,7 +50,7 @@ public class SpeedDisplayWidget extends Widget {
 	 */
 	public void setColor(Color color) {
 		sd.setColor(color);
-	} //end setColor
+	} 
 	
 	/**
 	 * Set two colors for the display
@@ -59,5 +59,5 @@ public class SpeedDisplayWidget extends Widget {
 	 */
 	public void setColors(Color fwdClr, Color revClr) {
 		sd.setColors(fwdClr, revClr);
-	} //end setColors
-} //end class
+	} 
+}

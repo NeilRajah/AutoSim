@@ -72,7 +72,7 @@ public class Environment extends JComponent {
 		
 		//add border
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, AutoSim.PPI * 2));
-	} //end constructor
+	} 
 	
 	/**
 	 * Get the single instance of the Environment
@@ -105,7 +105,7 @@ public class Environment extends JComponent {
 		
 		//set focus traversable
 		this.setFocusable(true);
-	} //end setSize
+	} 
 	
 	//Simulation
 	
@@ -115,7 +115,7 @@ public class Environment extends JComponent {
 	 */
 	public void setSimulating(boolean isSimulating) {
 		this.simulating = isSimulating;
-	} //end setSimulating
+	} 
 	
 	/**
 	 * Get the time of the simulation in seconds
@@ -123,7 +123,7 @@ public class Environment extends JComponent {
 	 */
 	public static double getTime() {
 		return poseIndex * Util.UPDATE_PERIOD;
-	} //end getTime
+	} 
 	
 	//Pose
 	
@@ -133,7 +133,7 @@ public class Environment extends JComponent {
 	 */
 	public void setPoses(ArrayList<Pose> poses) {
 		this.poses = poses;
-	} //end addPoses
+	} 
 	
 	/**
 	 * Get the number of poses in the environment
@@ -141,7 +141,7 @@ public class Environment extends JComponent {
 	 */
 	public int getNumPoses() {
 		return poses != null ? poses.size() : null;
-	} //end getNumPoses
+	} 
 	
 	/**
 	 * Increment the pose index by one and repaint the component
@@ -150,7 +150,7 @@ public class Environment extends JComponent {
 		poseIndex++;
 		bar.setTime(poseIndex);
 		repaint();
-	} //end incrementPoseIndex
+	} 
 	
 	/**
 	 * Set the pose index to a specified value
@@ -158,7 +158,7 @@ public class Environment extends JComponent {
 	 */
 	public void setPoseIndex(int index) {
 		poseIndex = index;
-	} //end setPoseIndex
+	} 
 	
 	//Curve
 	
@@ -168,7 +168,7 @@ public class Environment extends JComponent {
 	 */
 	public void setCurves(ArrayList<int[][]> paths) {
 		curves = paths;
-	} //end setCurve
+	} 
 	
 	/**
 	 * Increment the curve index by one and repaint the component
@@ -222,7 +222,7 @@ public class Environment extends JComponent {
 	 */
 	public void setData(ArrayList<HashMap<ROBOT_KEY, Object>> data) {
 		this.data = data;
-	} //end setData
+	} 
 	
 	/**
 	 * Get the data point at an index
@@ -231,7 +231,7 @@ public class Environment extends JComponent {
 	 */
 	public HashMap<ROBOT_KEY, Object> getDataPoint(int index) {
 		return data.get(index);
-	} //end getDataPoint
+	} 
 	
 	//Graphics
 	
@@ -241,7 +241,7 @@ public class Environment extends JComponent {
 	 */
 	public int width() {
 		return width;
-	} //end width
+	} 
 
 	/**
 	 * Return the height of the environment
@@ -249,21 +249,21 @@ public class Environment extends JComponent {
 	 */
 	public int height() {
 		return height;
-	} //end height
+	} 
 	
 	/**
 	 * Update the environment
 	 */
 	public void update() {	
 		repaint();
-	} //end update
+	} 
 	
 	/**
 	 * Set the debug mode of the Environment (do not draw field if debug mode)
 	 */
 	public void setDebug() {
 		debug = true;
-	} //end setDebug
+	} 
 	
 	/**
 	 * Set the focus state of the Enviroinment
@@ -280,7 +280,7 @@ public class Environment extends JComponent {
 		Color color = focus ? Color.YELLOW : Color.BLACK;
 		this.setBorder(BorderFactory.createLineBorder(color, AutoSim.PPI * 2));
 		update();
-	} //end setFocused
+	} 
 	
 	/**
 	 * Draw the environment
@@ -309,7 +309,7 @@ public class Environment extends JComponent {
 		
 		//draw the lookahead
 		drawLookAhead(g2);
-	} //end paintComponent
+	} 
 	
 	//User Interaction
 	
@@ -319,7 +319,7 @@ public class Environment extends JComponent {
 	 */
 	public void addUIBar(UIBar bar) {
 		this.bar = bar;
-	} //end addUIBar
+	}
 	
 	/**
 	 * Set the mouse coordinates for the UI to draw
@@ -328,7 +328,7 @@ public class Environment extends JComponent {
 	 */
 	public void setBarCursorLocation(int x, int y) {
 		bar.setCursorLocation(x, y);
-	} //end setBarCursorLocation
+	} 
 	
 	//Graphics
 	
@@ -353,7 +353,7 @@ public class Environment extends JComponent {
 		g2.setFont(Painter.createFont(Painter.SF_UI_FONT, AutoSim.PPI * 8));
 		g2.drawString("y", (int) (width * 0.975),(int) (height * 0.03));
 		g2.drawString("x", (int) (width * 0.015),(int) (height * 0.985));
-	} //end drawBackground
+	}
 	
 	/**
 	 * Draw the current path 
@@ -400,7 +400,7 @@ public class Environment extends JComponent {
 			Painter.drawPose(g2, poses.get(poseIndex));
 		} //if
 		g2.setTransform(oldTransform);
-	} //end drawCurrentPose
+	} 
 	
 	/**
 	 * Draw the goal point the robot is travelling to, if it has one
@@ -417,8 +417,8 @@ public class Environment extends JComponent {
 			Painter.drawPoint(g2, goal);
 			Painter.drawPoint(g2, robot);
 			Painter.drawLine(g2, goal, robot);
-		} //if
-	} //end drawGoalPoint
+		} 
+	} 
 	
 	/**
 	 * Draw the lookahead distance, if it exists
