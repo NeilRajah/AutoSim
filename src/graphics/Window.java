@@ -35,14 +35,17 @@ public class Window extends JFrame {
 	private int height; //height of window in pixels
 	private int width; //width of window in pixels
 	private boolean debug; //whether the window is for debugging or not
+	private String title; //window title
 	
 	/**
 	 * Create a window
+	 * @param title Title of the window
 	 * @param debug Whether the window is for debugging
 	 */
-	public Window(boolean debug) {
+	public Window(String title, boolean debug) {
 		super();
 		
+		this.title = title;
 		this.debug = debug;
 		layoutView();
 	} 
@@ -51,7 +54,7 @@ public class Window extends JFrame {
 	 * Create a regular window
 	 */
 	public Window() {
-		this(false);
+		this("AutoSim", false);
 	}
 	
 	/**
@@ -66,7 +69,7 @@ public class Window extends JFrame {
 		setUpEnvironment();
 		setUpUIBar();
 		setUpStartButton();
-	} //end layoutView
+	}
 	
 	/**
 	 * Set up the Environment
@@ -139,7 +142,7 @@ public class Window extends JFrame {
 	 */
 	public void launch() {
 		//configure frame and set it to visible
-		this.setTitle("AutoSim");
+		this.setTitle(title);
 		this.setContentPane(mainPanel);
 		this.setUndecorated(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
