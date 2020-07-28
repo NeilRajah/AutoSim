@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.TimerTask;
 
 import main.AutoSim;
 
@@ -27,9 +28,9 @@ public class Util {
 	
 	//PID constants
 	//DrivePID constants
-	public static final double kP_DRIVE = 0.05; //0.3 P2P, 0.9 linear traj, 0.05 RAMSETE
+	public static final double kP_DRIVE = 0.9; //0.3 P2P, 0.9 linear traj
 	public static final double kI_DRIVE = 0;
-	public static final double kD_DRIVE = 0.0; //1.25 P2P, 0.13 linear traj
+	public static final double kD_DRIVE = 0.13; //1.25 P2P, 0.13 linear traj
 
 	//TurnPID constants
 	public static final double kP_TURN = 0.06; //7.5 P2P, 0.06 curve
@@ -566,4 +567,26 @@ public class Util {
 	public static double minMag(double a, double b) {
 		return Math.abs(a) < Math.abs(b) ? a : b;
 	} //end minMag
+	
+	/**
+	 * Run a group of Runnables
+	 * @param r Runnables to run
+	 */
+	public static void runRunnables(Runnable ... r) {
+		for (int i = 0; i < r.length; i++)
+			r[i].run();
+	}
+	
+	/**
+	 * Create a TimerTask from a group of Runnables
+	 * @param r Runnables to run
+	 * @return Task containing the Runnables
+	 */
+	public static TimerTask task(Runnable ... r) {
+		return new TimerTask() {
+			public void run() {
+				runRunnables(r);
+			}
+		};
+	}
 } //end Util

@@ -222,4 +222,14 @@ public class Point {
 	public static double dot(Point a, Point b) {
 		return a.getX() * b.getX() + a.getY() * b.getY();
 	} //end dot
+	
+	/**
+	 * Return the head of a vector
+	 * @param mag Length of the vector
+	 * @param hdg Heading vector is pointing at
+	 * @return
+	 */
+	public static Point vector(double mag, double hdg) {
+		return new Point(mag * Math.cos(hdg), mag * Math.sin(hdg));
+	}
 } //end Point

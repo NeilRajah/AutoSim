@@ -15,7 +15,7 @@ import org.knowm.xchart.XYChart;
 
 import commands.CommandGroup;
 import commands.CommandList;
-import commands.PurePursuit;
+import commands.DriveDistance;
 import graphics.Painter;
 import graphics.Window;
 import graphics.widgets.BezierPathCreator;
@@ -158,7 +158,8 @@ public class AutoSim {
 			testPoints[i] = Point.scale(testPoints[i], 1.0);
 		}
 		
-		cg = new CommandList(new PurePursuit(driveLoop, testPoints));
+//		cg = new CommandList(new PurePursuit(driveLoop, testPoints));
+		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, r.getMaxLinSpeed()));
 		r.setXY(testPoints[0]);
 		r.setHeading(path.getInitialHeading());
 	} 

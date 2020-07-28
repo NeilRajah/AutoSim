@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import commands.Command;
 import commands.CommandGroup;
+import commands.CommandList;
 import graphics.components.BoxButton;
 import graphics.components.ButtonController;
 import graphics.widgets.Widget;
@@ -36,6 +37,8 @@ public class Window extends JFrame {
 	private int width; //width of window in pixels
 	private boolean debug; //whether the window is for debugging or not
 	private String title; //window title
+	private Thread animThread; //animation Thread
+	private CommandGroup cg; //CommandGroup to run
 	
 	/**
 	 * Create a window
@@ -170,6 +173,7 @@ public class Window extends JFrame {
 	 * @param c Command to be animated
 	 */
 	public void addCommand(Command c) {
+		this.cg = new CommandList(c);
 		c.run();
 		env.setPoses(c.getPoses());
 		env.setCurves(c.getCurves());
@@ -181,9 +185,11 @@ public class Window extends JFrame {
 	 * @param cg CommandGroup to be animated
 	 */
 	public void addCommandGroup(CommandGroup cg) {
+		this.cg = cg;
 		cg.run();
 		env.setPoses(cg.getPoses());		
 		env.setData(cg.getData());
+		env.setPoseIndex(-1);
 		env.incrementPoseIndex();
 		
 		//don't add empty curves
@@ -199,15 +205,13 @@ public class Window extends JFrame {
 	public void runAnimation() {
 		//loop for running simulation
 		Runnable loop = () -> {
-			//slight delay before running
-			Util.pause(250);
 			Util.println("Starting loop");
 			Util.println("Number of poses:", env.getNumPoses());
 			Util.println("Total time:", env.getNumPoses() * Util.UPDATE_PERIOD);
 			env.setSimulating(true);
 			
 			//loop through all poses every 5 milliseconds
-			for (int i = 1; i < env.getNumPoses(); i++) {
+			for (int i = 0; i < env.getNumPoses()-1; i++) {
 				env.incrementPoseIndex(); //draw the next pose
 				
 				try {
@@ -225,8 +229,12 @@ public class Window extends JFrame {
 		};
 		
 		//create and run the thread
-		Thread t = new Thread(loop);
-		t.start();
+		if (animThread != null) {
+			animThread.stop();
+			env.setPoseIndex(0);
+		}
+		animThread = new Thread(loop);
+		animThread.start();
 		Util.println("Thread Started");
 	} 
 	

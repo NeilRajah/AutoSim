@@ -132,4 +132,4 @@ public class Circle extends Point {
 		
 		Environment.getInstance().update();
 	} 
-} //end class
+}

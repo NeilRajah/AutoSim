@@ -158,7 +158,16 @@ public class Environment extends JComponent {
 	 */
 	public void setPoseIndex(int index) {
 		poseIndex = index;
-	} 
+	}
+	
+	/**
+	 * Get the pose index
+	 * @return poseIndex Current pose index
+	 * @return
+	 */
+	public double getPoseIndex() {
+		return poseIndex;
+	}
 	
 	//Curve
 	

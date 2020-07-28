@@ -39,6 +39,7 @@ public class TextInput extends JPanel {
 	
 	private void layoutView() {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
+		this.setLayout(layout);
 		int h = this.height / 15;
 		
 		titleComp = new JLabel(title, SwingConstants.CENTER);
@@ -46,7 +47,7 @@ public class TextInput extends JPanel {
 		titleComp.setPreferredSize(new Dimension(width / 6, h));
 		this.add(titleComp);
 
-		textComp = JComponentUtil.textField("0.0", (int) (this.width * 0.8), h, AutoSim.PPI * 3);	
+		textComp = JComponentUtil.textField("0.0", (int) (this.width * 0.7), h, AutoSim.PPI * 3);	
 		this.add(textComp);
 	}
 }
