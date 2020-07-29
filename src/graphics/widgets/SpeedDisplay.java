@@ -13,6 +13,8 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
+import util.Util;
+
 public class SpeedDisplay extends JComponent {
 	//Attributes
 	private double speed; //speed of object

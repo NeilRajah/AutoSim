@@ -30,9 +30,10 @@ import util.Util.ROBOT_KEY;
 
 public class PIDSim {
 	//Attributes
-	private static Window w; //window to add components to
+	private static Window w; //Window to add components to
 	public static DriveLoop driveLoop; //DriveLoop instance to be controlled
 	private static CommandGroup cg; //CommandGroup to be run
+	private static TextInputWidget kPWidg, kIWidg, kDWidg; //Widgets for PID constants
 	
 	/**
 	 * Create a Window and launch the program
@@ -45,6 +46,7 @@ public class PIDSim {
 		//create the window 
 		w = new Window("PIDSim", true); //true for debug, false for not
 		addWidgets(); //add widgets to the widget hub
+		w.addStartButtonActions(PIDSim::updateCommand);
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
@@ -89,10 +91,12 @@ public class PIDSim {
 		//Create the command the robot is going to follow
 		//CommandList is a utility object for creating a CommandGroup
 		//The command to be followed is a simple DriveDistance command
-		//Drive to 200 inches ahead with 1 inch of tolerance, limited to max speed (no speed limit)
+		//Drive to 100 inches ahead with 1 inch of tolerance, limited to max speed (no speed limit)
 		//The simulation will stop when the command ends or when 10 seconds has passed, whichever comes first
-		double distance = 200;
+		double distance = 100;
 		cg = new CommandList(new DriveDistance(driveLoop, distance, 1, r.getMaxLinSpeed()));
+		
+		//Save a point distance inches ahead of the robot for visualization
 		r.setGoalPoint(Point.add(r.getPoint(), Point.vector(distance, r.getHeading() + Math.PI/2)));
 	} 
 	
@@ -110,12 +114,29 @@ public class PIDSim {
 		w.addWidget(linSpd);	
 		
 		//Widget for each constant
-		TextInputWidget kPWidg = new TextInputWidget(new TextInput("kP", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
-		//add controller to change the driveLoop values 
+		kPWidg = new TextInputWidget(new TextInput("kP", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
 		w.addWidget(kPWidg);
-		TextInputWidget kIWidg = new TextInputWidget(new TextInput("kI", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
+		kIWidg = new TextInputWidget(new TextInput("kI", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
 		w.addWidget(kIWidg);
-		TextInputWidget kDWidg = new TextInputWidget(new TextInput("kD", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
+		kDWidg = new TextInputWidget(new TextInput("kD", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
 		w.addWidget(kDWidg);
+	}
+	
+	/**
+	 * Update the command with new PID gains
+	 */
+	private static void updateCommand() {
+		//Set PID values
+		double kP = Double.parseDouble(kPWidg.getText());
+		double kI = Double.parseDouble(kIWidg.getText());
+		double kD = Double.parseDouble(kDWidg.getText());
+		driveLoop.getDrivePID().setGains(kP, kI, kD);
+		
+		//Reset the robot
+		driveLoop.getRobot().setXY(new Point(162, 75));
+		driveLoop.getRobot().setHeadingDegrees(0);
+
+		//Reset the command group
+		w.addCommandGroup(cg);
 	}
 }

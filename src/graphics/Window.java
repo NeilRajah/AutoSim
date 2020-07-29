@@ -39,6 +39,7 @@ public class Window extends JFrame {
 	private String title; //window title
 	private Thread animThread; //animation Thread
 	private CommandGroup cg; //CommandGroup to run
+	private ButtonController startCtrl; //controller for start button
 	
 	/**
 	 * Create a window
@@ -134,11 +135,15 @@ public class Window extends JFrame {
 		BoxButton start = new BoxButton((int) (env.width() * 0.2), bar.height(), "Start", true, true);
 		start.setColors(Painter.BEZ_BTN_LIGHT, Painter.BEZ_BTN_DARK);
 		
-		ButtonController startCtrl = new ButtonController(start, this::runAnimation); 
+		startCtrl = new ButtonController(start, this::runAnimation); 
 		start.addMouseListener(startCtrl);
 		
 		mainPanel.add(start, JComponentUtil.createGBC(1, 1));
-	} 
+	}
+	
+	public void addStartButtonActions(Runnable ... r) {
+		startCtrl.addRunnables(r);
+	}
 	
 	/**
 	 * Configure and launch the window
@@ -219,6 +224,7 @@ public class Window extends JFrame {
 					bar.setCommandName((String) data.get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
 					if (widgetHub != null)
 						widgetHub.update(data); //update all widgets
+					Util.println((Double) data.get(ROBOT_KEY.LIN_VEL));
 				} catch (NullPointerException n) {}
 				
 				Util.pause(Util.ANIMATION_PERIOD);

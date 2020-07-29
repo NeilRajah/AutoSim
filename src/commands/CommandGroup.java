@@ -56,6 +56,7 @@ public abstract class CommandGroup {
 	 * Runs the entire command group
 	 */
 	public void run() {
+		poses.clear();
 		isRunning = true;
 		
 		//run each command and add its poses to the total list
@@ -108,7 +109,7 @@ public abstract class CommandGroup {
 	
 	/**
 	 * Get the poses from the command group 
-	 * @return poses - all poses from each command
+	 * @return poses All poses from each command
 	 */
 	public ArrayList<Pose> getPoses() {
 		return poses;
@@ -116,7 +117,7 @@ public abstract class CommandGroup {
 	
 	/**
 	 * Get the curve from the command group 
-	 * @return curve - all curves from each command
+	 * @return curve All curves from each command
 	 */
 	public ArrayList<int[][]> getCurves() {
 		return curves;

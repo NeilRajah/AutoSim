@@ -92,7 +92,7 @@ public abstract class Command implements Runnable {
 		int iterations = 0;
 		
 		//execute the command until it is finished or timed out
-		while(!this.isFinished() && !this.isTimedOut) {
+		while (!this.isFinished() && !this.isTimedOut) {
 			this.execute(); //run the command
 			
 			//add the robot information to the respective collections

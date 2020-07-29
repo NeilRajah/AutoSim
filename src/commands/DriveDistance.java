@@ -71,5 +71,7 @@ public class DriveDistance extends Command {
 	/**
 	 * Run if the command times out
 	 */
-	protected void timedOut() {} 
+	protected void timedOut() {
+		loop.getRobot().update(0, 0); //stop the robot
+	} 
 } 
