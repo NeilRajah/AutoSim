@@ -64,9 +64,8 @@ public abstract class CommandGroup {
 			commands.get(i).run(); //run the command
 			
 			//add curves if list exists and is not empty
-			if (curves != null && !curves.isEmpty()) {
+			if (curves != null && !curves.isEmpty())
 				curves.addAll(commands.get(i).getCurves());
-			} //if
 			
 			//sum the tests passed and failed
 			if (testing) {
@@ -81,15 +80,15 @@ public abstract class CommandGroup {
 						
 						//output the command that ran
 						Util.println("Simulated command " + (i+1) + ": " + commands.get(i).getName());
-					} //if
-				} //if
+					}
+				}
 				
 			} else { //not testing
 				poses.addAll(commands.get(i).getPoses());
 				data.addAll(commands.get(i).getData());
 				Util.println("Simulated command " + i + ": " + commands.get(i).getName());
-			} //if
-		} //loop
+			}
+		}
 		
 		//output test information
 		if (testing) {

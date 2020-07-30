@@ -34,6 +34,8 @@ public class PIDSim {
 	public static DriveLoop driveLoop; //DriveLoop instance to be controlled
 	private static CommandGroup cg; //CommandGroup to be run
 	private static TextInputWidget kPWidg, kIWidg, kDWidg; //Widgets for PID constants
+	private static final Point startXY = new Point(162, 75); //Robot start position
+	private static final double startHeading = 0; //Robot start heading
 	
 	/**
 	 * Create a Window and launch the program
@@ -74,8 +76,8 @@ public class PIDSim {
 		//Create the robot to control by setting its physical parameters
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
 		Robot r = new Robot(4, 153, 30, 30, gb); //153lb 4" wheel dia 30"x30" chassis
-		r.setXY(new Point(162, 75));
-		r.setHeadingDegrees(0);
+		r.setXY(startXY);
+		r.setHeadingDegrees(startHeading);
 		
 		//Set graphics parameters for drawing the robot
 		Painter.ROBOT_LENGTH = r.getLengthPixels();
@@ -84,7 +86,7 @@ public class PIDSim {
 		//Create the feedback controllers and state machine for the robot
 		//Controllers are configured with their kP, kI, kD constants, along with the respective top speed for regulation
 		//The state machine uses these controllers to link user input and robot output
-		PIDController drivePID = new PIDController(0, 0, 0, r.getMaxLinSpeed());
+		PIDController drivePID = new PIDController(2.0, 0, 0, r.getMaxLinSpeed());
 		PIDController turnPID = new PIDController(Util.kP_TURN, Util.kI_TURN, Util.kD_TURN, r.getMaxAngSpeed()); 
 		driveLoop = new DriveLoop(r, drivePID, turnPID); 
 		
@@ -133,8 +135,10 @@ public class PIDSim {
 		driveLoop.getDrivePID().setGains(kP, kI, kD);
 		
 		//Reset the robot
-		driveLoop.getRobot().setXY(new Point(162, 75));
-		driveLoop.getRobot().setHeadingDegrees(0);
+		driveLoop.getRobot().setXY(startXY);
+		driveLoop.getRobot().setHeadingDegrees(startHeading);
+		
+		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, driveLoop.getRobot().getMaxLinSpeed()));
 
 		//Reset the command group
 		w.addCommandGroup(cg);

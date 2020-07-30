@@ -190,12 +190,12 @@ public class Window extends JFrame {
 	 * @param cg CommandGroup to be animated
 	 */
 	public void addCommandGroup(CommandGroup cg) {
-		this.cg = cg;
 		cg.run();
 		env.setPoses(cg.getPoses());		
 		env.setData(cg.getData());
 		env.setPoseIndex(-1);
 		env.incrementPoseIndex();
+		this.cg = cg;
 		
 		//don't add empty curves
 		if (cg.getCurves() != null && !cg.getCurves().isEmpty())
@@ -224,14 +224,13 @@ public class Window extends JFrame {
 					bar.setCommandName((String) data.get(ROBOT_KEY.CURRENT_COMMAND)); //name of the command being run
 					if (widgetHub != null)
 						widgetHub.update(data); //update all widgets
-					Util.println((Double) data.get(ROBOT_KEY.LIN_VEL));
 				} catch (NullPointerException n) {}
 				
 				Util.pause(Util.ANIMATION_PERIOD);
 			}
 			
 			env.setSimulating(false);
-			Util.println("ran");
+			Util.println("Command ran");
 		};
 		
 		//create and run the thread
