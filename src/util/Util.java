@@ -8,6 +8,7 @@ package util;
 
 import java.awt.Font;
 import java.io.File;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -389,23 +390,29 @@ public class Util {
 	
 	/*
 	 * Get a font from a file
-	 * String location - location of the file
-	 * return font - font retrieved from file OR default font
+	 * String location Location of the file
+	 * return font Font retrieved from file OR default font
 	 */
 	public static Font getFileFont(String location) {
 		Font f;
 		
 		//try to create and set the font if the file is present
 		try {
-			f = Font.createFont(Font.TRUETYPE_FONT, new File(location));
+//			String path = Util.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+//			String decodedPath = URLDecoder.decode(path, "UTF-8");
+//			Util.println(decodedPath);
+			ClassLoader cl = Thread.currentThread().getContextClassLoader();
+//			InputStream is = cl.getResourceAsStream(location);
+			File font = new File(cl.getResource("resources/sf-ui-display-light.ttf").getFile());
+			f = Font.createFont(Font.TRUETYPE_FONT, font);
 			f = f.deriveFont(FONT_SIZE);
 		} catch (Exception e) {
 			e.printStackTrace();
 			f = new Font(Font.SANS_SERIF, Font.PLAIN, (int) FONT_SIZE);
-		} //try-catch
+		}
 		
 		return f;
-	} //end getFileFont
+	}
 	
 	/**
 	 * Checks if a String is a valid number

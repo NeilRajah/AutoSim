@@ -35,25 +35,25 @@ public class SpeedDisplay extends JComponent {
 		this.maxSpeed = maxSpeed;
 		
 		this.color = Color.GREEN;
-	} //end constructor
+	}
 	
 	/**
 	 * Set the speed of the object and redraw the component
-	 * @param newSpeed - new speed of the object
+	 * @param newSpeed New speed of the object
 	 */
 	public void update(double newSpeed) {
 		speed = Math.abs(newSpeed);
 		this.color = newSpeed > 0 ? fwdClr : revClr;
 		repaint();
-	} //end setSpeed
+	}
 	
 	/**
 	 * Set the color of the display
-	 * @param clr - color to set the velocity slider of the display
+	 * @param clr Color to set the velocity slider of the display
 	 */
 	public void setColor(Color clr) {
 		this.color = clr;
-	} //end setColor
+	}
 	
 	/**
 	 * Set two colors for the display
@@ -63,7 +63,7 @@ public class SpeedDisplay extends JComponent {
 	public void setColors(Color fwdClr, Color revClr) {
 		this.fwdClr = fwdClr;
 		this.revClr = revClr;
-	} //end setColors
+	}
 	
 	/**
 	 * Visually represent the speed of the object
@@ -80,5 +80,5 @@ public class SpeedDisplay extends JComponent {
 		//clear
 		g2.setColor(Color.GRAY);
 		g2.fillRect(0, 0, this.getWidth(), drawHeight);
-	} //end paintComponent
-} //end class
+	} 
+}

@@ -10,12 +10,15 @@ package main;
 import java.awt.Color;
 import java.awt.Toolkit;
 
+import org.knowm.xchart.XYChart;
+
 import commands.CommandGroup;
 import commands.CommandList;
 import commands.DriveDistance;
 import graphics.Painter;
 import graphics.Window;
 import graphics.components.TextInput;
+import graphics.widgets.ChartWidget;
 import graphics.widgets.SpeedDisplay;
 import graphics.widgets.SpeedDisplayWidget;
 import graphics.widgets.TextInputWidget;
@@ -31,16 +34,20 @@ import util.Util.ROBOT_KEY;
 public class PIDSim {
 	//Attributes
 	private static Window w; //Window to add components to
-	public static DriveLoop driveLoop; //DriveLoop instance to be controlled
+	private static Robot r; //robot to control
+	private static DriveLoop driveLoop; //DriveLoop instance to be controlled
 	private static CommandGroup cg; //CommandGroup to be run
 	private static TextInputWidget kPWidg, kIWidg, kDWidg; //Widgets for PID constants
+	private static ChartWidget errorWidg; //Chart widget to display error
+	
+	private static double distance; //Distance robot will be driving
 	private static final Point startXY = new Point(162, 75); //Robot start position
 	private static final double startHeading = 0; //Robot start heading
 	
 	/**
 	 * Create a Window and launch the program
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		//initialize the program
 		initializeScreen();
 		initializeSimulation(); 
@@ -48,7 +55,7 @@ public class PIDSim {
 		//create the window 
 		w = new Window("PIDSim", true); //true for debug, false for not
 		addWidgets(); //add widgets to the widget hub
-		w.addStartButtonActions(PIDSim::updateCommand);
+		w.addStartButtonActions(PIDSim::updateCommand, r::reset, errorWidg::reset);
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
@@ -75,7 +82,7 @@ public class PIDSim {
 	private static void initializeSimulation() {
 		//Create the robot to control by setting its physical parameters
 		Gearbox gb = new Gearbox(Gearbox.ratioFromTopSpeed(Util.NEO, 4, 12), new Motor(Util.NEO), 2); //12ft/s 4 NEO
-		Robot r = new Robot(4, 153, 30, 30, gb); //153lb 4" wheel dia 30"x30" chassis
+		r = new Robot(4, 153, 30, 30, gb); //153lb 4" wheel dia 30"x30" chassis
 		r.setXY(startXY);
 		r.setHeadingDegrees(startHeading);
 		
@@ -86,7 +93,7 @@ public class PIDSim {
 		//Create the feedback controllers and state machine for the robot
 		//Controllers are configured with their kP, kI, kD constants, along with the respective top speed for regulation
 		//The state machine uses these controllers to link user input and robot output
-		PIDController drivePID = new PIDController(2.0, 0, 0, r.getMaxLinSpeed());
+		PIDController drivePID = new PIDController(0, 0, 0, r.getMaxLinSpeed());
 		PIDController turnPID = new PIDController(Util.kP_TURN, Util.kI_TURN, Util.kD_TURN, r.getMaxAngSpeed()); 
 		driveLoop = new DriveLoop(r, drivePID, turnPID); 
 		
@@ -95,7 +102,7 @@ public class PIDSim {
 		//The command to be followed is a simple DriveDistance command
 		//Drive to 100 inches ahead with 1 inch of tolerance, limited to max speed (no speed limit)
 		//The simulation will stop when the command ends or when 10 seconds has passed, whichever comes first
-		double distance = 100;
+		distance = 100;
 		cg = new CommandList(new DriveDistance(driveLoop, distance, 1, r.getMaxLinSpeed()));
 		
 		//Save a point distance inches ahead of the robot for visualization
@@ -109,7 +116,7 @@ public class PIDSim {
 		//The Widget Hub holds the widgets on the side of the screen
 		w.setUpWidgetHub();
 		
-		//Speed widget
+		//Robot output widget
 		SpeedDisplayWidget linSpd = new SpeedDisplayWidget(new SpeedDisplay(w.getHubWidth(), 
 			w.getHubHeight() * 1/4, driveLoop.getRobot().getMaxLinSpeed()), ROBOT_KEY.LIN_VEL);
 		linSpd.setColors(Color.GREEN, Color.RED);
@@ -122,6 +129,15 @@ public class PIDSim {
 		w.addWidget(kIWidg);
 		kDWidg = new TextInputWidget(new TextInput("kD", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
 		w.addWidget(kDWidg);
+		
+		//Widget for error
+		XYChart errorChart = new XYChart(w.getHubWidth(), w.getHubHeight() / 3);
+		errorWidg = new ChartWidget(errorChart, ROBOT_KEY.AVG_POS, "Error");
+		errorWidg.setColor(Color.RED);
+		errorWidg.setKeyOperation(pos -> (double) (distance - pos));  //calculate the error
+		errorWidg.setInitialY(distance);
+//		errorWidg.reset();
+		w.addWidget(errorWidg);
 	}
 	
 	/**

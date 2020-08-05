@@ -8,6 +8,7 @@ import util.Util.ROBOT_KEY;
 public class SpeedDisplayWidget extends Widget {
 	//Attributes
 	private SpeedDisplay sd; //speed display to control
+	private String title; //title of the widget
 	
 	/**
 	 * Create a SpeedDisplayWidget using a pre-existing component

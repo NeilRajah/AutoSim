@@ -7,7 +7,6 @@
 
 package graphics.widgets;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import util.Util.ROBOT_KEY;
@@ -28,7 +27,7 @@ public abstract class Widget {
 		
 		//layout the view of the widget
 		layoutWidg();
-	} //end constructor
+	}
 	
 	public abstract void update(double[] values);
 	
@@ -38,7 +37,7 @@ public abstract class Widget {
 	 */
 	public double getHeight() {
 		return panel.getHeight();
-	} //end getHeight
+	}
 	
 	/**
 	 * Get the width of the widget
@@ -46,7 +45,7 @@ public abstract class Widget {
 	 */
 	public double getWidth() {
 		return panel.getWidth();
-	} //end getWidth
+	}
 	
 	/**
 	 * Get the key values in array form
@@ -54,7 +53,7 @@ public abstract class Widget {
 	 */
 	public ROBOT_KEY[] getKeyArray() {
 		return keyArray;
-	} //end getID
+	}
 	
 	/**
 	 * Get the JPanel holding the widget
@@ -62,31 +61,27 @@ public abstract class Widget {
 	 */
 	public JPanel getComponent() {
 		return panel;
-	} //end getComponent
+	}
 	
 	/**
 	 * Return whether or not the widget is toggled
-	 * @return toggle
+	 * @return toggled
 	 */
 	public boolean getToggled() {
 		return toggled;
-	} //end getToggled
+	}
 	
 	/**
 	 * Toggle the state of the widget and update it
 	 */
 	public void toggle() {
 		toggled = !toggled;
-	} //end toggle
+	}
 	
 	/**
 	 * Layout the widget, including its component panel
 	 */
-	private void layoutWidg() {
-		//set up widgPanel
-//		widgPanel = JComponentFactory.boxPanel(false);
+	private void layoutWidg() {		
 		
-		//add header (text bar with collapsible button)
-		JLabel label = new JLabel("Widget");
-	} //end layoutWidg
-} //end class
+	}
+}

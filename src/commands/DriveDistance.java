@@ -57,6 +57,10 @@ public class DriveDistance extends Command {
 	 * @return True if conditions are met, false if not
 	 */
 	protected boolean isFinished() {
+		/*
+		 * Having a small position error and low speed can be considered the 'settling position'
+		 * The PID controller has 'settled' when it is within a comfortable distance from the target
+		 */
 		return loop.isDrivePIDAtTarget() && 
 				loop.isRobotSlowerThanPercent(loop.getDrivePID().getP() * tolerance * 0.01);
 	} 
