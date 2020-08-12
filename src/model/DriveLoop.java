@@ -246,6 +246,7 @@ public class DriveLoop {
 		
 		//set respective sides
 		robot.update(driveOut - turnOut, driveOut + turnOut);
+		this.robot.setPIDOutput(driveOut);
 	} 
 	
 	//TurnAngle state

@@ -8,6 +8,7 @@
 package main;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Toolkit;
 
 import org.knowm.xchart.XYChart;
@@ -38,16 +39,18 @@ public class PIDSim {
 	private static DriveLoop driveLoop; //DriveLoop instance to be controlled
 	private static CommandGroup cg; //CommandGroup to be run
 	private static TextInputWidget kPWidg, kIWidg, kDWidg; //Widgets for PID constants
-	private static ChartWidget errorWidg; //Chart widget to display error
+	private static ChartWidget outputWidg, errorWidg; //PID output and error widgets 
 	
 	private static double distance; //Distance robot will be driving
+	private static double tolerance; //Distance away from endpoint robot can acceptably be within
+	private static double maxSpd; //Maximum speed the robot can travel at
 	private static final Point startXY = new Point(162, 75); //Robot start position
 	private static final double startHeading = 0; //Robot start heading
 	
 	/**
 	 * Create a Window and launch the program
 	 */
-	public static void main(String[] args) {		
+	public static void main(String[] args) {			
 		//initialize the program
 		initializeScreen();
 		initializeSimulation(); 
@@ -55,7 +58,7 @@ public class PIDSim {
 		//create the window 
 		w = new Window("PIDSim", true); //true for debug, false for not
 		addWidgets(); //add widgets to the widget hub
-		w.addStartButtonActions(PIDSim::updateCommand, r::reset, errorWidg::reset);
+		w.addStartButtonActions(PIDSim::updateCommand, r::reset, errorWidg::reset, outputWidg::reset);
 		
 		//add the command group and plot data
 		w.addCommandGroup(cg);
@@ -103,7 +106,9 @@ public class PIDSim {
 		//Drive to 100 inches ahead with 1 inch of tolerance, limited to max speed (no speed limit)
 		//The simulation will stop when the command ends or when 10 seconds has passed, whichever comes first
 		distance = 100;
-		cg = new CommandList(new DriveDistance(driveLoop, distance, 1, r.getMaxLinSpeed()));
+		maxSpd = r.getMaxLinSpeed();
+		tolerance = 1;
+		cg = new CommandList(new DriveDistance(driveLoop, distance, tolerance, maxSpd));
 		
 		//Save a point distance inches ahead of the robot for visualization
 		r.setGoalPoint(Point.add(r.getPoint(), Point.vector(distance, r.getHeading() + Math.PI/2)));
@@ -116,12 +121,6 @@ public class PIDSim {
 		//The Widget Hub holds the widgets on the side of the screen
 		w.setUpWidgetHub();
 		
-		//Robot output widget
-		SpeedDisplayWidget linSpd = new SpeedDisplayWidget(new SpeedDisplay(w.getHubWidth(), 
-			w.getHubHeight() * 1/4, driveLoop.getRobot().getMaxLinSpeed()), ROBOT_KEY.LIN_VEL);
-		linSpd.setColors(Color.GREEN, Color.RED);
-		w.addWidget(linSpd);	
-		
 		//Widget for each constant
 		kPWidg = new TextInputWidget(new TextInput("kP", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
 		w.addWidget(kPWidg);
@@ -130,13 +129,18 @@ public class PIDSim {
 		kDWidg = new TextInputWidget(new TextInput("kD", w.getHubHeight(), w.getHubWidth(), Util.NUMBER_INPUT));
 		w.addWidget(kDWidg);
 		
+		//Widget for PID output
+		XYChart outputChart = new XYChart(w.getHubWidth(), w.getHubHeight() / 3);
+		outputWidg = new ChartWidget(outputChart, ROBOT_KEY.PID_OUTPUT, "PID Output");
+		outputWidg.setColor(Color.MAGENTA);
+		w.addWidget(outputWidg);
+		
 		//Widget for error
 		XYChart errorChart = new XYChart(w.getHubWidth(), w.getHubHeight() / 3);
 		errorWidg = new ChartWidget(errorChart, ROBOT_KEY.AVG_POS, "Error");
 		errorWidg.setColor(Color.RED);
 		errorWidg.setKeyOperation(pos -> (double) (distance - pos));  //calculate the error
 		errorWidg.setInitialY(distance);
-//		errorWidg.reset();
 		w.addWidget(errorWidg);
 	}
 	
@@ -154,7 +158,7 @@ public class PIDSim {
 		driveLoop.getRobot().setXY(startXY);
 		driveLoop.getRobot().setHeadingDegrees(startHeading);
 		
-		cg = new CommandList(new DriveDistance(driveLoop, 100, 1, driveLoop.getRobot().getMaxLinSpeed()));
+		cg = new CommandList(new DriveDistance(driveLoop, distance, tolerance, maxSpd));
 
 		//Reset the command group
 		w.addCommandGroup(cg);

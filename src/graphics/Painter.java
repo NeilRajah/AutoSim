@@ -25,8 +25,8 @@ public class Painter {
 	public static final int CIRCLE_RAD = 8; //radius of circle
 	
 	//Fonts
-	public static final String SF_UI_FONT = "src/resources/SF-UI-Display-Light.ttf";
-	public static final String OXYGEN_FONT = "src/resources/Oxygen-Regular.ttf";
+	public static final String SF_UI_FONT = "src/sf-ui-display-light.ttf";
+	public static final String OXYGEN_FONT = "/Oxygen-Regular.ttf";
 	
 	//Colors
 	public static final Color BEZ_BTN_LIGHT = new Color(120, 130, 140);

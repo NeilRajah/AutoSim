@@ -92,8 +92,9 @@ public class Util {
 		STATE,
 		CURRENT_COMMAND,
 		GOAL_POINT,
-		LOOKAHEAD_DIST
-	} //end enum
+		LOOKAHEAD_DIST,
+		PID_OUTPUT
+	}
 	
 	//Testing Constants
 	public static final int PASSED = 1;
@@ -401,10 +402,13 @@ public class Util {
 //			String path = Util.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 //			String decodedPath = URLDecoder.decode(path, "UTF-8");
 //			Util.println(decodedPath);
-			ClassLoader cl = Thread.currentThread().getContextClassLoader();
-//			InputStream is = cl.getResourceAsStream(location);
-			File font = new File(cl.getResource("resources/sf-ui-display-light.ttf").getFile());
-			f = Font.createFont(Font.TRUETYPE_FONT, font);
+			
+//			ClassLoader cl = Thread.currentThread().getContextClassLoader();
+//			InputStream is = cl.getResourceAsStream(location); 
+			//"sf-ui-display-light.ttf"
+			//"Oxygen-Regular.ttf"
+			InputStream is = Util.class.getResourceAsStream(location);
+			f = Font.createFont(Font.TRUETYPE_FONT, is);
 			f = f.deriveFont(FONT_SIZE);
 		} catch (Exception e) {
 			e.printStackTrace();

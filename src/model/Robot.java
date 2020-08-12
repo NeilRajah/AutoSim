@@ -39,6 +39,9 @@ public class Robot {
 	private Point goalPoint; //used for graphics
 	private double lookahead; //lookahead circle radius
 	
+	//Controller
+	private double pidOut; //output from a PID controller
+	
 	//Computed constants
 	private double kWheelRad; //wheel radius in meters
 	private double kMOI; //moment of inertia in kg*m^2
@@ -72,7 +75,7 @@ public class Robot {
 		
 		//set values to zero
 		reset();
-	} //end constructor
+	} 
 	
 	/**
 	 * Safely get a copy of this Robot
@@ -87,7 +90,7 @@ public class Robot {
 		
 		//left gearbox identical to right gearbox, doesn't matter which is used
 		return new Robot(wheelDia, mass, length, width, leftGearbox.clone());
-	} //end clone
+	} 
 	
 	/**
 	 * Compute constants of the robot
@@ -107,7 +110,7 @@ public class Robot {
 		maxLinSpeed = (Math.PI * leftGearbox.getMotorParameters()[0] * kWheelRad)/
 					(360 * leftGearbox.getGearRatio() * Util.INCHES_TO_METERS); //ft/s
 		maxAngSpeed = (24 * maxLinSpeed * Util.INCHES_TO_METERS) / (kWidth); //rad/s
-	} //end computeConstants
+	} 
 	
 	/**
 	 * Reset the gearboxes, pose and kinematics of the robot
@@ -135,7 +138,7 @@ public class Robot {
 		rightGearbox.zeroVel();
 		
 		color = Color.yellow;
-	} //end waitState
+	} 
 	
 	//Kinematics
 	
@@ -145,7 +148,7 @@ public class Robot {
 	 */
 	public double getAveragePos() {
 		return averagePos;
-	} //end getAveragePos
+	} 
 	
 	/**
 	 * Get the linear velocity of the robot
@@ -153,7 +156,7 @@ public class Robot {
 	 */
 	public double getLinearVel() {
 		return linearVel;
-	} //end getLinearVel
+	} 
 	
 	/**
 	 * Get the angular velocity of the robot
@@ -161,7 +164,7 @@ public class Robot {
 	 */
 	public double getAngularVel() {
 		return angularVel;
-	} //end getAngularVel
+	} 
 	
 	/**
 	 * Get the max linear speed of the robot
@@ -169,7 +172,7 @@ public class Robot {
 	 */
 	public double getMaxLinSpeed() {
 		return maxLinSpeed;
-	} //end getMaxLinSpeed
+	} 
 	
 	/**
 	 * Get the max angular speed of the robot
@@ -177,7 +180,7 @@ public class Robot {
 	 */
 	public double getMaxAngSpeed() {
 		return maxAngSpeed;
-	} //end getMaxAngSpeed
+	} 
 	
 	/**
 	 * Get the width of the robot in inches
@@ -185,7 +188,7 @@ public class Robot {
 	 */
 	public double getWidthInches() {
 		return kWidth / Util.INCHES_TO_METERS;
-	} //end getWidthInches
+	} 
 	
 	/**
 	 * Get the length of the robot in inches
@@ -193,7 +196,7 @@ public class Robot {
 	 */
 	public double getLengthInches() {
 		return kLength / Util.INCHES_TO_METERS;
-	} //end getLengthInches
+	} 
 	
 	/**
 	 * Get the position of the left side of the drive
@@ -201,7 +204,7 @@ public class Robot {
 	 */
 	public double getLeftPos() {
 		return leftGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS;
-	} //end getLeftPos
+	} 
 	
 	/**
 	 * Get the position of the right side of the drive
@@ -209,7 +212,7 @@ public class Robot {
 	 */
 	public double getRightPos() {
 		return rightGearbox.getPos() * kWheelRad / Util.INCHES_TO_METERS;
-	} //end getRightPos
+	} 
 	
 	/**
 	 * Check if the robot's speed is lower than a percent of its top speed
@@ -218,7 +221,7 @@ public class Robot {
 	 */
 	public boolean isSlowerThanPercent(double percent) {
 		return Math.abs(linearVel) < percent * maxLinSpeed;
-	} //end isSlowerThanPercent
+	} 
 	
 	//Pose
 	
@@ -228,7 +231,7 @@ public class Robot {
 	 */
 	public Point getPoint() {
 		return new Point(point.getX(), point.getY());
-	} //end getPoint
+	} 
 	
 	/**
 	 * Get the x position of the robot
@@ -236,7 +239,7 @@ public class Robot {
 	 */
 	public double getX() {
 		return point.getX();
-	} //end getX
+	} 
 	
 	/**
 	 * Get the y position of the robot
@@ -244,7 +247,7 @@ public class Robot {
 	 */
 	public double getY() {
 		return point.getY();
-	} //end getY
+	} 
 	
 	/**
 	 * Set the (x,y) coordinates of the robot
@@ -252,7 +255,7 @@ public class Robot {
 	 */
 	public void setXY(Point p) {
 		point = new Point(p.getX(), p.getY());
-	} //end setXY
+	} 
 	
 	/**
 	 * Get the pose of the robot
@@ -261,7 +264,7 @@ public class Robot {
 	public Pose getPose() {
 		return new Pose(new Point(point.getX(), point.getY()), heading, 
 						new Color(color.getRed(), color.getGreen(), color.getBlue()));	
-	} //end getPose
+	} 
 	
 	/**
 	 * Get the heading of the robot
@@ -269,7 +272,7 @@ public class Robot {
 	 */
 	public double getHeading() {
 		return heading;
-	} //end getHeading
+	} 
 	
 	/**
 	 * Set the heading of the robot
@@ -277,7 +280,7 @@ public class Robot {
 	 */
 	public void setHeading(double heading) {
 		this.heading = heading;
-	} //end setHeading
+	} 
 	
 	/**
 	 * Set the heading of the robot in degrees
@@ -285,7 +288,7 @@ public class Robot {
 	 */
 	public void setHeadingDegrees(double heading) {
 		this.heading = Math.toRadians(heading);
-	} //end setHeadingDegrees
+	} 
 	
 	/**
 	 * Get the yaw of the robot in degrees
@@ -294,7 +297,7 @@ public class Robot {
 	public double getYaw() {
 		yaw = Math.toDegrees(heading) % 360; //convert heading to degrees
 		return yaw;
-	} // end getYaw
+	}
 
 	/**
 	 * Set the yaw (and heading) of the robot
@@ -303,7 +306,7 @@ public class Robot {
 	public void setYaw(double yaw) {
 		this.yaw = yaw;
 		this.heading = Math.toRadians(yaw);
-	} //end setYaw
+	}
 
 	//Dynamics
 	
@@ -332,7 +335,7 @@ public class Robot {
 		
 		//update the graphics of the robot
 		updateGraphics();
-	} //end update
+	}
 	
 	/**
 	 * Calculate the accelerations of each side of the drive
@@ -347,7 +350,7 @@ public class Robot {
 		//update the position and velocity of the gearbox
 		leftGearbox.update(leftAcc);
 		rightGearbox.update(rightAcc);
-	} //end updateGearboxes
+	} 
 	
 	/**
 	 * Calculate the angular velocity of the robot and update its heading
@@ -358,7 +361,7 @@ public class Robot {
 		
 		//linear speed is average of two velocities
 		linearVel = kWheelRad / Util.INCHES_TO_METERS / 12 * (rightGearbox.getVel() + leftGearbox.getVel()) / 2;
-	} //end updateHeading
+	} 
 	
 	/**
 	 * Update the pose of the robot
@@ -376,7 +379,7 @@ public class Robot {
 		
 		//update heading
 		heading += angularVel * Util.UPDATE_PERIOD;
-	} //end update pose
+	} 
 	
 	//Graphics
 	
@@ -386,7 +389,7 @@ public class Robot {
 	 */
 	public Color getColor() {
 		return color;
-	} //end getColor
+	} 
 	
 	/**
 	 * Set the color of the robot
@@ -394,14 +397,14 @@ public class Robot {
 	 */
 	public void setColor(Color c) {
 		this.color = c;
-	} //end setColor
+	} 
 	
 	/**
 	 * Update the robot graphics
 	 */
 	private void updateGraphics() {
 		updateColor();
-	} //end updateGraphics
+	} 
 	
 	/**
 	 * Update the color of the robot
@@ -419,8 +422,8 @@ public class Robot {
 			
 		} else { //not moving
 			color = Color.YELLOW;
-		} //if
-	} //end updateColor
+		} 
+	} 
 	
 	/**
 	 * Get the width of the robot in pixels
@@ -428,7 +431,7 @@ public class Robot {
 	 */
 	public int getWidthPixels() {
 		return (int) ((kWidth * AutoSim.PPI) / Util.INCHES_TO_METERS);
-	} //end getWidthPixels
+	} 
 	
 	/**
 	 * Get the length of the robot in pixels
@@ -436,7 +439,7 @@ public class Robot {
 	 */
 	public int getLengthPixels() {
 		return (int) ((kLength * AutoSim.PPI) / Util.INCHES_TO_METERS);
-	} //end getLengthPixels
+	} 
 	
 	/**
 	 * Set the name of the Command the robot is running
@@ -444,7 +447,7 @@ public class Robot {
 	 */
 	public void setCommandName(String name) {
 		this.commandName = name;
-	} //end setCommandName
+	} 
 	
 	/**
 	 * Set the goal point to be drawn
@@ -452,7 +455,7 @@ public class Robot {
 	 */
 	public void setGoalPoint(Point goal) {
 		this.goalPoint = goal;
-	} //end setGoalPoint
+	} 
 	
 	/**
 	 * Set the lookahead for the robot
@@ -460,7 +463,15 @@ public class Robot {
 	 */
 	public void setLookahead(double lookahead) {
 		this.lookahead = lookahead;
-	} //end setLookAhead
+	} 
+	
+	/**
+	 * Set the PID output to be displayed
+	 * @param pidOut Output from PID controller to be displayed
+	 */
+	public void setPIDOutput(double pidOut) {
+		this.pidOut = pidOut;
+	}
 	
 	/**
 	 * Get the data of the robot
@@ -488,7 +499,8 @@ public class Robot {
 		data.put(ROBOT_KEY.CURRENT_COMMAND, commandName);
 		data.put(ROBOT_KEY.GOAL_POINT, goalPoint);
 		data.put(ROBOT_KEY.LOOKAHEAD_DIST, lookahead);
+		data.put(ROBOT_KEY.PID_OUTPUT, pidOut);
 		
 		return data;
-	} //end getData
-} //end Robot
+	} 
+} 
